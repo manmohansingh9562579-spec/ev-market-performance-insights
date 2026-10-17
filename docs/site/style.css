@@ -108,7 +108,7 @@ button { font: inherit; }
 .viz-loading, .viz-error { position: absolute; inset: 0; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px; color: #353a34; background: #f5f5f2; text-align: center; }
 .viz-loading p, .viz-error p { color: #676f68; font-size: 12px; line-height: 1.6; }
 .viz-error strong { font: 700 18px Manrope, sans-serif; }
-.viz-error[hidden] { display: none; }
+.viz-loading[hidden], .viz-error[hidden] { display: none; }
 .viz-error .button { margin-top: 8px; }
 .loader { width: 27px; height: 27px; border: 2px solid #d4d8d1; border-top-color: #578566; border-radius: 50%; animation: spin .8s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
