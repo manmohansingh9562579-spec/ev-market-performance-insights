@@ -27,8 +27,8 @@ After the owner's license confirmation:
 1. Open the local output file `EV_Market_Performance_Public_Ready_Clean.twbx` in Tableau Public Desktop. Confirm the extract is available and the dashboard, seven chart sheets, filters, and both Stories load.
 2. Review the dashboard at desktop and phone sizes. Check filter behavior and verify the sales total against the deduplicated source if you use the total in a submission.
 3. In Tableau Public Desktop, choose **File → Save to Tableau Public**, then sign in to the Tableau Public account. Review the workbook title and public visibility before completing the upload.
-4. The save/upload completed. Tableau Public displayed the published workbook under the signed-in profile and rendered the Manufacturer Sales view. Share URL: <https://public.tableau.com/app/profile/man.mohan.singh3746/viz/EV_Market_Performance_Public_Ready_Clean/ManufacturerSales>.
-5. To show that view inside Flask, set `TABLEAU_PUBLIC_URL` to the share URL in a local `.env` file and restart Flask. If the variable is unset, the local Flask dashboard continues to work without an embed.
+4. The save/upload completed. The initial published URL opened the Manufacturer Sales worksheet. The full published dashboard was verified at <https://public.tableau.com/app/profile/man.mohan.singh3746/viz/EV_Market_Performance_Public_Ready_Clean/Dashboard1>; its page title and multiple chart zones loaded.
+5. To show the full dashboard inside Flask, set `TABLEAU_PUBLIC_URL` to the Dashboard 1 URL in a local `.env` file and restart Flask. If the variable is unset, the local Flask dashboard continues to work without an embed.
 
 Tableau Public account login and publishing must be completed by the account owner. Do not enter a password into the Flask project or commit `.env`.
 
@@ -39,7 +39,7 @@ Tableau Public account login and publishing must be completed by the account own
 - Tableau Public uses extracts rather than live database connections for published workbooks. CSV/Excel sources do not automatically refresh there; refresh the local extract and republish when updating data.
 - The workbook has 199,999 analyzed rows, within Tableau Public's documented 15-million-row workbook limit. This does not guarantee browser performance.
 - The owner confirmed checking the dataset terms and authorizing publication; the assistant could not independently read the dataset-specific Kaggle license statement.
-- The workbook has been published to Tableau Public; the URL above is the submission link. The initial view opens on the Manufacturer Sales worksheet.
+- The workbook has been published to Tableau Public. Use the Dashboard 1 link above for the full dashboard; the initial save URL opens only the Manufacturer Sales worksheet.
 
 ## Flask embedding
 
