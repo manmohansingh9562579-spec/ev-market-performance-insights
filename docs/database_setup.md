@@ -4,7 +4,7 @@
 
 1. Install and start a local MySQL 8+ server and create a database user with permission to create/use the project database and insert/update its tables.
 2. Open a MySQL client and run `sql/schema.sql`. It creates `ev_market`, `ev_market_train`, and `ev_market_test` with a `vehicle_id` primary key and indexes supporting the dashboard filters.
-3. Copy `.env.example` to `.env`. Set `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, and `DB_NAME=ev_market`; set `EV_TRAIN_CSV` to the actual training CSV path. Keep `.env` private and out of source control.
+3. Copy `.env.example` to `.env`. Clear the default `DATABASE_URL=sqlite:///ev_market.sqlite`, then set `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, and `DB_NAME=ev_market`; set `EV_TRAIN_CSV` to the actual training CSV path. Keep `.env` private and out of source control.
 4. Install Python dependencies with `python -m pip install -r requirements.txt`.
 5. Import training data:
 
@@ -24,10 +24,10 @@ The importer requires all 37 inspected fields. It removes exact duplicate rows, 
 
 ## SQLite local fallback
 
-Set `DATABASE_URL=sqlite:///ev_market.sqlite` in `.env`; the database file is created in the project working directory when the importer runs. Import the train CSV with the command above. The importer creates the schema and indexes. SQLite import and dashboard reading were exercised by the automated integration test.
+The one-click launcher defaults to `DATABASE_URL=sqlite:///ev_market.sqlite`; it creates the database and imports the training CSV the first time it runs. You can also set this value in `.env` and run the importer manually. The importer creates the schema and indexes. SQLite import and dashboard reading were exercised by the automated integration test.
 
 To switch back to CSV mode, clear `DATABASE_URL` and the MySQL `DB_*` settings, then set `EV_TRAIN_CSV`.
 
 ## Verification status
 
-SQLite fallback: tested by a synthetic integration fixture. MySQL runtime, server connection, DDL compatibility against a running server, real-data MySQL import, and query performance: pending because no MySQL service or configured connection was available during this work.
+SQLite: automated synthetic integration coverage plus a manual local import and dashboard check using 199,999 real training rows. MySQL runtime, server connection, DDL compatibility against a running server, real-data MySQL import, and query performance: pending because no MySQL service or configured connection was available during this work.

@@ -1,6 +1,6 @@
 # Electric Vehicle Market Performance & Insights
 
-A responsive Flask dashboard and MySQL-ready data workflow for the Electric Vehicle Market Classification Dataset. The dashboard reads the local training CSV or a configured SQL database. It keeps the test split separate and never edits the source CSV.
+A responsive Flask dashboard and MySQL-ready data workflow for the Electric Vehicle Market Classification Dataset. The one-click local launcher imports the training CSV into a private SQLite database on first use; a configured MySQL database can replace it. It keeps the test split separate and never edits the source CSV.
 
 ## What is included
 
@@ -23,7 +23,7 @@ The inspected source files were found in a local `Downloads/archive/` folder:
 
 Together the two files contain 300,000 rows across matching 37-column schemas and occupy 69,716,983 bytes (about 66.49 MiB).
 
-The application uses the training split only by default. Keep the originals at their current location or set `EV_TRAIN_CSV` in a local `.env` file. No licensed source CSV is bundled in this project. The data profile contains inspected schema and quality results; see [`docs/data_profile.md`](docs/data_profile.md).
+The application uses the training split only by default. The launcher looks for the source in `Downloads/archive/`, `data/`, then the project root, and keeps the CSV in place. No licensed source CSV or database file is bundled in this project. To use another file, set `EV_TRAIN_CSV` in a local `.env` file. The data profile contains inspected schema and quality results; see [`docs/data_profile.md`](docs/data_profile.md).
 
 The training file has one exact duplicate row, which the app removes in memory. It does not modify the source. Missing measures remain null and are omitted from the relevant sum or mean. The UI includes distinct `model_name` and average `battery_capacity_kwh` summaries, plus annual sales grouped by `model_year`. Sales and CO₂ totals are dataset-field aggregates; the row grain and external interpretation of these fields should be confirmed before presenting them as market-wide totals.
 
@@ -40,18 +40,18 @@ py -m venv .venv
 .\.venv\Scripts\Activate.ps1
 python -m pip install -r requirements.txt
 Copy-Item .env.example .env
-python app.py
+python scripts/launch_local.py
 ```
 
-Open the address shown in the console (the one-click launcher may choose a port other than 5000). The default loader checks `~/Downloads/archive/ev_market_train.csv`, `data/ev_market_train.csv`, then the project root. To use another file, edit `.env` and set `EV_TRAIN_CSV` to its path. Do not put credentials in source files or commit a populated `.env`.
+The launcher creates the local SQLite database from the training CSV when needed and opens the address shown in the console. To use another file, edit `.env` and set `EV_TRAIN_CSV` to its path. Do not put credentials in source files or commit a populated `.env`.
 
 Chart.js, Plotly (used for the treemap and map), and fonts load from CDNs; the data API and Flask server run locally. An internet connection is needed for those external visual assets. If the Plotly map cannot load, the app shows a country-sales table; if no CSV or database is available, the page shows a clear data-loading state. Synthetic rows exist only in automated test fixtures and are not offered as real dataset results.
 
 ## Database
 
-Read [`docs/database_setup.md`](docs/database_setup.md) before using MySQL. Run `sql/schema.sql` in MySQL 8+, configure environment variables, then import using `scripts/import_csv.py`. The importer validates the 37-column schema, drops exact duplicates, rejects conflicting or missing primary-key IDs, and protects a non-empty destination unless `--replace` is explicitly passed.
+Read [`docs/database_setup.md`](docs/database_setup.md) before using MySQL. Run `sql/schema.sql` in MySQL 8+, clear `DATABASE_URL` in `.env`, configure the environment variables, then import using `scripts/import_csv.py`. The importer validates the 37-column schema, drops exact duplicates, rejects conflicting or missing primary-key IDs, and protects a non-empty destination unless `--replace` is explicitly passed.
 
-For a local SQLite database, set `DATABASE_URL=sqlite:///ev_market.sqlite` in `.env` and use the same importer. The automated suite exercised this SQLite path. **MySQL installation, connection, import, and query performance have not been tested in this environment.**
+The default local setup uses `DATABASE_URL=sqlite:///ev_market.sqlite` and imports the training CSV on first launch. The automated suite exercised the SQLite path with a synthetic integration fixture; the live local database now uses the real training file. **MySQL installation, connection, import, and query performance have not been tested in this environment.**
 
 ## Tableau
 
