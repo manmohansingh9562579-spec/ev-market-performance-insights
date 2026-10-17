@@ -145,6 +145,17 @@ class DashboardApiTests(unittest.TestCase):
         self.assertIn(b"<tableau-viz", response.data)
         self.assertIn(b"tableau.embedding.3.latest.min.js", response.data)
 
+    def test_tableau_profile_share_urls_are_normalized_for_embedding(self) -> None:
+        with patch.dict(os.environ, {
+            "TABLEAU_PUBLIC_URL": "https://public.tableau.com/app/profile/example/viz/EV_Market/Dashboard1",
+            "TABLEAU_STORY_URL": "https://public.tableau.com/app/profile/example/viz/EV_Market/Story2",
+        }):
+            response = self.client.get("/")
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'src="https://public.tableau.com/views/EV_Market/Dashboard1"', response.data)
+        self.assertIn(b'src="https://public.tableau.com/views/EV_Market/Story2"', response.data)
+        self.assertNotIn(b'src="https://public.tableau.com/app/profile/', response.data)
+
     def test_missing_or_non_public_tableau_url_keeps_local_dashboard(self) -> None:
         with patch.dict(os.environ, {
             "TABLEAU_PUBLIC_URL": "https://example.com/views/ev-market",

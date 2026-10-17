@@ -493,7 +493,19 @@ def validated_tableau_url(raw_value: str) -> str | None:
     }:
         LOG.warning("Ignoring TABLEAU_PUBLIC_URL outside the official Tableau Public host.")
         return None
-    return value
+
+    # Tableau Public's profile/share page is not the view endpoint that the
+    # Embedding API expects. Convert its standard share URL to the canonical
+    # /views/<workbook>/<view> form used by Tableau's embed component.
+    parts = parsed.path.strip("/").split("/")
+    if len(parts) == 6 and parts[0:2] == ["app", "profile"] and parts[3] == "viz":
+        parsed = parsed._replace(path=f"/views/{parts[4]}/{parts[5]}")
+        return parsed.geturl()
+    if parsed.path.startswith("/views/"):
+        return value
+
+    LOG.warning("Ignoring Tableau Public URL that is not a supported view or profile share URL.")
+    return None
 
 
 def create_app(config: dict[str, Any] | None = None) -> Flask:
