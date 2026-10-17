@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#0b0e0d">
     <meta name="description" content="Explore the Electric Vehicle Market Performance and Insights Tableau dashboard and data story.">
-    <title>EV Market | Performance &amp; Insights</title>
+    <title>EV Insights | Market Performance</title>
     <link rel="preconnect" href="https://public.tableau.com">
     <link rel="stylesheet" href="style.css">
     <script type="module" src="https://public.tableau.com/javascripts/api/tableau.embedding.3.latest.min.js"></script>
@@ -15,35 +15,49 @@
     <a class="skip-link" href="#main">Skip to dashboard</a>
     <header class="topbar">
       <a class="brand" href="#top" aria-label="EV Market home">
-        <span class="brand-mark" aria-hidden="true">EV</span>
-        <span class="brand-copy"><strong>EV MARKET</strong><small>PERFORMANCE &amp; INSIGHTS</small></span>
+        <span class="brand-mark" aria-hidden="true">ϟ</span>
+        <span class="brand-copy"><strong>EV Insights</strong><small>MARKET INTELLIGENCE</small></span>
       </a>
-      <nav class="nav" aria-label="Main navigation">
-        <a href="#overview">Overview</a>
-        <a href="#workspace">Workspace</a>
+      <button class="menu-toggle" id="menu-toggle" type="button" aria-label="Open navigation" aria-expanded="false">☰</button>
+      <nav class="nav" id="main-nav" aria-label="Main navigation">
+        <a href="#top">Home</a>
+        <a href="#overview">About</a>
+        <a href="#features">Features</a>
+        <a href="#method">Services</a>
+        <a href="#workspace">Dashboard</a>
         <a href="#story">Story</a>
-        <a class="nav-github" href="https://github.com/manmohansingh9562579-spec/ev-market-performance-insights" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a>
       </nav>
+      <div class="header-actions"><a class="header-story" href="#story">Explore Story</a><a class="header-cta" href="#workspace">Explore Dashboard <span aria-hidden="true">↗</span></a></div>
     </header>
 
     <main id="main">
       <section class="hero" id="top">
         <div class="hero-copy">
-          <p class="eyebrow"><span class="live-dot"></span> ELECTRIC VEHICLE MARKET</p>
-          <h1>Performance<br><span>&amp; Insights</span></h1>
-          <p class="hero-lede">Explore sales, customer sentiment, vehicle capability, and market coverage in one place.</p>
+          <p class="eyebrow"><span class="live-dot"></span> ELECTRIC VEHICLE MARKET · DATA STORY</p>
+          <h1>Transform your workflow<br>with <span>seamless EV insights.</span></h1>
+          <p class="hero-lede">Explore market performance, customer experience and vehicle capability through an interactive dashboard and guided story.</p>
           <div class="hero-actions">
-            <a class="button button-primary" href="#workspace">Explore dashboard <span aria-hidden="true">↓</span></a>
-            <a class="button button-quiet" href="#story">Follow the story <span aria-hidden="true">→</span></a>
+            <a class="button button-primary" href="#workspace">Explore dashboard <span aria-hidden="true">→</span></a>
+            <a class="button button-quiet" href="#story">Explore story <span aria-hidden="true">↗</span></a>
           </div>
-          <p class="hero-note">Interactive Tableau Public views · 199,999 analyzed training records</p>
+          <p class="hero-note"><span class="live-dot"></span> Interactive Tableau Public views · 199,999 analyzed training records</p>
         </div>
         <div class="hero-art" aria-hidden="true">
-          <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
-          <div class="orbit-core"><span>EV</span><i></i></div>
-          <div class="art-label label-top">MARKET<br>PERFORMANCE</div>
-          <div class="art-label label-bottom"><b>01</b> &nbsp; DATA STORY</div>
-          <span class="art-spark spark-one">✳</span><span class="art-spark spark-two">✦</span>
+          <div class="art-grid"></div><div class="car-halo"></div>
+          <svg class="hero-car" viewBox="0 0 760 310">
+            <defs><linearGradient id="paint" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#d9ddd5"/><stop offset=".38" stop-color="#7f8980"/><stop offset="1" stop-color="#1b201e"/></linearGradient><linearGradient id="glass" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#617c70"/><stop offset="1" stop-color="#111918"/></linearGradient><filter id="shadow" x="-20%" y="-80%" width="140%" height="250%"><feGaussianBlur stdDeviation="14"/></filter></defs>
+            <ellipse cx="392" cy="260" rx="292" ry="20" fill="#000" opacity=".8" filter="url(#shadow)"/>
+            <path d="m118 218 15-47c7-23 25-40 49-48l90-29 72-56c17-13 38-20 60-20h98c28 0 52 11 70 32l56 65 46 20c17 7 29 22 32 40l7 41-20 25H133l-15-23Z" fill="url(#paint)" stroke="#d5d7cd" stroke-opacity=".45" stroke-width="2"/>
+            <path d="m286 112 63-51c14-11 31-17 50-17h40v69H286Zm166-68h47c19 0 37 8 50 22l43 49H452V44Z" fill="url(#glass)" stroke="#d7ddd2" stroke-opacity=".32" stroke-width="2"/>
+            <path d="M449 45v68M251 120l-95 30c-9 4-16 11-20 20h114l1-50ZM456 120h159" fill="none" stroke="#e3e2d7" stroke-opacity=".32" stroke-width="2"/>
+            <path d="m137 197 31-9h56l-10 14h-72l-5-5Zm511-2 34-7 22 13-9 7h-42l-5-13Z" fill="#efc053"/>
+            <path d="M117 216h590" stroke="#e8aa19" stroke-opacity=".7" stroke-width="2"/>
+            <circle cx="247" cy="222" r="48" fill="#101211" stroke="#9ca198" stroke-width="5"/><circle cx="247" cy="222" r="28" fill="#282e2a" stroke="#7e867d" stroke-width="3"/><circle cx="247" cy="222" r="8" fill="#d6d9d0"/>
+            <circle cx="590" cy="222" r="48" fill="#101211" stroke="#9ca198" stroke-width="5"/><circle cx="590" cy="222" r="28" fill="#282e2a" stroke="#7e867d" stroke-width="3"/><circle cx="590" cy="222" r="8" fill="#d6d9d0"/>
+          </svg>
+          <div class="art-card art-card-one"><span class="art-icon">↗</span><span><b>Market performance</b><small>Sales by maker, category &amp; region</small></span></div>
+          <div class="art-card art-card-two"><div class="art-card-head"><b>MARKET MIX</b><span>INTERACTIVE VIEW</span></div><div class="art-bars"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="art-card-foot"><span>Battery</span><span>Category</span><span>Region</span></div></div>
+          <div class="art-caption">EV MARKET INTELLIGENCE <span>·</span> DATA STORY</div>
         </div>
       </section>
 
@@ -52,7 +66,7 @@
           <div><p class="eyebrow">THE PROJECT</p><h2>A clearer view of the EV market</h2></div>
           <p>This project explores the available EV market dataset through an interactive Tableau dashboard and a guided Story. Select a view below, then use Tableau's controls to inspect the published workbook.</p>
         </div>
-        <div class="fact-row">
+        <div class="fact-row" id="features">
           <article class="fact-card"><span class="fact-icon">↗</span><div><strong>199,999</strong><span>training records analyzed</span></div></article>
           <article class="fact-card"><span class="fact-icon">▦</span><div><strong>37</strong><span>source fields</span></div></article>
           <article class="fact-card"><span class="fact-icon">◎</span><div><strong>7</strong><span>Tableau chart worksheets</span></div></article>
@@ -92,12 +106,12 @@
         </div>
       </section>
 
-      <section class="method section-shell">
+      <section class="method section-shell" id="method">
         <div><p class="eyebrow">METHOD &amp; SCOPE</p><h2>Use the numbers<br>with context.</h2></div>
         <div class="method-copy"><p>The workbook analyzes the deduplicated training split. Its measures summarize the records in this dataset; they should not be read as independently verified market-wide totals. Missing values are excluded from the applicable calculations, and aggregation follows each field's meaning.</p><div class="method-links"><a href="https://github.com/manmohansingh9562579-spec/ev-market-performance-insights/blob/main/docs/methodology.md" target="_blank" rel="noopener noreferrer">Methodology <span aria-hidden="true">↗</span></a><a href="https://github.com/manmohansingh9562579-spec/ev-market-performance-insights/blob/main/docs/data_profile.md" target="_blank" rel="noopener noreferrer">Data profile <span aria-hidden="true">↗</span></a><a href="https://github.com/manmohansingh9562579-spec/ev-market-performance-insights/blob/main/docs/performance_report.md" target="_blank" rel="noopener noreferrer">Performance report <span aria-hidden="true">↗</span></a></div></div>
       </section>
     </main>
 
-    <footer class="footer"><a class="brand" href="#top"><span class="brand-mark" aria-hidden="true">EV</span><span class="brand-copy"><strong>EV MARKET</strong><small>PERFORMANCE &amp; INSIGHTS</small></span></a><span>Tableau Public is a separate public deliverable. Flask and database features run from the source project.</span><a href="https://github.com/manmohansingh9562579-spec/ev-market-performance-insights" target="_blank" rel="noopener noreferrer">Project repository ↗</a></footer>
+    <footer class="footer"><a class="brand" href="#top"><span class="brand-mark" aria-hidden="true">ϟ</span><span class="brand-copy"><strong>EV Insights</strong><small>MARKET INTELLIGENCE</small></span></a><span>Tableau Public is a separate public deliverable. Flask and database features run from the source project.</span><a href="https://github.com/manmohansingh9562579-spec/ev-market-performance-insights" target="_blank" rel="noopener noreferrer">Project repository ↗</a></footer>
   </body>
 </html>

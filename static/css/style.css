@@ -263,3 +263,52 @@ tableau-viz { width: 100%; height: 620px; display: block; }
   .kpi-card { padding-right: 9px; padding-left: 9px; }
   .kpi-value { font-size: 19px; }
 }
+
+/* EV Insights opening scene, based on the supplied SkillWallet references. */
+.hero { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto auto; min-height: 0; padding-top: 68px; padding-bottom: 52px; }
+.hero-showcase { width: min(100%, 1020px); margin: 48px auto 0; overflow: hidden; text-align: left; border: 1px solid rgba(237,232,215,.14); border-radius: 12px; background: #111210; box-shadow: 0 28px 80px rgba(0,0,0,.34); }
+.showcase-topline, .showcase-foot { min-height: 39px; display: flex; align-items: center; justify-content: space-between; gap: 15px; padding: 0 17px; color: #87847a; font-size: 8px; font-weight: 700; letter-spacing: .13em; }
+.showcase-topline { border-bottom: 1px solid rgba(237,232,215,.09); }
+.showcase-topline span:first-child { color: #d4d0c5; }
+.showcase-topline i { width: 6px; height: 6px; display: inline-block; margin: 0 7px 1px 0; border-radius: 50%; background: #7eb58d; box-shadow: 0 0 10px rgba(126,181,141,.7); }
+.showcase-scene { height: clamp(230px, 29vw, 350px); position: relative; overflow: hidden; background: radial-gradient(ellipse at 52% 77%, rgba(95,115,92,.2), transparent 35%), linear-gradient(110deg, #141613 0%, #10110f 48%, #171610 100%); }
+.showcase-scene::before { content: ''; position: absolute; inset: auto 0 0; height: 34%; border-top: 1px solid rgba(237,232,215,.09); background: linear-gradient(180deg, rgba(255,255,255,.01), rgba(0,0,0,.42)); }
+.showcase-glow { position: absolute; width: 62%; height: 60%; left: 19%; top: 16%; border-radius: 50%; background: radial-gradient(ellipse, rgba(194,148,46,.1), rgba(60,86,62,.09) 34%, transparent 70%); filter: blur(10px); }
+.showcase-car { position: absolute; z-index: 1; width: min(83%, 770px); height: auto; left: 50%; bottom: 1%; transform: translateX(-50%); }
+.showcase-floating { position: absolute; z-index: 2; display: flex; align-items: center; gap: 11px; padding: 12px 14px; border: 1px solid rgba(239,232,213,.13); border-radius: 8px; background: rgba(15,16,14,.88); box-shadow: 0 12px 28px rgba(0,0,0,.28); backdrop-filter: blur(9px); }
+.showcase-signal { left: 4%; top: 17%; }
+.signal-mark { width: 30px; height: 30px; display: grid; place-items: center; color: #17140e; background: var(--gold); border-radius: 7px; font-size: 19px; }
+.showcase-signal b, .showcase-signal small { display: block; }
+.showcase-signal b { color: #eeeae0; font-size: 10px; }
+.showcase-signal small { margin-top: 4px; color: #8e8b82; font-size: 8px; }
+.showcase-bars { width: 205px; right: 3%; top: 12%; display: block; padding: 12px; }
+.bars-head, .bars-foot { display: flex; justify-content: space-between; gap: 7px; color: #858278; font-size: 7px; font-weight: 700; letter-spacing: .09em; }
+.bars-head span:first-child { color: #d7d2c6; }
+.mini-bars { height: 72px; display: flex; align-items: end; gap: 5px; margin-top: 10px; padding: 0 2px; border-bottom: 1px solid rgba(237,232,215,.13); background: repeating-linear-gradient(to bottom, transparent 0 22px, rgba(237,232,215,.055) 23px 24px); }
+.mini-bars i { flex: 1; min-width: 5px; height: var(--bar-height, 50%); border-radius: 3px 3px 0 0; background: linear-gradient(180deg, #edbb49, #956812); opacity: .82; }
+.mini-bars i:nth-child(3n) { --bar-height: 78%; }.mini-bars i:nth-child(3n + 1) { --bar-height: 48%; }.mini-bars i:nth-child(3n + 2) { --bar-height: 63%; }
+.bars-foot { margin-top: 8px; font-weight: 500; letter-spacing: 0; }
+.showcase-foot { border-top: 1px solid rgba(237,232,215,.08); }
+.showcase-foot b { color: var(--gold); font-size: 12px; margin-left: 4px; }
+@media (max-width: 950px) {
+  .hero { padding-top: 58px; padding-bottom: 43px; }
+  .hero-showcase { margin-top: 35px; }
+  .showcase-signal { left: 2%; }
+  .showcase-bars { right: 2%; width: 185px; }
+}
+@media (max-width: 680px) {
+  .hero { padding: 47px 17px 34px; }
+  .hero-showcase { width: 100%; margin-top: 27px; border-radius: 8px; }
+  .showcase-topline, .showcase-foot { min-height: 34px; padding: 0 10px; font-size: 6px; letter-spacing: .08em; }
+  .showcase-scene { height: 255px; }
+  .showcase-car { width: 112%; bottom: 4%; left: 55%; }
+  .showcase-floating { padding: 8px; border-radius: 6px; }
+  .showcase-signal { left: 3%; top: 8%; gap: 7px; }
+  .signal-mark { width: 25px; height: 25px; font-size: 16px; }
+  .showcase-signal b { font-size: 8px; }
+  .showcase-signal small { font-size: 6px; }
+  .showcase-bars { top: auto; right: 3%; bottom: 8%; width: 135px; padding: 8px; }
+  .bars-head, .bars-foot { font-size: 5px; }
+  .mini-bars { height: 42px; gap: 3px; margin-top: 6px; }
+  .bars-foot { margin-top: 5px; }
+}

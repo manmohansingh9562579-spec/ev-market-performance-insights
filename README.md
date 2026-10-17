@@ -30,6 +30,10 @@ The training file has one exact duplicate row, which the app removes in memory. 
 
 Use Python 3.11 or later. From this project directory, open PowerShell:
 
+For a one-click launch, double-click [`START_DASHBOARD.bat`](START_DASHBOARD.bat). It installs the project dependencies on first use if needed, selects a free local port, and opens the Flask website in your browser. Keep its console window open while using the site; press Ctrl+C there to stop it.
+
+To start it manually instead, use PowerShell:
+
 ```powershell
 py -m venv .venv
 .\.venv\Scripts\Activate.ps1

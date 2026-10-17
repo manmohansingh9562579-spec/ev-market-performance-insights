@@ -18,6 +18,19 @@ const directLink = document.querySelector('#direct-view-link');
 const frame = document.querySelector('#tableau-frame');
 let loadTimer;
 
+const menuToggle = document.querySelector('#menu-toggle');
+const mainNav = document.querySelector('#main-nav');
+menuToggle?.addEventListener('click', () => {
+  const open = mainNav.classList.toggle('is-open');
+  menuToggle.setAttribute('aria-expanded', String(open));
+  menuToggle.setAttribute('aria-label', open ? 'Close navigation' : 'Open navigation');
+});
+mainNav?.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => {
+  mainNav.classList.remove('is-open');
+  menuToggle?.setAttribute('aria-expanded', 'false');
+  menuToggle?.setAttribute('aria-label', 'Open navigation');
+}));
+
 async function showView(name) {
   const view = views[name] || views.dashboard;
   const selectedTab = document.querySelector(`[data-view="${name}"]`);
