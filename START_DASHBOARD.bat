@@ -18,6 +18,15 @@ if not exist ".venv\Scripts\python.exe" (
   )
 )
 
+if not exist ".env" (
+  copy /y ".env.example" ".env" >nul
+  if errorlevel 1 (
+    echo Could not create the local configuration file.
+    pause
+    exit /b 1
+  )
+)
+
 ".venv\Scripts\python.exe" -c "import flask, pandas, sqlalchemy, dotenv" >nul 2>&1
 if errorlevel 1 (
   echo Installing the website's Python packages...

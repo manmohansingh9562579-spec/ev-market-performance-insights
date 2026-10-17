@@ -31,7 +31,7 @@ The training file has one exact duplicate row, which the app removes in memory. 
 
 Use Python 3.11 or later. From this project directory, open PowerShell:
 
-For a one-click launch, double-click [`START_DASHBOARD.bat`](START_DASHBOARD.bat). It installs the project dependencies on first use if needed, selects a free local port, and opens the Flask website in your browser. Keep its console window open while using the site; press Ctrl+C there to stop it.
+For a one-click launch, double-click [`START_DASHBOARD.bat`](START_DASHBOARD.bat). It creates a private local `.env` from `.env.example` on first use, installs the project dependencies if needed, selects a free local port, and opens the Flask website in your browser. The default settings discover the training CSV in `Downloads/archive/` and load the public Tableau Dashboard and Story links. Keep its console window open while using the site; press Ctrl+C there to stop it.
 
 To start it manually instead, use PowerShell:
 
@@ -43,7 +43,7 @@ Copy-Item .env.example .env
 python app.py
 ```
 
-Open `http://127.0.0.1:5000`. The default loader checks `~/Downloads/archive/ev_market_train.csv`, `data/ev_market_train.csv`, then the project root. To use another file, edit `.env` and set `EV_TRAIN_CSV` to its path. Do not put credentials in source files or commit a populated `.env`.
+Open the address shown in the console (the one-click launcher may choose a port other than 5000). The default loader checks `~/Downloads/archive/ev_market_train.csv`, `data/ev_market_train.csv`, then the project root. To use another file, edit `.env` and set `EV_TRAIN_CSV` to its path. Do not put credentials in source files or commit a populated `.env`.
 
 Chart.js, Plotly (used for the treemap and map), and fonts load from CDNs; the data API and Flask server run locally. An internet connection is needed for those external visual assets. If the Plotly map cannot load, the app shows a country-sales table; if no CSV or database is available, the page shows a clear data-loading state. Synthetic rows exist only in automated test fixtures and are not offered as real dataset results.
 
