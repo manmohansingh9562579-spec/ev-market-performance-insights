@@ -9,12 +9,13 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css', v='20261017-3') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css', v='20261017-4') }}">
   {% if tableau_url or tableau_story_url %}
   <script type="module" src="https://public.tableau.com/javascripts/api/tableau.embedding.3.latest.min.js"></script>
   {% endif %}
   <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
-  <script defer src="{{ url_for('static', filename='js/dashboard.js', v='20261017-3') }}"></script>
+  <script defer src="https://cdn.plot.ly/plotly-3.1.0.min.js"></script>
+  <script defer src="{{ url_for('static', filename='js/dashboard.js', v='20261017-4') }}"></script>
 </head>
 <body>
   <header class="site-header">
@@ -37,6 +38,44 @@
         <p class="hero-copy">Explore EV market performance, vehicle capability and battery technology through one interactive dashboard and a guided data story.</p>
         <div class="hero-actions"><a class="button button-gold" href="#dashboard">Explore Dashboard <span>→</span></a><a class="button button-outline" href="#story">Explore Story <span>↗</span></a></div>
         <div class="hero-proof"><span class="proof-dot"></span><span id="heroDataNote">Connecting to the actual EV training dataset…</span></div>
+      </div>
+      <div class="hero-visual" aria-label="Illustrated electric crossover concept, shown as a dimensional vector render">
+        <div class="vehicle-orbit orbit-one"></div><div class="vehicle-orbit orbit-two"></div>
+        <div class="vehicle-glow"></div>
+        <svg class="ev-render" viewBox="0 0 780 410" role="img" aria-labelledby="evTitle evDesc">
+          <title id="evTitle">Electric crossover concept illustration</title>
+          <desc id="evDesc">A generic, unbranded electric crossover in a three-quarter view, drawn with dimensional shading.</desc>
+          <defs>
+            <linearGradient id="bodyTop" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f6f4ed"/><stop offset=".34" stop-color="#b9beb7"/><stop offset=".62" stop-color="#777e78"/><stop offset="1" stop-color="#d7d8cd"/></linearGradient>
+            <linearGradient id="bodySide" x1="0" y1="0" x2=".95" y2=".7"><stop stop-color="#c8cbc0"/><stop offset=".38" stop-color="#eef0e6"/><stop offset=".7" stop-color="#858d85"/><stop offset="1" stop-color="#434944"/></linearGradient>
+            <linearGradient id="glass" x1="0" y1="0" x2=".8" y2="1"><stop stop-color="#273940"/><stop offset=".52" stop-color="#101c21"/><stop offset="1" stop-color="#58696a"/></linearGradient>
+            <linearGradient id="hood" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fffef4"/><stop offset=".52" stop-color="#b5b9ae"/><stop offset="1" stop-color="#6d746e"/></linearGradient>
+            <radialGradient id="wheel" cx=".35" cy=".27"><stop stop-color="#65706d"/><stop offset=".42" stop-color="#242a29"/><stop offset=".8" stop-color="#111514"/><stop offset="1" stop-color="#030505"/></radialGradient>
+            <linearGradient id="rim" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#faf8e9"/><stop offset=".4" stop-color="#9ca39c"/><stop offset="1" stop-color="#4c5553"/></linearGradient>
+            <filter id="carShadow" x="-.2" y="-.3" width="1.4" height="1.8"><feGaussianBlur stdDeviation="12"/></filter>
+          </defs>
+          <ellipse cx="394" cy="347" rx="289" ry="29" fill="#000" opacity=".75" filter="url(#carShadow)"/>
+          <path d="m116 263 27-65c12-28 32-48 65-62l122-50c23-9 46-12 72-7l111 21c20 4 36 15 49 30l67 78 47 19c18 7 29 21 31 38l2 26c1 12-7 21-20 24l-48 9H170l-43-17c-14-6-18-25-11-44Z" fill="url(#bodyTop)" stroke="#f7f5ea" stroke-opacity=".45" stroke-width="3"/>
+          <path d="m116 263 165 35 272-11 156 5-2 26c-1 11-8 19-20 22l-49 10H170l-43-17c-14-6-18-25-11-44Z" fill="url(#bodySide)" stroke="#e0e1d6" stroke-opacity=".55" stroke-width="2"/>
+          <path d="m219 142 113-47c19-8 40-10 59-7l-27 95-177 30 12-29c4-17 10-30 20-42Z" fill="url(#glass)" stroke="#d8ddd4" stroke-width="5"/>
+          <path d="m405 91 100 19c17 4 31 14 44 28l51 61-216-5 21-103Z" fill="url(#glass)" stroke="#d8ddd4" stroke-width="5"/>
+          <path d="m371 92 34-1-21 104-20-1 7-102Z" fill="#9ea59e" opacity=".85"/>
+          <path d="m150 230 78-20m191-9 180 5" fill="none" stroke="#f9f6e8" stroke-opacity=".66" stroke-width="4"/>
+          <path d="m292 212-10 84m146-91-8 91m-125-48 128 1" fill="none" stroke="#555d57" stroke-opacity=".48" stroke-width="3"/>
+          <path d="m126 258 54 11-4 20-60-17 10-14Zm548 5 37 16-3 13-50-5 16-24Z" fill="#e8aa19" stroke="#fff2bd" stroke-width="3"/>
+          <path d="m604 199 42 18-2 10-57-8 17-20Z" fill="#f3f2e8" opacity=".92"/>
+          <path d="m147 289 38 7c-2 30-23 52-49 49-24-3-37-27-27-50 7-16 22-24 38-22Z" fill="#0b0e0d"/>
+          <path d="m562 289 39 1c2 29-16 54-42 57-26 3-44-18-39-43 4-18 21-30 42-31Z" fill="#0b0e0d"/>
+          <ellipse cx="150" cy="316" rx="31" ry="31" fill="url(#wheel)" stroke="#78817b" stroke-width="4"/><ellipse cx="150" cy="316" rx="17" ry="17" fill="url(#rim)"/><circle cx="150" cy="316" r="6" fill="#262d2b"/>
+          <ellipse cx="561" cy="317" rx="33" ry="33" fill="url(#wheel)" stroke="#78817b" stroke-width="4"/><ellipse cx="561" cy="317" rx="18" ry="18" fill="url(#rim)"/><circle cx="561" cy="317" r="6" fill="#262d2b"/>
+          <path d="m236 280 47 8m144-6 84-2" stroke="#fbf9ee" stroke-opacity=".7" stroke-width="3" stroke-linecap="round"/>
+          <path d="m193 325 319-1" stroke="#e8aa19" stroke-opacity=".55" stroke-width="2"/>
+        </svg>
+        <div class="vehicle-caption"><span class="caption-mark">ϟ</span><span><strong>Electric by design</strong><small>Unbranded concept illustration · not a dataset record</small></span><span class="caption-line"></span></div>
+        <div class="vehicle-energy-card">
+          <svg viewBox="0 0 80 58" aria-hidden="true"><path d="m8 15 44-9 21 9-44 10L8 15Z" fill="#879d76"/><path d="m8 15 21 10v25L8 40V15Z" fill="#33483a"/><path d="m29 25 44-10v25L29 50V25Z" fill="#637c56"/><path d="m20 19 8-2 15 7-8 2-15-7Zm15-4 8-2 15 7-8 2-15-7Zm15-3 8-2 15 7-8 2-15-7Z" fill="#c2d77d"/><path d="m49 28-6 10h6l-2 7 11-12h-7l3-5h-5Z" fill="#f1c548"/></svg>
+          <span class="energy-copy"><small>FILTERED AVERAGE BATTERY</small><strong id="heroBatteryValue">—</strong><span id="heroRangeValue">Mean driving range · —</span></span>
+        </div>
       </div>
     </section>
 
@@ -85,10 +124,10 @@
           <div class="chart-grid">
             <article class="chart-card"><div class="chart-head"><div><h3>EV category performance &amp; distribution</h3><p>Annual sales units by vehicle category</p></div><span class="chart-badge">SALES</span></div><div class="chart-wrap"><canvas id="chartCategorySales" aria-label="Sales by vehicle category" role="img"></canvas><div class="chart-state" hidden></div></div></article>
             <article class="chart-card"><div class="chart-head"><div><h3>Market share by manufacturer</h3><p>Top 12 · annual sales units</p></div><span class="chart-badge">SALES</span></div><div class="chart-wrap"><canvas id="chartManufacturer" aria-label="Sales by manufacturer" role="img"></canvas><div class="chart-state" hidden></div></div></article>
-            <article class="chart-card"><div class="chart-head"><div><h3>Customer rating by category</h3><p>Unweighted mean · scale 1–5</p></div><span class="chart-badge">RATING</span></div><div class="chart-wrap"><canvas id="chartRating" aria-label="Average customer rating by category" role="img"></canvas><div class="chart-state" hidden></div></div></article>
+            <article class="chart-card"><div class="chart-head"><div><h3>Customer rating by category</h3><p>Tile area = records · color = mean rating</p></div><span class="chart-badge">RATING</span></div><div class="chart-wrap"><div id="chartRating" class="plotly-chart" role="img" aria-label="Customer rating treemap by vehicle category"></div><div class="chart-state" hidden></div></div></article>
             <article class="chart-card"><div class="chart-head"><div><h3>Annual EV sales trend</h3><p>Grouped by model year</p></div><span class="chart-badge">TREND</span></div><div class="chart-wrap"><canvas id="chartYear" aria-label="Annual EV sales by model year" role="img"></canvas><div class="chart-state" hidden></div></div><p class="chart-footnote">The source does not define model year as the sales observation year.</p></article>
             <article class="chart-card"><div class="chart-head"><div><h3>Battery technology market share</h3><p>Sales mix by battery type</p></div><span class="chart-badge">MIX</span></div><div class="chart-wrap"><canvas id="chartBattery" aria-label="Sales mix by battery type" role="img"></canvas><div class="chart-state" hidden></div></div></article>
-            <article class="chart-card"><div class="chart-head"><div><h3>EV distribution by manufacturing country</h3><p>Sales units by supplied country labels</p></div><span class="chart-badge">COUNTRY</span></div><div class="chart-wrap"><canvas id="chartCountry" aria-label="Sales by manufacturing country" role="img"></canvas><div class="chart-state" hidden></div></div><p class="chart-footnote">Country names are shown as supplied; no location coordinates are inferred.</p></article>
+            <article class="chart-card chart-card-map"><div class="chart-head"><div><h3>EV distribution by manufacturing country</h3><p>Annual sales units · country shapes</p></div><span class="chart-badge">MAP</span></div><div class="chart-wrap map-wrap"><div id="chartCountry" class="plotly-chart" role="img" aria-label="World map of annual EV sales by manufacturing country"></div><div id="countryMapFallback" class="country-map-fallback" hidden></div><div class="chart-state" hidden></div></div><p class="chart-footnote">Map boundaries match country names from the file to ISO-3 countries. Unmatched names appear in the table fallback.</p></article>
             <article class="chart-card"><div class="chart-head"><div><h3>EV range by category</h3><p>Average range in kilometers</p></div><span class="chart-badge">KM</span></div><div class="chart-wrap"><canvas id="chartRange" aria-label="Average range by category" role="img"></canvas><div class="chart-state" hidden></div></div></article>
             <article class="chart-card"><div class="chart-head"><div><h3>Energy efficiency</h3><p>Average energy use by category</p></div><span class="chart-badge">WH/KM</span></div><div class="chart-wrap"><canvas id="chartEfficiency" aria-label="Average energy use by category" role="img"></canvas><div class="chart-state" hidden></div></div><p class="chart-footnote">Lower Wh/km indicates less energy used per kilometer.</p></article>
             <article class="chart-card"><div class="chart-head"><div><h3>Sales by market region</h3><p>Annual sales units</p></div><span class="chart-badge">REGION</span></div><div class="chart-wrap"><canvas id="chartRegion" aria-label="Sales by market region" role="img"></canvas><div class="chart-state" hidden></div></div></article>
@@ -103,9 +142,13 @@
         <div class="section-title-row"><div><p class="eyebrow">A GUIDED READ</p><h2>Follow the market story</h2></div><p class="section-description">A step-by-step read from market scale to competitive mix, customer experience and vehicle capability. Findings refresh with the active filters.</p></div>
         <div class="story-steps">
           <article class="story-step"><span class="step-number">01</span><div><h3>Market scale</h3><p id="insightScale">Sales and coverage will appear when a dataset is connected.</p></div></article>
-          <article class="story-step"><span class="step-number">02</span><div><h3>Market mix</h3><p id="insightMix">Manufacturer, region and battery leaders will be identified from the filtered data.</p></div></article>
-          <article class="story-step"><span class="step-number">03</span><div><h3>Customer experience</h3><p id="insightExperience">Category rating patterns will be calculated from non-missing ratings.</p></div></article>
-          <article class="story-step"><span class="step-number">04</span><div><h3>Capability &amp; efficiency</h3><p id="insightCapability">Range and energy use are summarized by category.</p></div></article>
+          <article class="story-step"><span class="step-number">02</span><div><h3>Category demand</h3><p id="insightCategory">Vehicle category sales will be ranked from filtered records.</p></div></article>
+          <article class="story-step"><span class="step-number">03</span><div><h3>Manufacturer landscape</h3><p id="insightManufacturer">Manufacturer sales leaders will be calculated from the filtered data.</p></div></article>
+          <article class="story-step"><span class="step-number">04</span><div><h3>Battery choices</h3><p id="insightBattery">Battery adoption will be compared using summed annual sales units.</p></div></article>
+          <article class="story-step"><span class="step-number">05</span><div><h3>Market geography</h3><p id="insightGeography">Country and region comparisons use the supplied labels and sales values.</p></div></article>
+          <article class="story-step"><span class="step-number">06</span><div><h3>Customer experience</h3><p id="insightExperience">Category rating patterns will be calculated from non-missing ratings.</p></div></article>
+          <article class="story-step"><span class="step-number">07</span><div><h3>Driving capability</h3><p id="insightCapability">Range and energy use are summarized by category.</p></div></article>
+          <article class="story-step"><span class="step-number">08</span><div><h3>CO₂ context</h3><p id="insightCo2">CO₂ savings will be summed only where the supplied field has values.</p></div></article>
         </div>
       </div>
     </section>
@@ -115,7 +158,7 @@
       <div class="details-grid">
         <article class="detail-card overview-card"><span class="section-kicker">PROJECT OVERVIEW</span><h3>One market, multiple lenses</h3><p>This project examines the Electric Vehicle Market Classification Dataset through sales, customer ratings, range, manufacturing country and battery technology. The Flask dashboard reads the training split only; the test split stays separate. Tableau Public is a separate deliverable.</p></article>
         <article class="detail-card"><span class="section-kicker">METHODOLOGY</span><h3>How measures are calculated</h3><ul><li><strong>Sales &amp; CO₂:</strong> sums of the supplied row values after exact-duplicate removal.</li><li><strong>Ratings, range, battery capacity &amp; Wh/km:</strong> unweighted means of non-missing record values.</li><li><strong>Manufacturers &amp; models:</strong> distinct names, not summed counts.</li><li><strong>Group charts:</strong> sales sums, or category means for rating/range/efficiency.</li><li><strong>Trend:</strong> annual_sales_units grouped by model_year.</li></ul></article>
-        <article class="detail-card limitation-card"><span class="section-kicker">LIMITATIONS</span><h3>Read the totals in context</h3><p>The training CSV contains one exact duplicate row, removed in memory. No missing values are imputed. The source does not establish the exact row grain or whether sales/CO₂ values overlap across records, so their sums are dataset aggregates, not independently validated market-wide totals.</p><p>Country comparisons use text labels, not geocoded boundaries. No demonstration values are presented as actual results.</p></article>
+        <article class="detail-card limitation-card"><span class="section-kicker">LIMITATIONS</span><h3>Read the totals in context</h3><p>The training CSV contains one exact duplicate row, removed in memory. No missing values are imputed. The source does not establish the exact row grain or whether sales/CO₂ values overlap across records, so their sums are dataset aggregates, not independently validated market-wide totals.</p><p>The map matches supported country names to ISO-3 boundaries; unmatched source labels remain available in a table fallback. No locations are inferred from sales values.</p></article>
       </div>
     </section>
 

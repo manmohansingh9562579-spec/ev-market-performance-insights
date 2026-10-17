@@ -5,7 +5,8 @@ A responsive Flask dashboard and MySQL-ready data workflow for the Electric Vehi
 ## What is included
 
 - Seven KPI cards: annual sales sum, unweighted average customer rating, distinct manufacturer and model counts, average range, average battery capacity, and annual CO₂ savings sum.
-- Nine interactive visualizations: manufacturer, battery, region, category and country sales; customer rating, model-year sales trend, range and energy use.
+- Nine interactive visualizations: manufacturer, battery, region and category sales; customer-rating treemap; model-year sales trend; manufacturing-country map with table fallback; range and energy use.
+- Interactive, unbranded EV concept artwork with filtered average battery-capacity and driving-range callouts; eight-step insight sequence updates with filters.
 - Filters for manufacturer, battery type, region, category, manufacturing country, and model-year range; chart sorting, tooltips, labels, and legends.
 - Story and insights sequence, overview, methodology, findings, and limitations.
 - Loading, empty, missing-source, invalid-filter, and error states.
@@ -44,7 +45,7 @@ python app.py
 
 Open `http://127.0.0.1:5000`. The default loader checks `~/Downloads/archive/ev_market_train.csv`, `data/ev_market_train.csv`, then the project root. To use another file, edit `.env` and set `EV_TRAIN_CSV` to its path. Do not put credentials in source files or commit a populated `.env`.
 
-Chart.js and fonts load from CDNs; the data API and Flask server run locally. An internet connection is needed for those external visual assets. If no CSV or database is available, the page shows a clear data-loading state. Synthetic rows exist only in automated test fixtures and are not offered as real dataset results.
+Chart.js, Plotly (used for the treemap and map), and fonts load from CDNs; the data API and Flask server run locally. An internet connection is needed for those external visual assets. If the Plotly map cannot load, the app shows a country-sales table; if no CSV or database is available, the page shows a clear data-loading state. Synthetic rows exist only in automated test fixtures and are not offered as real dataset results.
 
 ## Database
 

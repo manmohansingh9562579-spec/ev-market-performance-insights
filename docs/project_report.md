@@ -12,7 +12,7 @@ The training data contains 200 manufacturer labels, 10 manufacturing-country lab
 
 ## Dashboard and analysis
 
-The Flask dashboard provides 7 KPIs: annual sales sum, average rating, distinct manufacturers, CO2 savings sum, distinct model names, average range, and average battery capacity. It renders 9 charts for manufacturer and battery mix, region, category, customer rating, model-year sales, range, manufacturing-country labels and energy efficiency. Six filters include manufacturer, battery type, region, category, manufacturing country and model-year range; sales charts can be sorted.
+The Flask dashboard provides 7 KPIs: annual sales sum, average rating, distinct manufacturers, CO2 savings sum, distinct model names, average range, and average battery capacity. It renders 9 charts for manufacturer and battery mix, region, category, customer-rating treemap, model-year sales, range, manufacturing-country choropleth map and energy efficiency. Six filters include manufacturer, battery type, region, category, manufacturing country and model-year range; sales charts can be sorted. The Story section has eight live, filter-responsive steps and the hero includes unbranded, dimensional EV and battery concept artwork.
 
 All metrics are recomputed for the active filters. Counts use distinct names, sales and CO2 are sums of non-null supplied values, and ratings/range/capacity/efficiency are unweighted means. The training data includes missing values; no zero imputation is used. Exact duplicate records are excluded. Conflicting non-identical vehicle IDs would be excluded as a group.
 

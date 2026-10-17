@@ -26,7 +26,7 @@ The database importer is stricter because `vehicle_id` is a primary key: after r
 - Sales charts: sum annual sales by manufacturer, battery type, market region, category, manufacturing country, or model year.
 - Rating, range, and energy charts: unweighted average by vehicle category. Range is not summed. Lower Wh/km indicates lower energy use per distance.
 - Battery mix: sales by battery type; the doughnut segments show each type's share of their displayed sales total.
-- Country visualization: sales grouped by the supplied manufacturing-country text; no geocoding or map coordinates are inferred.
+- Country map: sales are grouped by the supplied manufacturing-country text, then common supported country labels are matched to ISO-3 boundary codes. A table fallback preserves the original labels for unmapped countries or if the map library/boundaries cannot load; the source coordinates are not inferred.
 - The annual-sales trend groups the supplied `model_year` values. The source does not define this field as a sales-observation year, so the chart is labelled by model year.
 
 Sales and CO₂ fields are described as dataset totals or candidate aggregates. The supplied document and data do not establish whether each row is a vehicle model, trim, or a market-period observation, or whether the CO₂ measure can be summed without overlap. Validate those definitions before presenting totals as externally validated market-wide metrics.

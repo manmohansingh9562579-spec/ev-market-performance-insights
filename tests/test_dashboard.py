@@ -164,6 +164,20 @@ class DashboardApiTests(unittest.TestCase):
         self.assertIn(b"tableauStoryViz", response.data)
         self.assertIn(b"data-tableau-view=\"story\"", response.data)
 
+    def test_dashboard_includes_country_map_story_and_vehicle_artwork(self) -> None:
+        with patch.dict(os.environ, {"TABLEAU_PUBLIC_URL": "", "TABLEAU_STORY_URL": ""}):
+            response = self.client.get("/")
+        self.assertEqual(response.status_code, 200)
+        page = response.data
+        self.assertIn(b"plotly-3.1.0.min.js", page)
+        self.assertIn(b'id="chartCountry" class="plotly-chart"', page)
+        self.assertIn(b'id="countryMapFallback"', page)
+        self.assertIn(b'id="chartRating" class="plotly-chart"', page)
+        self.assertEqual(page.count(b'class="story-step"'), 8)
+        self.assertIn(b'id="heroBatteryValue"', page)
+        self.assertIn(b'id="heroRangeValue"', page)
+        self.assertIn(b"Electric crossover concept illustration", page)
+
 
 class SqliteImportTests(unittest.TestCase):
     def test_repeatable_sqlite_import_and_dashboard_read(self) -> None:

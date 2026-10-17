@@ -4,15 +4,15 @@
 
 This report distinguishes the Flask dashboard from the preserved Tableau workbook. Chart counts are per deliverable and are not added together. A chart means one distinct analytical view on the page; KPI cards, filter controls, Story steps, and optional embedded Tableau views do not count as Flask charts.
 
-The Flask dashboard has 9 chart canvases:
+The Flask dashboard has 9 distinct analytical views (7 Chart.js canvases and 2 Plotly views):
 1. Sales by manufacturer (top 12, sum of annual sales units).
 2. Battery technology mix (sum of annual sales units by battery type).
 3. Sales by market region (sum).
 4. Sales by vehicle category (sum).
-5. Average customer rating by category.
+5. Customer-rating treemap by category (tile area = non-missing rating records; color = mean rating).
 6. Annual sales grouped by model year (sum).
 7. Average range by category.
-8. Sales by supplied manufacturing-country label (sum).
+8. Manufacturing-country choropleth map (sum of annual sales units; ISO-3 boundaries) with a country table fallback for unmapped names or map-load failures.
 9. Average energy use by category.
 
 The refreshed Tableau workbook is a separate artifact with 7 existing chart worksheets, in addition to its dashboard and Stories. KPI cards, story scenes, and filters are not counted as charts. The Flask and Tableau counts are not summed.
@@ -76,7 +76,7 @@ The 20 dashboard calls returned HTTP 200. These are application test-client resp
 
 A real-data filter check selected manufacturer AmpereAuto. Expected values were independently calculated from the deduplicated training frame and matched the API: 964 rows, annual sales sum 7,178,632, and average rating 4.09881981032666. The benchmark marked the comparison passed.
 
-The automated suite contains 12 tests and was last run successfully after the dashboard changes. It covers KPI aggregations and deduplication, combined filters, sorting, invalid filters, country filtering, empty results, conflicting vehicle IDs, missing data, Tableau embed URL handling, Story embedding, and repeatable SQLite import plus dashboard reads. Test fixtures are synthetic and are not reported as dataset findings.
+The automated suite contains 13 tests and was last run successfully after the dashboard changes. It covers KPI aggregations and deduplication, combined filters, sorting, invalid filters, country filtering, empty results, conflicting vehicle IDs, missing data, Tableau embed URL handling, Story embedding, presence of the map/treemap/eight-step Story/vehicle artwork in the page template, and repeatable SQLite import plus dashboard reads. The front-end asset syntax check also passed. Test fixtures are synthetic and are not reported as dataset findings.
 
 ## Pending checks and limitations
 

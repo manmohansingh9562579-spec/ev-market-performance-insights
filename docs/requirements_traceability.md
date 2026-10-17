@@ -26,12 +26,12 @@ The uploaded requirements/performance document was not available to read as a fi
 
 | Requirement | Implementation / evidence | Status |
 |---|---|---|
-| Epic: Data Visualizations — create/document unique visualizations | Flask renders 9 charts; titles, field mappings and aggregation rules appear in templates/index.html, app.py and docs/performance_report.md. Tableau handoff preserves 7 existing chart worksheets. | Complete |
+| Epic: Data Visualizations — create/document unique visualizations | Flask renders 9 charts, including a customer-rating treemap and manufacturing-country choropleth with table fallback; titles, field mappings and aggregation rules appear in templates/index.html, static/js/dashboard.js, app.py and docs/performance_report.md. Tableau handoff preserves 7 existing chart worksheets. | Complete |
 | Professional responsive dashboard | templates/index.html and static/css/style.css implement the dark/gold EV Insights design, responsive layout and navigation. | Implemented; manual browser/device verification pending |
 | KPIs for annual sales, customer rating, manufacturers, CO2 where available | Seven cards include the required four plus distinct models, average range and average battery capacity. Formulas are stated in docs/methodology.md. | Complete |
 | Sales by manufacturer, battery type, region and category | Four requested groupings, including a sales-mix doughnut by battery type. | Complete |
 | Customer rating, range and energy-efficiency analysis | Rating, range and Wh/km are means by category; lower Wh/km is explained in the UI. | Complete |
-| Country map or appropriate geography when reliable | Sales by supplied manufacturing-country labels; no coordinates or map placements are inferred. | Complete |
+| Country map or appropriate geography when reliable | Manufacturing-country sales map through recognized ISO-3 codes; unmatched labels or map-library errors fall back to a source-label sales table. | Implemented; browser map rendering pending |
 | Manufacturer, battery, region, category and model-year filters | Filtered API and UI also provide manufacturing-country filter and sales sort. | Implemented; automated behavior covered |
 | Sorting, tooltips, labels, legends, titles | Chart.js setup and chart headers in static/js/dashboard.js and templates/index.html. | Complete |
 | Loading, empty, missing-data and error states | UI/API states plus automated missing/empty/error behavior coverage. | Implemented; browser manual verification pending |
@@ -41,7 +41,7 @@ The uploaded requirements/performance document was not available to read as a fi
 
 | Requirement | Implementation / evidence | Status |
 |---|---|---|
-| Epic: Story — count Story scenes and build logical analysis sequence | Preserved Tableau Stories; Tableau Public Story 2 is linked in README.md and docs/tableau_public_workflow.md. Flask story section progresses from scale to mix, satisfaction, capability and limitations. | Complete |
+| Epic: Story — count Story scenes and build logical analysis sequence | Preserved Tableau Stories; Tableau Public Story 2 is linked in README.md and docs/tableau_public_workflow.md. Flask now provides eight filter-responsive steps from scale through CO₂ context. | Complete |
 | Project overview, methodology, findings and limitations | README.md, docs/project_report.md and docs/methodology.md. | Complete |
 | Epic: Project Demonstration & Documentation — project docs | README, traceability, data profile, methodology, performance, DB, Tableau and demo documentation are included. | Complete |
 | Epic: Project Demonstration & Documentation — record end-to-end video | docs/demo_outline.md provides a 5–7 minute walkthrough. Recording/uploading the video remains the owner's submission action. | Pending owner recording |
@@ -74,7 +74,7 @@ The uploaded requirements/performance document was not available to read as a fi
 | Epic: Performance Testing — amount of data | docs/performance_report.md and docs/performance_measurements.json record actual rows, columns and bytes. | Complete |
 | Epic: Performance Testing — field utilization | Report lists Flask's 14 used and 23 unused source fields; 14/37 = 37.84%. | Complete |
 | Epic: Performance Testing — calculated fields/measures/transformations | Report distinguishes 7 KPIs, 9 chart aggregation expressions, 6 numeric measures, 3 preparation operations, and zero newly authored Tableau calculated fields. | Complete |
-| Epic: Performance Testing — number of visualizations | Nine Flask canvas charts; seven Tableau chart worksheets counted separately. | Complete |
+| Epic: Performance Testing — number of visualizations | Nine Flask analytical views (seven Chart.js and two Plotly); seven Tableau chart worksheets counted separately. | Complete |
 | Load/response timing and SQL query performance | Actual in-process Flask timings recorded; HTTP/browser and MySQL SQL timing are explicitly pending. | Partial; pending checks labeled |
 | Filtering correctness, responsiveness and error handling | Real-data manufacturer filter comparison and unit coverage recorded; responsive CSS implemented; manual browser/device check pending. | Partial; manual visual check pending |
 | Repeatable test scripts and measured environment/method/limitations | tests/test_dashboard.py, benchmark scripts, docs/performance_report.md and docs/performance_measurements.json. | Complete |
@@ -87,7 +87,7 @@ The uploaded requirements/performance document was not available to read as a fi
 | Dependencies and safe environment template | requirements.txt, .env.example | Complete |
 | MySQL / SQL assets | sql/schema.sql, sql/analysis_queries.sql | Complete |
 | Data preparation, import and benchmarks | scripts/ | Complete |
-| Automated tests | tests/test_dashboard.py | 12 tests; last run passed |
+| Automated tests | tests/test_dashboard.py | 13 tests; last run passed |
 | Report and submission documentation | docs/ and README.md | Complete, with pending limits called out |
 | Tableau Public dashboard | https://public.tableau.com/app/profile/man.mohan.singh3746/viz/EV_Market_Performance_Public_Ready_Clean/Dashboard1 | Published |
 | Tableau Public Story | https://public.tableau.com/app/profile/man.mohan.singh3746/viz/EV_Market_Performance_Public_Ready_Clean/Story2 | Published |
