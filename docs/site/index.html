@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#0b0e0d">
+    <meta name="description" content="Explore the Electric Vehicle Market Performance and Insights Tableau dashboard and data story.">
+    <title>EV Market | Performance &amp; Insights</title>
+    <link rel="preconnect" href="https://public.tableau.com">
+    <link rel="stylesheet" href="style.css">
+    <script type="module" src="https://public.tableau.com/javascripts/api/tableau.embedding.3.latest.min.js"></script>
+    <script defer src="app.js"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to dashboard</a>
+    <header class="topbar">
+      <a class="brand" href="#top" aria-label="EV Market home">
+        <span class="brand-mark" aria-hidden="true">EV</span>
+        <span class="brand-copy"><strong>EV MARKET</strong><small>PERFORMANCE &amp; INSIGHTS</small></span>
+      </a>
+      <nav class="nav" aria-label="Main navigation">
+        <a href="#overview">Overview</a>
+        <a href="#workspace">Workspace</a>
+        <a href="#story">Story</a>
+        <a class="nav-github" href="https://github.com/manmohansingh9562579-spec/ev-market-performance-insights" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a>
+      </nav>
+    </header>
+
+    <main id="main">
+      <section class="hero" id="top">
+        <div class="hero-copy">
+          <p class="eyebrow"><span class="live-dot"></span> ELECTRIC VEHICLE MARKET</p>
+          <h1>Performance<br><span>&amp; Insights</span></h1>
+          <p class="hero-lede">Explore sales, customer sentiment, vehicle capability, and market coverage in one place.</p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="#workspace">Explore dashboard <span aria-hidden="true">↓</span></a>
+            <a class="button button-quiet" href="#story">Follow the story <span aria-hidden="true">→</span></a>
+          </div>
+          <p class="hero-note">Interactive Tableau Public views · 199,999 analyzed training records</p>
+        </div>
+        <div class="hero-art" aria-hidden="true">
+          <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
+          <div class="orbit-core"><span>EV</span><i></i></div>
+          <div class="art-label label-top">MARKET<br>PERFORMANCE</div>
+          <div class="art-label label-bottom"><b>01</b> &nbsp; DATA STORY</div>
+          <span class="art-spark spark-one">✳</span><span class="art-spark spark-two">✦</span>
+        </div>
+      </section>
+
+      <section class="overview section-shell" id="overview">
+        <div class="section-heading">
+          <div><p class="eyebrow">THE PROJECT</p><h2>A clearer view of the EV market</h2></div>
+          <p>This project explores the available EV market dataset through an interactive Tableau dashboard and a guided Story. Select a view below, then use Tableau's controls to inspect the published workbook.</p>
+        </div>
+        <div class="fact-row">
+          <article class="fact-card"><span class="fact-icon">↗</span><div><strong>199,999</strong><span>training records analyzed</span></div></article>
+          <article class="fact-card"><span class="fact-icon">▦</span><div><strong>37</strong><span>source fields</span></div></article>
+          <article class="fact-card"><span class="fact-icon">◎</span><div><strong>7</strong><span>Tableau chart worksheets</span></div></article>
+          <article class="fact-card"><span class="fact-icon">◷</span><div><strong>8</strong><span>Story points</span></div></article>
+        </div>
+        <p class="data-note"><strong>Data note:</strong> The original training file had 200,000 rows. One exact duplicate was excluded for analysis; the source file was left unchanged. See the repository's methodology and data profile for definitions and limitations.</p>
+      </section>
+
+      <section class="workspace section-shell" id="workspace">
+        <div class="section-heading workspace-heading">
+          <div><p class="eyebrow">INTERACTIVE WORKSPACE</p><h2>Explore the published analysis</h2></div>
+          <a class="text-link" href="https://public.tableau.com/app/profile/man.mohan.singh3746/viz/EV_Market_Performance_Public_Ready_Clean/Dashboard1" target="_blank" rel="noopener noreferrer">Open in Tableau Public <span aria-hidden="true">↗</span></a>
+        </div>
+        <div class="view-switch" role="tablist" aria-label="Choose a Tableau view">
+          <button class="view-tab is-active" id="dashboard-tab" type="button" role="tab" aria-selected="true" aria-controls="tableau-frame" data-view="dashboard">Dashboard <span>01</span></button>
+          <button class="view-tab" id="story-tab" type="button" role="tab" aria-selected="false" aria-controls="tableau-frame" data-view="story">Story <span>02</span></button>
+        </div>
+        <div class="viz-frame" id="tableau-frame" role="tabpanel" aria-labelledby="dashboard-tab">
+          <div class="viz-loading" id="viz-loading"><span class="loader"></span><p>Loading the Tableau view…</p></div>
+          <div class="viz-error" id="viz-error" hidden>
+            <strong>The Tableau view did not load here.</strong>
+            <p>Open it directly on Tableau Public, or check your internet connection and try again.</p>
+            <a class="button button-primary" id="direct-view-link" href="https://public.tableau.com/app/profile/man.mohan.singh3746/viz/EV_Market_Performance_Public_Ready_Clean/Dashboard1" target="_blank" rel="noopener noreferrer">Open Tableau Public <span aria-hidden="true">↗</span></a>
+          </div>
+          <div id="viz-host" class="viz-host"></div>
+        </div>
+        <div class="viz-footer"><span><i class="live-dot"></i> Hosted on Tableau Public</span><span>Use the tabs above to switch between dashboard and Story</span></div>
+      </section>
+
+      <section class="story section-shell" id="story">
+        <div class="story-copy"><p class="eyebrow">A GUIDED DATA STORY</p><h2>From market mix<br>to meaningful insight</h2><p>The eight-point Story moves through the workbook's market mix, vehicle insights, battery technology, and manufacturing footprint. Read each scene with its filters and source context in mind.</p><a class="text-link" href="#workspace" data-open-story>Explore the Story <span aria-hidden="true">↑</span></a></div>
+        <div class="story-steps" aria-label="Story themes">
+          <div><span>01</span><p>Market composition</p><b>↗</b></div>
+          <div><span>02</span><p>Sales and manufacturers</p><b>↗</b></div>
+          <div><span>03</span><p>Customer ratings and range</p><b>↗</b></div>
+          <div><span>04</span><p>Battery and geography</p><b>↗</b></div>
+        </div>
+      </section>
+
+      <section class="method section-shell">
+        <div><p class="eyebrow">METHOD &amp; SCOPE</p><h2>Use the numbers<br>with context.</h2></div>
+        <div class="method-copy"><p>The workbook analyzes the deduplicated training split. Its measures summarize the records in this dataset; they should not be read as independently verified market-wide totals. Missing values are excluded from the applicable calculations, and aggregation follows each field's meaning.</p><div class="method-links"><a href="https://github.com/manmohansingh9562579-spec/ev-market-performance-insights/blob/main/docs/methodology.md" target="_blank" rel="noopener noreferrer">Methodology <span aria-hidden="true">↗</span></a><a href="https://github.com/manmohansingh9562579-spec/ev-market-performance-insights/blob/main/docs/data_profile.md" target="_blank" rel="noopener noreferrer">Data profile <span aria-hidden="true">↗</span></a><a href="https://github.com/manmohansingh9562579-spec/ev-market-performance-insights/blob/main/docs/performance_report.md" target="_blank" rel="noopener noreferrer">Performance report <span aria-hidden="true">↗</span></a></div></div>
+      </section>
+    </main>
+
+    <footer class="footer"><a class="brand" href="#top"><span class="brand-mark" aria-hidden="true">EV</span><span class="brand-copy"><strong>EV MARKET</strong><small>PERFORMANCE &amp; INSIGHTS</small></span></a><span>Tableau Public is a separate public deliverable. Flask and database features run from the source project.</span><a href="https://github.com/manmohansingh9562579-spec/ev-market-performance-insights" target="_blank" rel="noopener noreferrer">Project repository ↗</a></footer>
+  </body>
+</html>
