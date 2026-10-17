@@ -1,0 +1,172 @@
+"""Inspect EV train/test CSV schema and quality without changing either file."""
+
+from __future__ import annotations
+
+import argparse
+from pathlib import Path
+
+import pandas as pd
+
+HOME = Path.home()
+DEFAULT_DIR = HOME / "Downloads" / "archive"
+
+
+def describe(path: Path) -> dict:
+    frame = pd.read_csv(path, low_memory=False)
+    exact_duplicates = int(frame.duplicated().sum())
+    repeated_id_rows = int(frame["vehicle_id"].duplicated(keep=False).sum()) if "vehicle_id" in frame else 0
+    conflicting_ids = 0
+    if repeated_id_rows:
+        repeated = frame.loc[frame["vehicle_id"].notna() & frame["vehicle_id"].duplicated(keep=False)]
+        conflicting_ids = int(
+            sum(1 for _, group in repeated.groupby("vehicle_id", dropna=True) if len(group.drop_duplicates()) > 1)
+        )
+    type_map = frame.dtypes.astype(str)
+    dtype_groups = {
+        "text": [str(name) for name in frame.select_dtypes(include=["object", "str", "string"]).columns],
+        "integer": [str(name) for name in frame.select_dtypes(include=["integer"]).columns],
+        "decimal": [str(name) for name in frame.select_dtypes(include=["floating"]).columns],
+    }
+    missing = {str(name): int(count) for name, count in frame.isna().sum().items() if int(count) > 0}
+    blank_text_cells = 0
+    for field in dtype_groups["text"]:
+        blank_text_cells += int(frame[field].astype("string").str.strip().eq("").fillna(False).sum())
+    return {
+        "path": path,
+        "bytes": path.stat().st_size,
+        "rows": len(frame),
+        "columns": len(frame.columns),
+        "frame": frame,
+        "exact_duplicates": exact_duplicates,
+        "repeated_id_rows": repeated_id_rows,
+        "conflicting_ids": conflicting_ids,
+        "missing": missing,
+        "blank_text_cells": blank_text_cells,
+        "dtypes": type_map,
+        "dtype_groups": dtype_groups,
+    }
+
+
+def markdown(train: dict, test: dict) -> str:
+    train_frame = train["frame"].drop_duplicates()
+    test_frame = test["frame"].drop_duplicates()
+    duplicate_id_mask = train_frame["vehicle_id"].notna() & train_frame["vehicle_id"].duplicated(keep=False)
+    if duplicate_id_mask.any():
+        conflicting_ids = [
+            vehicle_id
+            for vehicle_id, group in train_frame.loc[duplicate_id_mask].groupby("vehicle_id", dropna=True)
+            if len(group.drop_duplicates()) > 1
+        ]
+        if conflicting_ids:
+            train_frame = train_frame.loc[~train_frame["vehicle_id"].isin(conflicting_ids)]
+    unique_train = train_frame.drop_duplicates(subset=["vehicle_id"], keep="first")
+    missing_train_ids = train_frame["vehicle_id"].isna().sum()
+    if missing_train_ids:
+        unique_train = unique_train.loc[unique_train["vehicle_id"].notna()]
+    overlap = len(set(unique_train["vehicle_id"].dropna()) & set(test_frame["vehicle_id"].dropna()))
+
+    type_rows = []
+    for label, fields in train["dtype_groups"].items():
+        type_rows.append(f"| {label.title()} ({len(fields)}) | " + ", ".join(f"`{field}`" for field in fields) + " |")
+
+    quality_rows = []
+    for label, info in (("Train", train), ("Test", test)):
+        total_cells = info["rows"] * info["columns"]
+        missing_cells = sum(info["missing"].values())
+        ratio = (missing_cells / total_cells * 100) if total_cells else 0
+        quality_rows.append(
+            f"| {label} | {info['rows']:,} | {info['columns']} | {info['bytes']:,} | "
+            f"{missing_cells:,} / {total_cells:,} ({ratio:.4f}%) | {info['exact_duplicates']:,} | "
+            f"{info['repeated_id_rows']:,} | {info['conflicting_ids']:,} | {info['blank_text_cells']:,} |"
+        )
+
+    missing_fields = sorted(set(train["missing"]) | set(test["missing"]))
+    missing_rows = [
+        f"| `{field}` | {train['missing'].get(field, 0):,} | {test['missing'].get(field, 0):,} |"
+        for field in missing_fields
+    ]
+
+    kpis = []
+    for field, label, mode in (
+        ("annual_sales_units", "Annual sales units", "sum"),
+        ("customer_rating", "Customer rating", "mean"),
+        ("co2_saved_tons_per_year", "CO₂ savings (tons/year)", "sum"),
+    ):
+        values = pd.to_numeric(unique_train[field], errors="coerce").dropna()
+        result = values.sum() if mode == "sum" else values.mean()
+        kpis.append(f"| {label} | `{mode}` | {result:,.6f} | {len(values):,} |")
+    manufacturers = int(unique_train["manufacturer"].nunique(dropna=True))
+
+    categorical_counts = []
+    for field in ("manufacturer", "manufacturing_country", "market_region", "category", "battery_type", "drivetrain", "recommended_use_case"):
+        categorical_counts.append(f"| `{field}` | {unique_train[field].nunique(dropna=True):,} |")
+
+    schema_list = "\n".join(type_rows)
+    quality_table = "\n".join(quality_rows)
+    missing_table = "\n".join(missing_rows) if missing_rows else "| None | 0 | 0 |"
+    kpi_table = "\n".join(kpis)
+    categorical_table = "\n".join(categorical_counts)
+    return f"""# EV Market CSV profile
+
+Generated by `scripts/inspect_data.py`. Source files are read-only; this script does not alter or copy them.
+
+## File inventory
+
+| Split | Rows | Columns | Size (bytes) | Missing cells | Exact duplicate rows | Duplicate ID rows | Conflicting ID values | Blank text cells |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+{quality_table}
+
+The splits have matching column names and order: **{len(train['frame'].columns)} fields**. Train/test vehicle ID overlap: **{overlap:,}**. Exact duplicate train rows are removed before candidate aggregates; ID conflicts are reported separately.
+
+## Inferred data types
+
+Pandas inferred data types as follows on the environment where this script is run.
+
+| Type | Fields |
+|---|---|
+{schema_list}
+
+## Missing values by field
+
+| Field | Train missing | Test missing |
+|---|---:|---:|
+{missing_table}
+
+## Train-split candidate aggregates
+
+Aggregates use train rows after removing exact duplicate rows and selecting one row per vehicle ID. Null measure values are skipped. Validate the dataset's row grain and field definitions before presenting sales or CO₂ sums as externally validated market totals.
+
+| Measure | Aggregation | Result | Non-null records |
+|---|---|---:|---:|
+{kpi_table}
+| Manufacturer count | `COUNT(DISTINCT manufacturer)` | {manufacturers:,} | {unique_train['manufacturer'].notna().sum():,} non-null manufacturer names |
+
+## Category coverage (train split)
+
+| Field | Distinct non-null values |
+|---|---:|
+{categorical_table}
+"""
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--train", type=Path, default=DEFAULT_DIR / "ev_market_train.csv")
+    parser.add_argument("--test", type=Path, default=DEFAULT_DIR / "ev_market_test.csv")
+    parser.add_argument("--output", type=Path, help="Optional Markdown output file; otherwise print to stdout.")
+    args = parser.parse_args()
+    train = describe(args.train.expanduser())
+    test = describe(args.test.expanduser())
+    report = markdown(train, test)
+    if args.output:
+        output = args.output.expanduser()
+        output.parent.mkdir(parents=True, exist_ok=True)
+        output.write_text(report, encoding="utf-8")
+        print(f"Wrote data profile to {output.resolve()}")
+    else:
+        print(report)
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

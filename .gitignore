@@ -1,0 +1,16 @@
+.env
+.venv/
+venv/
+__pycache__/
+.test-tmp/
+*.py[cod]
+*.db
+*.sqlite
+*.sqlite3
+*.csv
+*.hyper
+*.twb
+*.twbx
+.pytest_cache/
+.coverage
+htmlcov/
