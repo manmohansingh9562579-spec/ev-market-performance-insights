@@ -29,7 +29,7 @@ The Flask dashboard uses **12 of 37 fields = 32.43%**. Calculation: `12 / 37 × 
 
 **Fields unused by the Flask dashboard (25):** `model_name`, `battery_capacity_kwh`, `battery_cycle_life`, `battery_degradation_pct_5yr`, `motor_power_kw`, `torque_nm`, `num_motors`, `drivetrain`, `top_speed_kmph`, `acceleration_0_100_sec`, `max_dc_charging_kw`, `charging_dc_fast_time_min`, `charging_ac_time_hr`, `num_charging_ports`, `num_seats`, `weight_kg`, `cargo_capacity_liters`, `price_usd`, `insurance_cost_usd_yearly`, `warranty_years`, `resale_value_pct_3yr`, `safety_rating_stars`, `autonomous_level`, `infotainment_screen_inch`, `recommended_use_case`.
 
-Tableau workbook count is separate: **9 of 37 = 24.32%**, counting the distinct fields used by its existing sheets/dashboard. It retains the existing extract. Tableau calculation inventory: zero calculated-field formulas, three distinct field/aggregation pairs (`SUM(annual_sales_units)`, `AVG(customer_rating)`, `AVG(range_km)`), and seven measure placements across chart sheets. This is not added to Flask's field-use percentage.
+Tableau workbook count is separate: **9 of 37 = 24.32%**, counting the distinct fields used by its existing sheets/dashboard. The clean local Tableau package uses a Hyper extract created from the 199,999-row deduplicated training CSV. Tableau calculation inventory: zero calculated-field formulas, three distinct field/aggregation pairs (`SUM(annual_sales_units)`, `AVG(customer_rating)`, `AVG(range_km)`), and seven measure placements across chart sheets. This is not added to Flask's field-use percentage.
 
 ## Calculations, measures, and transformations
 

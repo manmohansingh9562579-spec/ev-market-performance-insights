@@ -14,12 +14,12 @@ The training data contains 200 manufacturers, 10 manufacturing-country labels, 7
 
 The Flask UI has four KPI cards, eight charts, five filter dimensions (including a model-year range), a story/insights sequence, methodology notes, and responsive CSS layouts. Data is loaded from the CSV by default or from SQLAlchemy when a database URL is configured. The app never falls back silently from a failed configured database to a different source.
 
-The Tableau packaged workbook is a separate local output. It preserves seven chart sheets, its dashboard, and both stories, and adds three dashboard filters. The two original `.twb` workbooks were not overwritten. Its inherited Hyper extract was not independently inspected and may still contain the one exact duplicate present in the source train CSV; refresh it from the prepared deduplicated CSV before presenting Tableau sales totals as corrected or publishing. No Tableau Public publication or URL is claimed.
+The Tableau packaged workbook is a separate local output. The refreshed handoff copy preserves seven chart sheets, its dashboard, and both Stories, and uses one embedded Hyper extract created from the deduplicated 199,999-row CSV. The two original `.twb` workbooks and older package versions were not overwritten. No Tableau Public publication or URL is claimed.
 
 ## Limitations and next operational steps
 
 - MySQL server connectivity, schema execution, CSV import, and SQL timing remain pending.
-- No Tableau Public URL is configured. The owner must sign in to Tableau Public Desktop and complete publication.
+- No Tableau Public URL is configured. The account owner must sign in and publish after confirming that the dataset-specific Kaggle terms permit public redistribution of the embedded extract; that license statement was not readable during this project's check.
 - Local HTTP/browser access was unavailable for this measurement environment; web-rendering and viewport verification remain pending.
 - The test suite uses synthetic rows to verify calculation logic and SQLite import, while actual-data checks separately compare filtered results against a pandas aggregate.
 - The source dataset’s licensing and metric grain should be reviewed before public distribution.

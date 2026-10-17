@@ -43,8 +43,8 @@ The uploaded project/performance requirement document was not accessible as a re
 
 | Requirement | Implementation or evidence | Status |
 |---|---|---|
-| Preserve existing workbook sheets, dashboard, filters, Story | Original `.twb` files remain untouched. `EV_Market_Performance_Final.twbx` is a separate enhanced package; its inherited extract should be refreshed from the deduplicated prepared CSV before treating Tableau totals as corrected. | Preserved; extract refresh pending |
-| Prepare Tableau-compatible CSV/extract workflow | `scripts/prepare_tableau_csv.py`; workflow documented in [`tableau_public_workflow.md`](tableau_public_workflow.md) | Complete |
+| Preserve existing workbook sheets, dashboard, filters, Story | Original `.twb` files remain untouched. `outputs/EV_Market_Performance_Public_Ready_Clean.twbx` is a separate package whose seven chart worksheets use the prepared 199,999-row deduplicated source and one embedded Hyper extract; the dashboard and two Stories remain. Older packages are retained separately. | Local extract refresh complete; Tableau Public publication pending |
+| Prepare Tableau-compatible CSV/extract workflow | `scripts/prepare_tableau_csv.py`; the prepared 199,999-row CSV and embedded Hyper extract are documented in [`tableau_public_workflow.md`](tableau_public_workflow.md) | Complete |
 | Explain Tableau Public publishing requirements/limitations | CSV extract, account, public visibility/download implications, refresh limitations, and steps documented | Complete |
 | Embed a Tableau Public view when URL exists; work without it | `TABLEAU_PUBLIC_URL` optional; only HTTPS `public.tableau.com` hosts accepted; local charts are always available | Complete; no URL configured |
 | Do not state Flask substitutes Tableau/public submission | Explicitly documented; actual Public publish was not completed and no URL exists | Complete |
@@ -71,5 +71,5 @@ The uploaded project/performance requirement document was not accessible as a re
 | Data preparation/import scripts | `scripts/` | Complete |
 | Tests | `tests/` | Complete; 10/10 pass |
 | Project, methodology, performance, database, Tableau, demo documentation | `docs/` plus `README.md` | Complete |
-| Enhanced Tableau packaged workbook | `../EV_Market_Performance_Final.twbx` | Complete; local file, not published |
-| Tableau Public URL/submission | Not available | Pending user sign-in/publish; no claim made |
+| Refreshed Tableau Public handoff workbook | `../EV_Market_Performance_Public_Ready_Clean.twbx` | Local clean extract verified; not published |
+| Tableau Public URL/submission | Not available; dataset-specific Kaggle redistribution terms were not readable during the license check | Pending license confirmation and account-owner publish; no claim made |

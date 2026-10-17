@@ -1,44 +1,53 @@
 # Tableau workbook and Tableau Public workflow
 
-## Existing work preservation
+## Existing workbook preservation
 
-The existing `Book1.twb` and `EV_Market_Performance.twb` in the user's Tableau Workbooks folder were left unchanged. A separate packaged workbook, `outputs/EV_Market_Performance_Final.twbx`, preserves the existing seven chart sheets, dashboard, and two Stories, and adds Category, Market Region, and Model Year dashboard filters. The packaged copy includes the inherited Tableau extract, which has not been independently inspected. Tableau and Flask remain separate deliverables.
+The original `Book1.twb` and `EV_Market_Performance.twb` files in the Tableau Workbooks folder were left unchanged. Other local packaged workbook versions under `outputs/` were also retained.
 
-## Prepare data if refreshing the workbook
+Use the local output file `EV_Market_Performance_Public_Ready_Clean.twbx` for the Tableau Public handoff. It was saved as a separate package in Tableau Public Desktop 2026.2 from the prepared CSV. Verification of the saved package found one embedded Hyper file (18,808,832 uncompressed bytes; the `.twbx` package is 11,210,219 bytes), one data source captioned `ev_market_train_tableau`, and all seven distinct chart worksheets connected to that data source. The existing dashboard and two Stories remain in the workbook. The original source extracts are not present in this clean package. The `.twbx` and prepared CSV are kept outside the source repository because they contain the dataset.
 
-No source CSV has been copied into the project. To create a fresh, Tableau-ready file without overwriting the original:
+The prepared source `ev_market_train_tableau.csv` has 199,999 rows and 37 columns after removing the single exact duplicate from the 200,000-row train CSV. The source CSV was not modified. The workbook's embedded Hyper extract was generated from this prepared file; Tableau's data preview showed 37 fields and 199,999 rows before saving. The package also contains a text connection pointing to the prepared CSV's local output-folder path for refresh. When moving the workbook to another computer, use the embedded extract for viewing; reconnect to a local copy of the prepared CSV if refreshing.
+
+## Re-create or refresh the Tableau data
+
+The original train CSV remains in the local Downloads archive and is not included in this project or its GitHub repository. Create a separate Tableau-ready CSV without overwriting the original:
 
 ```powershell
 python scripts/prepare_tableau_csv.py --input "C:/path/to/ev_market_train.csv" --output "C:/path/to/ev_market_train_tableau.csv"
 ```
 
-The script removes exact duplicate rows, rejects conflicting `vehicle_id` records, and writes to the new path. It refuses to overwrite an existing output unless `--overwrite` is explicitly passed. In Tableau Desktop/Public Desktop, connect to this prepared CSV, verify the data types and row count, then create an extract (Data Source page: select Extract, then save/refresh the extract). Save a packaged workbook as `.twbx` so the extract travels with that workbook.
-
-**Current package data caveat:** the source train CSV has one exact duplicate, and the inherited Hyper extract's rows were not independently queried. Its existing sales sums may still count the duplicate. Before treating Tableau sales as corrected or publishing, refresh/replace the workbook data source from the deduplicated CSV and verify the extract row count.
+The script removes exact duplicate rows, rejects conflicting `vehicle_id` records, and refuses to overwrite an existing output unless `--overwrite` is explicitly supplied. In Tableau Desktop/Public Desktop, connect to that prepared CSV, check field types and row count, select **Extract** on the Data Source page, and refresh. Save a new packaged workbook (`.twbx`) so the extract travels with it. Keep the previous workbook versions until the refreshed copy has been checked.
 
 ## Publish through Tableau Public Desktop
 
-1. Open the packaged workbook in Tableau Public Desktop and confirm that all sheets, filters, and both Stories load from the extract.
-2. Preview the dashboard at desktop and phone sizes; resolve layout or filter issues before publishing.
-3. Use **Server → Tableau Public → Save to Tableau Public** and sign in to the Tableau Public account. Give the workbook a descriptive title and save.
-4. After publication, open the view on the Tableau Public profile, use **Share → Copy Link**, and copy the view URL. Add that exact HTTPS URL to `TABLEAU_PUBLIC_URL` in `.env`, then restart Flask to show the embedded Story/dashboard section.
-5. Keep the local Flask dashboard available as a separate usable view. It does not need a Tableau URL to render.
+Before publishing, confirm the dataset's license permits making the workbook and its embedded data publicly available. The Kaggle page for this dataset did not expose a readable license statement during this project's check, so permission to redistribute the data has **not** been verified. Tableau Public workbooks can expose downloadable workbook data; public hosting is a redistribution of the extracted records.
 
-## Limitations, account, and visibility
+Once the license is confirmed:
 
-- Tableau Public publishing requires signing in to a Tableau Public account. Tableau's official Desktop instructions support Tableau Desktop Professional and Public Edition; Desktop Free Edition cannot publish to Tableau Public.
-- Tableau Public is public hosting. Published workbook and data are freely accessible to anyone; download can be enabled by default. Do not publish confidential or restricted data.
-- Tableau Public supports extracts, not live data connections. It creates an extract during publication. CSV/Excel sources do not automatically refresh on Tableau Public; Google Sheets is the documented refresh exception.
-- Public has a 15-million-row per-workbook limit according to Tableau's FAQ. This project has 199,999 analyzed training records after exact de-duplication, below that published limit, although file size and browser rendering still merit review.
-- Tableau Public permissions and profile settings govern visibility and download options. Hiding a view from the profile does not make a known URL private.
-- There is currently no published URL: the earlier save flow was canceled before publication. The Tableau Public submission remains pending the account owner's sign-in and publish action. The downloadable local `.twbx` is not a Public submission.
+1. Open the local output file `EV_Market_Performance_Public_Ready_Clean.twbx` in Tableau Public Desktop. Confirm the extract is available and the dashboard, seven chart sheets, filters, and both Stories load.
+2. Review the dashboard at desktop and phone sizes. Check filter behavior and verify the sales total against the deduplicated source if you use the total in a submission.
+3. In Tableau Public Desktop, choose **File → Save to Tableau Public**, then sign in to the Tableau Public account. Review the workbook title and public visibility before completing the upload.
+4. Wait for the save/upload to finish. Open the published view from the Tableau Public profile, check that it renders, and copy its share URL. No published URL has been recorded for this project yet.
+5. To show that view inside Flask, put the exact HTTPS `public.tableau.com` URL in `TABLEAU_PUBLIC_URL` in a local `.env` file and restart Flask. If the variable is unset, the local Flask dashboard continues to work without an embed.
 
-## Embed implementation
+Tableau Public account login and publishing must be completed by the account owner. Do not enter a password into the Flask project or commit `.env`.
 
-When `TABLEAU_PUBLIC_URL` is a valid HTTPS URL hosted by `public.tableau.com`, the Flask template loads the official Tableau Embedding API v3 and uses its `<tableau-viz>` web component. An unset/invalid URL leaves the local Chart.js dashboard fully available and omits the embed panel.
+## Tableau Public limits and visibility
+
+- Tableau Public requires a signed-in Tableau Public account. A workbook saved locally is not a Tableau Public submission.
+- Tableau Public is public hosting. Published workbook and data may be viewed and downloaded by other people; profile hiding does not make a known URL private. Check account and workbook download settings before publication.
+- Tableau Public uses extracts rather than live database connections for published workbooks. CSV/Excel sources do not automatically refresh there; refresh the local extract and republish when updating data.
+- The workbook has 199,999 analyzed rows, within Tableau Public's documented 15-million-row workbook limit. This does not guarantee browser performance.
+- Dataset redistribution permission is unresolved because the dataset-specific Kaggle license statement could not be verified. Do not publish the extract until its terms permit this use.
+- The earlier Tableau Public save flow was canceled before publication. There is no Tableau Public URL, and the local `.twbx` is not the required public submission.
+
+## Flask embedding
+
+When `TABLEAU_PUBLIC_URL` is a valid HTTPS URL hosted by `public.tableau.com`, the Flask page loads Tableau's official Embedding API v3 and uses the `<tableau-viz>` web component. An unset or invalid URL leaves the local Chart.js dashboard available and omits the embed panel. Flask is a separate deliverable and does not replace Tableau Public publication.
 
 Official references:
 
+- [Kaggle dataset page](https://www.kaggle.com/datasets/tharishreddy22/electric-vehicle-market-classification-dataset) (license section was not readable during this project check)
 - [Save workbooks with Tableau Public](https://help.tableau.com/current/pro/desktop/en-us/publish_workbooks_tableaupublic.htm)
 - [Tableau Public FAQ](https://help.tableau.com/current/pro/desktop/en-us/public_faq.htm)
 - [Basic Embedding with Embedding API v3](https://help.tableau.com/current/api/embedding_api/en-us/docs/embedding_api_basic.html)

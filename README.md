@@ -10,7 +10,7 @@ A responsive Flask dashboard and MySQL-ready data workflow for the Electric Vehi
 - Story and insights sequence, overview, methodology, findings, and limitations.
 - Loading, empty, missing-source, invalid-filter, and error states.
 - MySQL schema, analysis queries, safe repeatable CSV importer, and SQLite local-development support.
-- Tableau-compatible CSV preparation workflow and a separate enhanced Tableau packaged workbook that preserves the existing sheets and Stories.
+- Tableau-compatible CSV preparation workflow and a refreshed Tableau packaged workbook that preserves the existing sheets, dashboard, filters, and Stories.
 - Data profile, requirements traceability, project report, database guide, Tableau Public guide, performance report, and demo outline under `docs/`.
 
 ## Data source
@@ -50,7 +50,7 @@ For a local SQLite database, set `DATABASE_URL=sqlite:///ev_market.sqlite` in `.
 
 ## Tableau
 
-The original Tableau workbooks remain untouched. See [`docs/tableau_public_workflow.md`](docs/tableau_public_workflow.md) for extract creation, Tableau Public steps, account/privacy limits, and the workbook delivered here. The packaged workbook inherits an extract that was not independently inspected and may still include the source duplicate; refresh from the prepared deduplicated CSV before presenting its sales totals as corrected or publishing. Flask is a separate application and does not replace a Tableau workbook or a Tableau Public submission. No Tableau Public URL is configured, so the Flask dashboard works independently; when a valid Public URL is added to `.env`, the app uses Tableau's Embedding API v3 web component.
+The original Tableau workbooks remain untouched. The refreshed local package `EV_Market_Performance_Public_Ready_Clean.twbx` uses the prepared, deduplicated 199,999-row training CSV through one embedded Hyper extract, and its seven existing chart worksheets use that source. The existing dashboard and Stories are preserved. The packaged workbook and prepared CSV are kept outside this source repository because they contain the dataset. The Tableau Public URL is still pending; publishing makes the workbook and its embedded data publicly accessible, so verify dataset redistribution terms before uploading. See [`docs/tableau_public_workflow.md`](docs/tableau_public_workflow.md) for the preparation evidence, account requirements, and publish steps. Flask remains a separate application and does not replace the Tableau workbook or Tableau Public submission. The local Flask dashboard works without a Public URL; after a valid URL is added to `.env`, it uses Tableau's Embedding API v3 web component.
 
 ## Checks
 
