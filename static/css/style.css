@@ -311,3 +311,88 @@ tableau-viz { width: 100%; height: 620px; display: block; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
 }
+
+/* Tableau-inspired light green market workspace, matched to the project reference. */
+.dashboard-section {
+  --dash-ink: #26382d;
+  --dash-muted: #68796e;
+  --dash-line: #cdddc9;
+  --dash-green: #38744d;
+  width: 100%; max-width: none; margin: 0; padding: 66px max(calc((100% - 1280px) / 2), 32px) 78px;
+  color: var(--dash-ink); color-scheme: light; background: #eaf3e7;
+}
+.dashboard-section .section-wrap { width: min(1280px, 100%); margin: 0 auto; }
+.dashboard-section .section-heading h2, .dashboard-section .section-title-row h2 { color: #26382d; }
+.dashboard-section .section-copy, .dashboard-section .section-description { color: #66766b; }
+.dashboard-section .source-state { color: #53685a; }
+.dashboard-section .source-state .status-dot { background: #9aaa9e; }
+.dashboard-section .source-state.ready .status-dot { background: #328451; box-shadow: 0 0 9px rgba(50,132,81,.25); }
+.dashboard-section .source-state.error .status-dot { background: #c76151; box-shadow: 0 0 9px rgba(199,97,81,.22); }
+.dashboard-section .state-panel { border-color: #d2dcbf; background: #f7faef; }
+.dashboard-section .state-panel[data-state="error"] { border-color: #e3b9aa; background: #fff5ef; }
+.dashboard-section .state-panel h2 { color: #324537; }
+.dashboard-section .state-panel p { color: #68796e; }
+.dashboard-section .state-panel .state-help { color: #728075; }
+.dashboard-section .state-icon { color: #fff; background: #658d50; }
+.dashboard-section .dashboard-layout { grid-template-columns: 205px minmax(0,1fr); gap: 17px; }
+.dashboard-section .filter-panel { border-color: #ccdcca; background: linear-gradient(150deg, #f9fcf6, #edf5e9); box-shadow: 0 12px 30px rgba(58,94,62,.08); }
+.dashboard-section .filter-heading h3 { color: #26382d; }
+.dashboard-section .filter-field > span { color: #64776a; }
+.dashboard-section .filter-field select { color: #314436; background: #fff; border-color: #cedbca; }
+.dashboard-section .filter-field select option { color: #314436; background: #fff; }
+.dashboard-section .filter-field select:focus { border-color: #719b5e; box-shadow: 0 0 0 2px rgba(92,137,78,.14); }
+.dashboard-section .text-button { color: #5e7966; }
+.dashboard-section .text-button:hover { color: #327349; }
+.dashboard-section .filter-footer { border-color: #d4e0d1; }
+.dashboard-section .filter-footer > span { color: #6a7b70; }
+.dashboard-section .apply-button { color: #fff; background: #428155; border-color: #428155; }
+.dashboard-section .apply-button:hover { background: #326d45; }
+.dashboard-section .kpi-grid { grid-template-columns: repeat(7, minmax(0,1fr)); gap: 8px; }
+.dashboard-section .kpi-card { min-height: 108px; border-color: #cadbc6; background: linear-gradient(145deg, #fff, #f6faf3); box-shadow: 0 3px 10px rgba(54,91,58,.045); }
+.dashboard-section .kpi-label { color: #66806b; }
+.dashboard-section .kpi-icon { color: #558653; }
+.dashboard-section .kpi-value { color: #26392d; font-size: clamp(15px, 1.28vw, 22px); }
+.dashboard-section .kpi-note { color: #718176; }
+.dashboard-section .section-title-row { margin-top: 46px; }
+.dashboard-section .chart-grid { grid-template-columns: repeat(4, minmax(0,1fr)); gap: 12px; }
+.dashboard-section .chart-card { min-width: 0; padding: 14px 13px 12px; border-color: #c8dac5; border-radius: 8px; background: #fbfdf9; box-shadow: 0 4px 13px rgba(54,91,58,.045); }
+.dashboard-section .chart-head { min-height: 39px; }
+.dashboard-section .chart-head h3 { color: #34473a; font-size: 12px; }
+.dashboard-section .chart-head p { color: #76867a; font-size: 8px; }
+.dashboard-section .chart-badge { color: #55804d; background: #eff6e7; border-color: #dce9d2; }
+.dashboard-section .chart-wrap { height: 205px; margin-top: 7px; }
+.dashboard-section .map-wrap { height: 226px; }
+.dashboard-section .chart-state { color: #697a6e; background: rgba(251,253,249,.96); }
+.dashboard-section .chart-footnote { color: #758579; }
+.dashboard-section .country-map-fallback { border-color: #d5e2d1; background: #f5f9f2; }
+.dashboard-section .map-fallback-note { color: #637569; }
+.dashboard-section .country-fallback-table th, .dashboard-section .country-fallback-table td { border-color: #dce7d9; }
+.dashboard-section .country-fallback-table thead th, .dashboard-section .country-fallback-table tbody th { color: #53685a; }
+.dashboard-section .country-fallback-table tbody td { color: #34774c; }
+.dashboard-section .dashboard-footnote { color: #68796e; }
+.dashboard-vehicle-card { display: flex; flex-direction: column; }
+.dashboard-car-art { display: grid; place-items: center; min-height: 142px; margin: 4px -4px 3px; border-radius: 6px; background: radial-gradient(ellipse at 50% 78%, #d8ebd0, #f5f9f1 62%); }
+.dashboard-car-art svg { display: block; width: 100%; max-height: 158px; filter: drop-shadow(0 9px 7px rgba(50,83,53,.14)); }
+.dashboard-car-stats { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); margin-top: auto; border-top: 1px solid #dce7d9; }
+.dashboard-car-stats > span { display: grid; gap: 5px; padding: 9px 7px 1px; }
+.dashboard-car-stats > span + span { border-left: 1px solid #dce7d9; }
+.dashboard-car-stats small { color: #728477; font-size: 7px; font-weight: 800; letter-spacing: .09em; }
+.dashboard-car-stats strong { color: #315f3f; font: 750 15px/1.1 'Manrope',sans-serif; }
+
+@media (max-width: 1250px) {
+  .dashboard-section { padding-right: 32px; padding-left: 32px; }
+  .dashboard-section .chart-grid { grid-template-columns: repeat(3, minmax(0,1fr)); }
+  .dashboard-section .dashboard-layout { grid-template-columns: 190px minmax(0,1fr); }
+  .dashboard-section .kpi-grid { grid-template-columns: repeat(4, minmax(0,1fr)); }
+}
+@media (max-width: 950px) {
+  .dashboard-section .chart-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+}
+@media (max-width: 680px) {
+  .dashboard-section { padding: 52px 17px 58px; }
+  .dashboard-section .dashboard-layout { grid-template-columns: minmax(0,1fr); }
+  .dashboard-section .kpi-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .dashboard-section .chart-grid { grid-template-columns: minmax(0,1fr); }
+  .dashboard-section .chart-wrap { height: 245px; }
+  .dashboard-section .map-wrap { height: 255px; }
+}

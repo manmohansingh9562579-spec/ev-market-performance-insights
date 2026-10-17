@@ -181,3 +181,42 @@ button { font: inherit; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; }
 }
+
+/* Keep the public landing page in the same dark-and-green visual language as the dashboard. */
+.hero {
+  grid-template-columns: minmax(0, 1fr) minmax(390px, .95fr);
+  align-items: center;
+  gap: clamp(24px, 4vw, 64px);
+  min-height: 510px;
+  padding: 62px max(calc((100vw - var(--max)) / 2), 5vw) 55px;
+  text-align: left;
+}
+.hero-copy { width: min(100%, 630px); margin: 0; text-align: left; }
+.hero-lede { margin-left: 0; }
+.hero-actions { justify-content: flex-start; }
+.hero-note { text-align: left; }
+.hero-car { min-width: 0; min-height: 335px; position: relative; display: grid; place-items: center; isolation: isolate; }
+.hero-car svg { position: relative; width: min(100%, 650px); height: auto; overflow: visible; filter: drop-shadow(0 26px 22px rgba(0,0,0,.48)); transition: transform .35s ease; }
+.hero-car:hover svg { transform: translateY(-5px) rotateY(-5deg); }
+.car-glow { position: absolute; z-index: -1; bottom: 11%; left: 8%; width: 84%; height: 48%; border-radius: 50%; background: radial-gradient(ellipse, rgba(119,177,84,.27), rgba(71,117,74,.11) 48%, transparent 73%); filter: blur(20px); }
+.car-caption, .battery-chip { position: absolute; display: flex; align-items: center; gap: 9px; padding: 9px 11px; border: 1px solid rgba(238,236,220,.14); border-radius: 7px; background: rgba(17,21,17,.88); backdrop-filter: blur(8px); box-shadow: 0 12px 32px rgba(0,0,0,.3); }
+.car-caption { right: 0; bottom: 2%; }
+.battery-chip { top: 5%; left: 1%; }
+.car-mark { display: grid; width: 25px; height: 25px; place-items: center; border-radius: 5px; color: #13150f; background: var(--gold); font-size: 18px; }
+.car-caption strong, .car-caption small, .battery-chip strong, .battery-chip small { display: block; }
+.car-caption strong { font: 700 9px Manrope,sans-serif; }
+.car-caption small { margin-top: 3px; color: #9da398; font-size: 7px; }
+.battery-icon { color: #91bd6c; font-size: 22px; }
+.battery-chip strong { margin-top: 3px; font: 700 9px Manrope,sans-serif; }
+.battery-chip small { color: #a0a79d; font-size: 6px; font-weight: 800; letter-spacing: .1em; }
+@media (max-width: 760px) {
+  .hero { grid-template-columns: minmax(0, 1fr); gap: 6px; padding: 53px 20px 42px; text-align: center; }
+  .hero-copy { width: min(100%, 700px); margin: 0 auto; text-align: center; }
+  .hero-lede { margin-right: auto; margin-left: auto; }
+  .hero-actions { justify-content: center; }
+  .hero-note { text-align: center; }
+  .hero-car { width: min(100%, 560px); min-height: 230px; margin: 0 auto; }
+  .hero-car svg { width: 100%; }
+  .car-caption { right: 1%; bottom: 0; }
+  .battery-chip { top: 0; left: 0; }
+}

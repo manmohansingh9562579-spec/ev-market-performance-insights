@@ -9,13 +9,13 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css', v='20261017-4') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css', v='20261017-5') }}">
   {% if tableau_url or tableau_story_url %}
   <script type="module" src="https://public.tableau.com/javascripts/api/tableau.embedding.3.latest.min.js"></script>
   {% endif %}
   <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/plotly.js-dist-min@3.1.0/plotly.min.js"></script>
-  <script defer src="{{ url_for('static', filename='js/dashboard.js', v='20261017-5') }}"></script>
+  <script defer src="{{ url_for('static', filename='js/dashboard.js', v='20261017-6') }}"></script>
 </head>
 <body>
   <header class="site-header">
@@ -46,10 +46,10 @@
           <title id="evTitle">Electric crossover concept illustration</title>
           <desc id="evDesc">A generic, unbranded electric crossover in a three-quarter view, drawn with dimensional shading.</desc>
           <defs>
-            <linearGradient id="bodyTop" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f6f4ed"/><stop offset=".34" stop-color="#b9beb7"/><stop offset=".62" stop-color="#777e78"/><stop offset="1" stop-color="#d7d8cd"/></linearGradient>
-            <linearGradient id="bodySide" x1="0" y1="0" x2=".95" y2=".7"><stop stop-color="#c8cbc0"/><stop offset=".38" stop-color="#eef0e6"/><stop offset=".7" stop-color="#858d85"/><stop offset="1" stop-color="#434944"/></linearGradient>
+            <linearGradient id="bodyTop" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#d9f3b4"/><stop offset=".34" stop-color="#9fca70"/><stop offset=".62" stop-color="#578742"/><stop offset="1" stop-color="#c4e19a"/></linearGradient>
+            <linearGradient id="bodySide" x1="0" y1="0" x2=".95" y2=".7"><stop stop-color="#78a856"/><stop offset=".38" stop-color="#d2eba7"/><stop offset=".7" stop-color="#548342"/><stop offset="1" stop-color="#263f2f"/></linearGradient>
             <linearGradient id="glass" x1="0" y1="0" x2=".8" y2="1"><stop stop-color="#273940"/><stop offset=".52" stop-color="#101c21"/><stop offset="1" stop-color="#58696a"/></linearGradient>
-            <linearGradient id="hood" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fffef4"/><stop offset=".52" stop-color="#b5b9ae"/><stop offset="1" stop-color="#6d746e"/></linearGradient>
+            <linearGradient id="hood" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#e1f5c2"/><stop offset=".52" stop-color="#9bc36a"/><stop offset="1" stop-color="#46733c"/></linearGradient>
             <radialGradient id="wheel" cx=".35" cy=".27"><stop stop-color="#65706d"/><stop offset=".42" stop-color="#242a29"/><stop offset=".8" stop-color="#111514"/><stop offset="1" stop-color="#030505"/></radialGradient>
             <linearGradient id="rim" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#faf8e9"/><stop offset=".4" stop-color="#9ca39c"/><stop offset="1" stop-color="#4c5553"/></linearGradient>
             <filter id="carShadow" x="-.2" y="-.3" width="1.4" height="1.8"><feGaussianBlur stdDeviation="12"/></filter>
@@ -85,7 +85,8 @@
       <div class="intro-mark"><span>01</span><small>PROJECT<br>OVERVIEW</small></div>
     </section>
 
-    <section class="dashboard-section section-wrap" id="dashboard">
+    <section class="dashboard-section" id="dashboard">
+      <div class="section-wrap">
       <div class="section-heading">
         <div><p class="eyebrow">INTERACTIVE ANALYSIS</p><h2>EV market performance</h2><p class="section-copy">Filter the actual training data to explore market mix, customer feedback and vehicle capabilities.</p></div>
         <div class="source-state"><span class="status-dot" id="connectionDot"></span><span id="connectionLabel">Checking source</span></div>
@@ -125,6 +126,32 @@
             <article class="chart-card"><div class="chart-head"><div><h3>EV category performance &amp; distribution</h3><p>Annual sales units by vehicle category</p></div><span class="chart-badge">SALES</span></div><div class="chart-wrap"><canvas id="chartCategorySales" aria-label="Sales by vehicle category" role="img"></canvas><div class="chart-state" hidden></div></div></article>
             <article class="chart-card"><div class="chart-head"><div><h3>Market share by manufacturer</h3><p>Top 12 · annual sales units</p></div><span class="chart-badge">SALES</span></div><div class="chart-wrap"><canvas id="chartManufacturer" aria-label="Sales by manufacturer" role="img"></canvas><div class="chart-state" hidden></div></div></article>
             <article class="chart-card"><div class="chart-head"><div><h3>Customer rating by category</h3><p>Tile area = records · color = mean rating</p></div><span class="chart-badge">RATING</span></div><div class="chart-wrap"><div id="chartRating" class="plotly-chart" role="img" aria-label="Customer rating treemap by vehicle category"></div><div class="chart-state" hidden></div></div></article>
+            <article class="chart-card dashboard-vehicle-card">
+              <div class="chart-head"><div><h3>Electric mobility</h3><p>Illustrative EV · live filtered averages</p></div><span class="chart-badge">EV</span></div>
+              <div class="dashboard-car-art" role="img" aria-label="Green electric crossover illustration">
+                <svg viewBox="0 0 520 250" aria-hidden="true">
+                  <defs>
+                    <linearGradient id="dashboardCarBody" x1=".1" y1="0" x2=".8" y2="1"><stop stop-color="#c6e89b"/><stop offset=".28" stop-color="#69a84e"/><stop offset=".68" stop-color="#347a42"/><stop offset="1" stop-color="#19442d"/></linearGradient>
+                    <linearGradient id="dashboardCarGlass" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#607d76"/><stop offset=".55" stop-color="#1d302e"/><stop offset="1" stop-color="#10201f"/></linearGradient>
+                    <radialGradient id="dashboardWheel" cx=".35" cy=".3"><stop stop-color="#7a8980"/><stop offset=".35" stop-color="#28322e"/><stop offset="1" stop-color="#101613"/></radialGradient>
+                    <filter id="dashboardCarShadow" x="-.2" y="-.4" width="1.4" height="1.9"><feGaussianBlur stdDeviation="9"/></filter>
+                  </defs>
+                  <ellipse cx="267" cy="204" rx="203" ry="21" fill="#345c3c" opacity=".25" filter="url(#dashboardCarShadow)"/>
+                  <path d="m54 156 22-43c8-16 22-27 41-33l80-27c14-5 31-7 47-4l80 14c17 3 31 12 43 25l43 47 45 13c12 4 20 14 21 27l1 13c1 8-5 14-14 16l-33 8H95l-31-12c-12-5-16-15-10-28Z" fill="url(#dashboardCarBody)" stroke="#e3f2c9" stroke-width="3"/>
+                  <path d="m136 88 59-20c13-4 25-6 39-4l-14 56-111 17 9-25c3-10 8-18 18-24Zm110-23 74 13c12 2 22 9 31 20l31 37-160-14 24-56Z" fill="url(#dashboardCarGlass)" stroke="#d9ebc9" stroke-width="4"/>
+                  <path d="m235 65 17-1-24 58-14-1 21-56Z" fill="#acc49e" opacity=".8"/>
+                  <path d="m80 143 74-14m87-8 130 11" fill="none" stroke="#e7f4d0" stroke-opacity=".8" stroke-width="3"/>
+                  <path d="m157 129-6 47m97-51-7 52m-85-29 89 2" fill="none" stroke="#245c38" stroke-opacity=".8" stroke-width="3"/>
+                  <path d="m58 153 40 8-3 14-45-10 8-12Zm421 4 23 9-2 11-33-2 12-18Z" fill="#f8f5dc" stroke="#fff" stroke-width="2"/>
+                  <path d="m89 176 35 3c-1 23-17 39-36 39-20 0-31-17-26-34 4-13 14-20 27-20Zm316 3 34 1c2 21-11 38-30 41-19 3-31-12-27-30 3-12 12-19 23-21Z" fill="#141a16"/>
+                  <circle cx="91" cy="195" r="25" fill="url(#dashboardWheel)" stroke="#98a69a" stroke-width="4"/><circle cx="91" cy="195" r="12" fill="#c7d0c1"/><circle cx="91" cy="195" r="4" fill="#53615a"/>
+                  <circle cx="421" cy="196" r="26" fill="url(#dashboardWheel)" stroke="#98a69a" stroke-width="4"/><circle cx="421" cy="196" r="13" fill="#c7d0c1"/><circle cx="421" cy="196" r="4" fill="#53615a"/>
+                  <path d="m125 183 56 2m129 1 80 1" stroke="#d3edac" stroke-width="3" stroke-linecap="round"/>
+                  <path d="m221 146 9-11h13l-7 11h12l-21 21 6-14h-12Z" fill="#e9f5c7"/>
+                </svg>
+              </div>
+              <div class="dashboard-car-stats"><span><small>AVG. RANGE</small><strong id="dashboardRangeValue">—</strong></span><span><small>BATTERY</small><strong id="dashboardBatteryValue">—</strong></span></div>
+            </article>
             <article class="chart-card"><div class="chart-head"><div><h3>Annual EV sales trend</h3><p>Grouped by model year</p></div><span class="chart-badge">TREND</span></div><div class="chart-wrap"><canvas id="chartYear" aria-label="Annual EV sales by model year" role="img"></canvas><div class="chart-state" hidden></div></div><p class="chart-footnote">The source does not define model year as the sales observation year.</p></article>
             <article class="chart-card"><div class="chart-head"><div><h3>Battery technology market share</h3><p>Sales mix by battery type</p></div><span class="chart-badge">MIX</span></div><div class="chart-wrap"><canvas id="chartBattery" aria-label="Sales mix by battery type" role="img"></canvas><div class="chart-state" hidden></div></div></article>
             <article class="chart-card chart-card-map"><div class="chart-head"><div><h3>EV distribution by manufacturing country</h3><p>Annual sales units · country shapes</p></div><span class="chart-badge">MAP</span></div><div class="chart-wrap map-wrap"><div id="chartCountry" class="plotly-chart" role="img" aria-label="World map of annual EV sales by manufacturing country"></div><div id="countryMapFallback" class="country-map-fallback" hidden></div><div class="chart-state" hidden></div></div><p class="chart-footnote">Map boundaries match country names from the file to ISO-3 countries. Unmatched names appear in the table fallback.</p></article>
@@ -134,6 +161,7 @@
           </div>
           <p class="dashboard-footnote"><span id="dataPeriod">Training split · loading</span><span>Dataset field totals are candidate aggregates; see methodology before interpreting as market-wide totals.</span></p>
         </div>
+      </div>
       </div>
     </section>
 

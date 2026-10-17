@@ -2,7 +2,7 @@
   'use strict';
   const instances = new Map();
   const filters = { manufacturer: 'filterManufacturer', battery_type: 'filterBattery', region: 'filterRegion', category: 'filterCategory', country: 'filterCountry', sort: 'sortOrder' };
-  const palette = ['#e8aa19','#64ad9b','#6584a7','#d47c70','#a08bc5','#b5c66c','#c785a4','#7e9da1','#c68d53','#739c76','#7196bc','#beaa79','#8e8b7c'];
+  const palette = ['#438956','#e6a72d','#78ad68','#4e9a9b','#ed9149','#88bb8a','#a9bc5a','#5f9b79','#cd845e','#619d9e','#8caa55','#b89656','#799079'];
   const integer = new Intl.NumberFormat(undefined, { maximumFractionDigits: 0 });
   const decimal = new Intl.NumberFormat(undefined, { maximumFractionDigits: 2 });
   const el = (id) => document.getElementById(id);
@@ -110,8 +110,8 @@
   const baseOptions = () => ({
     responsive: true, maintainAspectRatio: false, animation: false,
     plugins: { legend: { display: false }, tooltip: {
-      displayColors: false, backgroundColor: '#22231f', borderColor: 'rgba(232,170,25,.28)', borderWidth: 1,
-      titleColor: '#f2eee3', bodyColor: '#cbc6b8', padding: 10,
+      displayColors: false, backgroundColor: '#ffffff', borderColor: 'rgba(75,132,83,.35)', borderWidth: 1,
+      titleColor: '#26382d', bodyColor: '#526458', padding: 10,
       titleFont: { family: 'DM Sans', size: 10, weight: '700' }, bodyFont: { family: 'DM Sans', size: 10 }
     } }
   });
@@ -132,10 +132,10 @@
       afterLabel: (ctx) => fmt(ctx.dataset.records[ctx.dataIndex]) + ' records'
     };
     options.scales = {
-      x: { beginAtZero: min == null, min, max, grid: { color: 'rgba(235,230,215,.08)' }, border: { display: false },
-        ticks: { color: '#8d8a81', font: { family: 'DM Sans', size: 8 }, maxTicksLimit: 5, callback: (v) => fmt(v, decimals) },
-        title: { display: true, text: title, color: '#9b978d', font: { family: 'DM Sans', size: 8 } } },
-      y: { grid: { display: false }, border: { display: false }, ticks: { color: '#c3bfb4', autoSkip: false, font: { family: 'DM Sans', size: 8 }, padding: 5 } }
+      x: { beginAtZero: min == null, min, max, grid: { color: 'rgba(69,101,75,.11)' }, border: { display: false },
+        ticks: { color: '#6a7b6f', font: { family: 'DM Sans', size: 8 }, maxTicksLimit: 5, callback: (v) => fmt(v, decimals) },
+        title: { display: true, text: title, color: '#718176', font: { family: 'DM Sans', size: 8 } } },
+      y: { grid: { display: false }, border: { display: false }, ticks: { color: '#526458', autoSkip: false, font: { family: 'DM Sans', size: 8 }, padding: 5 } }
     };
     instances.set(id, new window.Chart(canvas.getContext('2d'), {
       type: 'bar',
@@ -159,7 +159,7 @@
     const total = rows.reduce((sum, row) => sum + row.value, 0);
     const options = baseOptions();
     options.cutout = '59%';
-    options.plugins.legend = { display: true, position: 'bottom', labels: { color: '#c3bfb4', padding: 12, boxWidth: 8, boxHeight: 8, font: { family: 'DM Sans', size: 9 } } };
+    options.plugins.legend = { display: true, position: 'bottom', labels: { color: '#526458', padding: 12, boxWidth: 8, boxHeight: 8, font: { family: 'DM Sans', size: 9 } } };
     options.plugins.tooltip.callbacks = {
       label: (ctx) => ctx.label + ': ' + fmt(ctx.parsed) + ' units (' + fmt(total ? ctx.parsed / total * 100 : 0, true) + '%)',
       afterLabel: (ctx) => fmt(ctx.dataset.records[ctx.dataIndex]) + ' records'
@@ -185,8 +185,8 @@
       afterLabel: (ctx) => fmt(ctx.dataset.records[ctx.dataIndex]) + ' records'
     };
     options.scales = {
-      x: { grid: { display: false }, border: { display: false }, ticks: { color: '#a9a59b', font: { family: 'DM Sans', size: 9 } } },
-      y: { beginAtZero: true, grid: { color: 'rgba(235,230,215,.08)' }, border: { display: false }, ticks: { color: '#8d8a81', font: { family: 'DM Sans', size: 8 }, callback: (v) => fmt(v) } }
+      x: { grid: { display: false }, border: { display: false }, ticks: { color: '#65786b', font: { family: 'DM Sans', size: 9 } } },
+      y: { beginAtZero: true, grid: { color: 'rgba(69,101,75,.11)' }, border: { display: false }, ticks: { color: '#6a7b6f', font: { family: 'DM Sans', size: 8 }, callback: (v) => fmt(v) } }
     };
     instances.set(id, new window.Chart(canvas.getContext('2d'), { type: 'line', data: {
       labels: rows.map((row) => row.label),
@@ -217,11 +217,11 @@
       type: 'treemap', labels: rows.map((row) => row.label), parents: rows.map(() => ''),
       values: rows.map((row) => row.records), branchvalues: 'total',
       marker: { colors: rows.map((row) => row.value), cmin: 1, cmax: 5,
-        colorscale: [[0, '#925744'], [.5, '#637d73'], [1, '#e8aa19']],
-        line: { color: '#171816', width: 2 }, showscale: false },
+        colorscale: [[0, '#345e67'], [.5, '#287c72'], [1, '#3e916f']],
+        line: { color: '#f7fbf4', width: 2 }, showscale: false },
       customdata: rows.map((row) => [row.value, row.records]),
       texttemplate: '%{label}<br>%{customdata[0]:.1f} / 5',
-      textfont: { size: 11, color: '#f5f3ec' },
+      textfont: { size: 11, color: '#f7fff5' },
       hovertemplate: '<b>%{label}</b><br>Average rating: %{customdata[0]:.2f} / 5<br>Non-missing ratings: %{customdata[1]:,}<extra></extra>'
     };
     const layout = { autosize: true, height: 210, margin: { l: 3, r: 3, t: 3, b: 3 },
@@ -291,17 +291,17 @@
       type: 'choropleth', locationmode: 'ISO-3', locations: mapped.map((row) => row.iso3),
       z: mapped.map((row) => row.value), text: mapped.map((row) => row.label),
       customdata: mapped.map((row) => [row.records]),
-      colorscale: [[0, '#344b43'], [.5, '#76a98b'], [1, '#e8aa19']],
-      marker: { line: { color: '#333831', width: .55 } }, showscale: true,
-      colorbar: { title: { text: 'Sales units', side: 'right' }, tickfont: { color: '#b9b6ad', size: 8 }, titlefont: { color: '#b9b6ad', size: 8 }, thickness: 8, len: .72 },
+      colorscale: [[0, '#c8dfbd'], [.5, '#78aa70'], [1, '#33784c']],
+      marker: { line: { color: '#f7fbf4', width: .65 } }, showscale: true,
+      colorbar: { title: { text: 'Sales units', side: 'right' }, tickfont: { color: '#53685a', size: 8 }, titlefont: { color: '#53685a', size: 8 }, thickness: 8, len: .72 },
       hovertemplate: '<b>%{text}</b><br>Annual sales units: %{z:,}<br>Records: %{customdata[0]:,}<extra></extra>'
     };
     const layout = { autosize: true, height: 225, margin: { l: 0, r: 0, t: 0, b: 0 },
       paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: 'rgba(0,0,0,0)',
-      font: { family: 'DM Sans, Segoe UI, sans-serif', color: '#f5f3ec' },
+      font: { family: 'DM Sans, Segoe UI, sans-serif', color: '#53685a' },
       geo: { projection: { type: 'natural earth' }, showframe: false, showcoastlines: false,
-        showcountries: true, countrycolor: '#333831', showland: true, landcolor: '#252722',
-        showocean: true, oceancolor: '#111310', bgcolor: 'rgba(0,0,0,0)' } };
+        showcountries: true, countrycolor: '#cedccc', showland: true, landcolor: '#e6ece2',
+        showocean: true, oceancolor: '#f7faf4', bgcolor: 'rgba(0,0,0,0)' } };
     window.Plotly.react(plot, [trace], layout, { responsive: true, displayModeBar: false, displaylogo: false })
       .catch(() => {
         plot.replaceChildren();
@@ -327,6 +327,8 @@
     assign('kpiCo2Note', fmt(kpis.co2_savings.valid_records) + ' records · sum of annual field');
     assign('heroBatteryValue', kpis.average_battery_capacity.value == null ? '—' : fmt(kpis.average_battery_capacity.value, true) + ' kWh');
     assign('heroRangeValue', 'Mean driving range · ' + (kpis.average_range.value == null ? '—' : fmt(kpis.average_range.value, true) + ' km'));
+    assign('dashboardBatteryValue', kpis.average_battery_capacity.value == null ? '—' : fmt(kpis.average_battery_capacity.value, true) + ' kWh');
+    assign('dashboardRangeValue', kpis.average_range.value == null ? '—' : fmt(kpis.average_range.value, true) + ' km');
   }
   function renderStory(data) {
     const k = data.kpis;
