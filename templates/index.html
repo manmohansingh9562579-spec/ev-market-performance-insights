@@ -9,12 +9,12 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css', v='20261017-2') }}">
   {% if tableau_url or tableau_story_url %}
   <script type="module" src="https://public.tableau.com/javascripts/api/tableau.embedding.3.latest.min.js"></script>
   {% endif %}
   <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
-  <script defer src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+  <script defer src="{{ url_for('static', filename='js/dashboard.js', v='20261017-2') }}"></script>
 </head>
 <body>
   <header class="site-header">
@@ -37,33 +37,6 @@
         <p class="hero-copy">Explore EV market performance, vehicle capability and battery technology through one interactive dashboard and a guided data story.</p>
         <div class="hero-actions"><a class="button button-gold" href="#dashboard">Explore Dashboard <span>→</span></a><a class="button button-outline" href="#story">Explore Story <span>↗</span></a></div>
         <div class="hero-proof"><span class="proof-dot"></span><span id="heroDataNote">Connecting to the actual EV training dataset…</span></div>
-      </div>
-      <div class="hero-showcase" aria-label="Electric vehicle market dashboard preview">
-        <div class="showcase-topline"><span><i></i> EV MARKET INTELLIGENCE</span><span>TRAINING DATA · FILTERABLE ANALYSIS</span></div>
-        <div class="showcase-scene">
-          <div class="showcase-glow"></div>
-          <svg class="showcase-car" viewBox="0 0 760 310" role="img" aria-label="Illustration of a modern electric vehicle">
-            <defs>
-              <linearGradient id="carPaint" x1=".08" y1=".16" x2=".92" y2=".88"><stop stop-color="#d9ddd5"/><stop offset=".34" stop-color="#879087"/><stop offset=".68" stop-color="#373e3b"/><stop offset="1" stop-color="#171b1a"/></linearGradient>
-              <linearGradient id="carGlass" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#668077"/><stop offset="1" stop-color="#111918"/></linearGradient>
-              <linearGradient id="lamp" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#fff0c3"/><stop offset="1" stop-color="#e8aa19"/></linearGradient>
-              <filter id="carShadow" x="-20%" y="-60%" width="140%" height="220%"><feGaussianBlur stdDeviation="14"/></filter>
-            </defs>
-            <ellipse cx="392" cy="255" rx="292" ry="22" fill="#000" opacity=".72" filter="url(#carShadow)"/>
-            <path d="m118 218 15-47c7-23 25-40 49-48l90-29 72-56c17-13 38-20 60-20h98c28 0 52 11 70 32l56 65 46 20c17 7 29 22 32 40l7 41-20 25H133l-15-23Z" fill="url(#carPaint)" stroke="#c7c9bf" stroke-opacity=".4" stroke-width="2"/>
-            <path d="m286 112 63-51c14-11 31-17 50-17h40v69H286Zm166-68h47c19 0 37 8 50 22l43 49H452V44Z" fill="url(#carGlass)" stroke="#bbc4b9" stroke-opacity=".28" stroke-width="2"/>
-            <path d="M449 45v68M251 120l-95 30c-9 4-16 11-20 20h114l1-50ZM456 120h159l18 19H456v-19Z" fill="none" stroke="#e3e2d7" stroke-opacity=".36" stroke-width="2"/>
-            <path d="m137 197 31-9h56l-10 14h-72l-5-5Zm511-2 34-7 22 13-9 7h-42l-5-13Z" fill="url(#lamp)"/>
-            <path d="M117 216h590" stroke="#e8aa19" stroke-opacity=".66" stroke-width="2"/>
-            <path d="M302 132v57m170-57v57M322 189h129" stroke="#d5d6cc" stroke-opacity=".18" stroke-width="2"/>
-            <rect x="335" y="200" width="83" height="5" rx="2.5" fill="#e8aa19" opacity=".84"/>
-            <circle cx="247" cy="222" r="48" fill="#101211" stroke="#9ca198" stroke-width="5"/><circle cx="247" cy="222" r="29" fill="#252a27" stroke="#7e867d" stroke-width="3"/><circle cx="247" cy="222" r="9" fill="#d6d9d0"/>
-            <circle cx="590" cy="222" r="48" fill="#101211" stroke="#9ca198" stroke-width="5"/><circle cx="590" cy="222" r="29" fill="#252a27" stroke="#7e867d" stroke-width="3"/><circle cx="590" cy="222" r="9" fill="#d6d9d0"/>
-          </svg>
-          <div class="showcase-floating showcase-signal"><span class="signal-mark">↗</span><span><b>Market performance</b><small>Compare categories, makers &amp; regions</small></span></div>
-          <div class="showcase-floating showcase-bars"><div class="bars-head"><span>SALES MIX</span><span>FILTERED VIEW</span></div><div class="mini-bars"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="bars-foot"><span>Battery</span><span>Category</span><span>Region</span></div></div>
-        </div>
-        <div class="showcase-foot"><span>SALES · CUSTOMER RATINGS · VEHICLE CAPABILITY</span><span>EXPLORE BELOW <b>↓</b></span></div>
       </div>
     </section>
 
