@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>EV Insights | Market Performance</title>
+  <link rel="stylesheet" href="style.css">
+  <script type="module" src="https://public.tableau.com/javascripts/api/tableau.embedding.3.latest.min.js"></script>
+</head>
+<body>
+
+<header class="nav">
+  <a class="brand" href="#home">EV Insights</a>
+  <button class="burger" aria-label="Menu" onclick="document.querySelector('.links').classList.toggle('open')">&#9776;</button>
+  <nav class="links">
+    <a href="#home">Home</a>
+    <a href="#about">About</a>
+    <a href="#features">Features</a>
+    <a href="#services">Services</a>
+    <a href="#dashboard">Dashboard</a>
+    <a href="#story">Story</a>
+  </nav>
+  <div class="cta">
+    <a class="btn amber" href="#dashboard">Explore Dashboard</a>
+    <a class="btn amber" href="#story">Explore Story</a>
+  </div>
+</header>
+
+<main>
+  <section id="home" class="hero">
+    <h1>Explore EV Market Intelligence</h1>
+    <p>Live EV market intelligence, adoption trends, and the story behind the growth of electric mobility through a polished dashboard and narrative experience.</p>
+    <div class="hero-btns">
+      <a class="btn amber" href="#dashboard">Explore the Dashboard &rarr;</a>
+      <a class="btn ghost" href="#story">Explore Story</a>
+    </div>
+    <div class="stats">
+      <div><b>200</b><span>Manufacturers</span></div>
+      <div><b>17,980</b><span>EV Models</span></div>
+      <div><b>4 / 5</b><span>Avg. Customer Rating</span></div>
+      <div><b>324.54 km</b><span>Avg. Driving Range</span></div>
+      <div><b>78.2 kWh</b><span>Avg. Battery Capacity</span></div>
+    </div>
+  </section>
+
+  <section id="about" class="block">
+    <h2>About the Project</h2>
+    <p class="lead">The EV market is growing fast. This project analyses 200,000 EV records covering manufacturers, categories, battery technologies, annual sales, customer ratings and manufacturing countries, and presents the findings in an interactive Tableau dashboard and a guided story.</p>
+  </section>
+
+  <section id="features" class="block">
+    <h2>Features</h2>
+    <div class="cards">
+      <article><h3>Interactive Filters</h3><p>Filter by Manufacturer, Category and Manufacturing Country.</p></article>
+      <article><h3>7 Visualizations</h3><p>Bar, treemap, line, pie and map charts with KPI cards.</p></article>
+      <article><h3>Guided Story</h3><p>A step-by-step Tableau Story that walks through the key insights.</p></article>
+      <article><h3>Responsive Design</h3><p>Works on desktop, tablet and mobile screens.</p></article>
+    </div>
+  </section>
+
+  <section id="services" class="block">
+    <h2>Services</h2>
+    <div class="cards">
+      <article><h3>Market Analysis</h3><p>Sales, market share and category performance.</p></article>
+      <article><h3>Technology Tracking</h3><p>Battery technology share: LFP, NMC, NCA, Sodium-Ion.</p></article>
+      <article><h3>Customer Insight</h3><p>Customer ratings across vehicle categories.</p></article>
+      <article><h3>Global Footprint</h3><p>EV distribution by manufacturing country.</p></article>
+    </div>
+  </section>
+
+  <section id="dashboard" class="block wide">
+    <h2>Dashboard</h2>
+    <p class="lead">EV Market Performance &amp; Insights, published on Tableau Public.</p>
+    <div class="viz">
+      <tableau-viz id="dashViz" src="https://public.tableau.com/views/EV_Market_Performance_Public_Ready_Clean/Dashboard1" toolbar="bottom" hide-tabs></tableau-viz>
+    </div>
+    <p class="note"><a class="btn amber" href="https://public.tableau.com/app/profile/man.mohan.singh3746/viz/EV_Market_Performance_Public_Ready_Clean/Dashboard1" target="_blank" rel="noopener">Open Dashboard on Tableau Public</a></p>
+  </section>
+
+  <section id="story" class="block wide">
+    <h2>Insights Behind the EV Story</h2>
+    <p class="lead">Tracking adoption, momentum, and market transformation.</p>
+    <div class="cards four">
+      <article><h3>Market Growth</h3><p>EV adoption continues to rise as awareness, infrastructure, and affordability improve across markets.</p></article>
+      <article><h3>Technology Shift</h3><p>Battery innovation and smarter mobility solutions are making EVs more competitive and scalable.</p></article>
+      <article><h3>Consumer Confidence</h3><p>Growing trust in EV performance and range is reflected in strong customer ratings.</p></article>
+      <article><h3>Actionable Insights</h3><p>Each visual point in the dashboard turns raw numbers into practical insight.</p></article>
+    </div>
+    <div class="viz">
+      <tableau-viz id="storyViz" src="https://public.tableau.com/views/EV_Market_Performance_Public_Ready_Clean/Story2" toolbar="bottom" hide-tabs></tableau-viz>
+    </div>
+    <p class="note"><a class="btn amber" href="https://public.tableau.com/app/profile/man.mohan.singh3746/viz/EV_Market_Performance_Public_Ready_Clean/Story2" target="_blank" rel="noopener">Open Story on Tableau Public</a></p>
+  </section>
+</main>
+
+<footer>
+  <p>&copy; 2026 EV Insights &middot; Flask + Tableau Public</p>
+</footer>
+
+</body>
+</html>
