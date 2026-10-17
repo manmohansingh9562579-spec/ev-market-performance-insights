@@ -14,15 +14,15 @@ The training data contains 200 manufacturers, 10 manufacturing-country labels, 7
 
 The Flask UI has four KPI cards, eight charts, five filter dimensions (including a model-year range), a story/insights sequence, methodology notes, and responsive CSS layouts. Data is loaded from the CSV by default or from SQLAlchemy when a database URL is configured. The app never falls back silently from a failed configured database to a different source.
 
-The Tableau packaged workbook is a separate local output. The refreshed handoff copy preserves seven chart sheets, its dashboard, and both Stories, and uses one embedded Hyper extract created from the deduplicated 199,999-row CSV. The two original `.twb` workbooks and older package versions were not overwritten. No Tableau Public publication or URL is claimed.
+The Tableau packaged workbook is a separate deliverable. The refreshed handoff copy preserves seven chart sheets, its dashboard, and both Stories, and uses one embedded Hyper extract created from the deduplicated 199,999-row CSV. The two original `.twb` workbooks and older package versions were not overwritten. The workbook is published at [Tableau Public](https://public.tableau.com/app/profile/man.mohan.singh3746/viz/EV_Market_Performance_Public_Ready_Clean/ManufacturerSales). The dataset owner confirmed checking the dataset terms and authorizing publication; the assistant could not independently read Kaggle's dataset-specific license statement.
 
 ## Limitations and next operational steps
 
 - MySQL server connectivity, schema execution, CSV import, and SQL timing remain pending.
-- No Tableau Public URL is configured. The account owner must sign in and publish after confirming that the dataset-specific Kaggle terms permit public redistribution of the embedded extract; that license statement was not readable during this project's check.
+- The Flask embed reads `TABLEAU_PUBLIC_URL` from the local `.env`; set it to the published Tableau Public link and restart Flask to show the view. The app keeps its local charts when the URL is unset.
 - Local HTTP/browser access was unavailable for this measurement environment; web-rendering and viewport verification remain pending.
 - The test suite uses synthetic rows to verify calculation logic and SQLite import, while actual-data checks separately compare filtered results against a pandas aggregate.
-- The source dataset’s licensing and metric grain should be reviewed before public distribution.
+- The dataset owner confirmed checking licensing before publication. Metric grain and field definitions still need to be interpreted with care before presenting totals as externally validated market totals.
 
 ## Suggested presentation sequence
 
@@ -31,4 +31,4 @@ The Tableau packaged workbook is a separate local output. The refreshed handoff 
 3. Show the KPI summary and sales distribution by manufacturer, battery, region, category, and country.
 4. Compare rating, range, and Wh/km averages.
 5. Apply filters to demonstrate how KPIs and charts recompute.
-6. Explain limitations, measured performance scope, and Tableau Public publishing status.
+6. Explain limitations, measured performance scope, and show the published Tableau Public view.

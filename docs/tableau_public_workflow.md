@@ -20,15 +20,15 @@ The script removes exact duplicate rows, rejects conflicting `vehicle_id` record
 
 ## Publish through Tableau Public Desktop
 
-Before publishing, confirm the dataset's license permits making the workbook and its embedded data publicly available. The Kaggle page for this dataset did not expose a readable license statement during this project's check, so permission to redistribute the data has **not** been verified. Tableau Public workbooks can expose downloadable workbook data; public hosting is a redistribution of the extracted records.
+Tableau Public workbooks can expose downloadable workbook data; publishing is a public redistribution of the embedded extract. During this session, the dataset owner confirmed they checked the Kaggle dataset terms and authorized public publication. The assistant could not independently read the dataset-specific license statement, so this records the owner's confirmation rather than independent license verification.
 
-Once the license is confirmed:
+After the owner's license confirmation:
 
 1. Open the local output file `EV_Market_Performance_Public_Ready_Clean.twbx` in Tableau Public Desktop. Confirm the extract is available and the dashboard, seven chart sheets, filters, and both Stories load.
 2. Review the dashboard at desktop and phone sizes. Check filter behavior and verify the sales total against the deduplicated source if you use the total in a submission.
 3. In Tableau Public Desktop, choose **File → Save to Tableau Public**, then sign in to the Tableau Public account. Review the workbook title and public visibility before completing the upload.
-4. Wait for the save/upload to finish. Open the published view from the Tableau Public profile, check that it renders, and copy its share URL. No published URL has been recorded for this project yet.
-5. To show that view inside Flask, put the exact HTTPS `public.tableau.com` URL in `TABLEAU_PUBLIC_URL` in a local `.env` file and restart Flask. If the variable is unset, the local Flask dashboard continues to work without an embed.
+4. The save/upload completed. Tableau Public displayed the published workbook under the signed-in profile and rendered the Manufacturer Sales view. Share URL: <https://public.tableau.com/app/profile/man.mohan.singh3746/viz/EV_Market_Performance_Public_Ready_Clean/ManufacturerSales>.
+5. To show that view inside Flask, set `TABLEAU_PUBLIC_URL` to the share URL in a local `.env` file and restart Flask. If the variable is unset, the local Flask dashboard continues to work without an embed.
 
 Tableau Public account login and publishing must be completed by the account owner. Do not enter a password into the Flask project or commit `.env`.
 
@@ -38,8 +38,8 @@ Tableau Public account login and publishing must be completed by the account own
 - Tableau Public is public hosting. Published workbook and data may be viewed and downloaded by other people; profile hiding does not make a known URL private. Check account and workbook download settings before publication.
 - Tableau Public uses extracts rather than live database connections for published workbooks. CSV/Excel sources do not automatically refresh there; refresh the local extract and republish when updating data.
 - The workbook has 199,999 analyzed rows, within Tableau Public's documented 15-million-row workbook limit. This does not guarantee browser performance.
-- Dataset redistribution permission is unresolved because the dataset-specific Kaggle license statement could not be verified. Do not publish the extract until its terms permit this use.
-- The earlier Tableau Public save flow was canceled before publication. There is no Tableau Public URL, and the local `.twbx` is not the required public submission.
+- The owner confirmed checking the dataset terms and authorizing publication; the assistant could not independently read the dataset-specific Kaggle license statement.
+- The workbook has been published to Tableau Public; the URL above is the submission link. The initial view opens on the Manufacturer Sales worksheet.
 
 ## Flask embedding
 

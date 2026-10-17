@@ -43,11 +43,11 @@ The uploaded project/performance requirement document was not accessible as a re
 
 | Requirement | Implementation or evidence | Status |
 |---|---|---|
-| Preserve existing workbook sheets, dashboard, filters, Story | Original `.twb` files remain untouched. `outputs/EV_Market_Performance_Public_Ready_Clean.twbx` is a separate package whose seven chart worksheets use the prepared 199,999-row deduplicated source and one embedded Hyper extract; the dashboard and two Stories remain. Older packages are retained separately. | Local extract refresh complete; Tableau Public publication pending |
+| Preserve existing workbook sheets, dashboard, filters, Story | Original `.twb` files remain untouched. `outputs/EV_Market_Performance_Public_Ready_Clean.twbx` is a separate package whose seven chart worksheets use the prepared 199,999-row deduplicated source and one embedded Hyper extract; the dashboard and two Stories remain. Older packages are retained separately. | Complete; published workbook renders on Tableau Public |
 | Prepare Tableau-compatible CSV/extract workflow | `scripts/prepare_tableau_csv.py`; the prepared 199,999-row CSV and embedded Hyper extract are documented in [`tableau_public_workflow.md`](tableau_public_workflow.md) | Complete |
 | Explain Tableau Public publishing requirements/limitations | CSV extract, account, public visibility/download implications, refresh limitations, and steps documented | Complete |
-| Embed a Tableau Public view when URL exists; work without it | `TABLEAU_PUBLIC_URL` optional; only HTTPS `public.tableau.com` hosts accepted; local charts are always available | Complete; no URL configured |
-| Do not state Flask substitutes Tableau/public submission | Explicitly documented; actual Public publish was not completed and no URL exists | Complete |
+| Embed a Tableau Public view when URL exists; work without it | `TABLEAU_PUBLIC_URL` optional; only HTTPS `public.tableau.com` hosts accepted; local charts are always available | Embed feature complete; set local `.env` to published URL to enable |
+| Do not state Flask substitutes Tableau/public submission | Explicitly documented; actual Tableau Public workbook is published at the URL below | Complete |
 
 ## Performance and acceptance checks
 
@@ -71,5 +71,5 @@ The uploaded project/performance requirement document was not accessible as a re
 | Data preparation/import scripts | `scripts/` | Complete |
 | Tests | `tests/` | Complete; 10/10 pass |
 | Project, methodology, performance, database, Tableau, demo documentation | `docs/` plus `README.md` | Complete |
-| Refreshed Tableau Public handoff workbook | `../EV_Market_Performance_Public_Ready_Clean.twbx` | Local clean extract verified; not published |
-| Tableau Public URL/submission | Not available; dataset-specific Kaggle redistribution terms were not readable during the license check | Pending license confirmation and account-owner publish; no claim made |
+| Refreshed Tableau Public handoff workbook | `../EV_Market_Performance_Public_Ready_Clean.twbx` | Clean extract verified and published |
+| Tableau Public URL/submission | [Published workbook](https://public.tableau.com/app/profile/man.mohan.singh3746/viz/EV_Market_Performance_Public_Ready_Clean/ManufacturerSales) | Complete; dataset owner confirmed checking terms and authorizing publication; independent license text remained unreadable |
