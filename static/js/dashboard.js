@@ -6,26 +6,36 @@
   const integer = new Intl.NumberFormat(undefined, { maximumFractionDigits: 0 });
   const decimal = new Intl.NumberFormat(undefined, { maximumFractionDigits: 2 });
   const el = (id) => document.getElementById(id);
+  const setText = (id, value) => {
+    const node = el(id);
+    if (node) node.textContent = value;
+  };
   const fmt = (value, decimals = false) => value == null || !Number.isFinite(Number(value)) ? '—' : (decimals ? decimal : integer).format(Number(value));
 
   function sourceStatus(state, label, rows) {
     const source = document.querySelector('.source-state');
-    source.classList.remove('ready', 'error');
-    if (state === 'ready') source.classList.add('ready');
-    if (state === 'error') source.classList.add('error');
-    el('connectionLabel').textContent = label;
-    el('heroDataNote').textContent = rows == null ? label : fmt(rows) + ' deduplicated training records · actual source';
+    if (source) {
+      source.classList.remove('ready', 'error');
+      if (state === 'ready') source.classList.add('ready');
+      if (state === 'error') source.classList.add('error');
+    }
+    setText('connectionLabel', label);
+    setText('heroDataNote', rows == null ? label : fmt(rows) + ' deduplicated training records · actual source');
   }
   function showState(state, title, message, help = '') {
     const panel = el('statePanel');
+    if (!panel) return;
     panel.hidden = false;
     panel.dataset.state = state;
-    el('stateIcon').textContent = state === 'error' ? '!' : state === 'loading' ? '…' : 'i';
-    el('stateTitle').textContent = title;
-    el('stateMessage').textContent = message;
-    el('stateHelp').textContent = help;
+    setText('stateIcon', state === 'error' ? '!' : state === 'loading' ? '…' : 'i');
+    setText('stateTitle', title);
+    setText('stateMessage', message);
+    setText('stateHelp', help);
   }
-  function hideState() { el('statePanel').hidden = true; }
+  function hideState() {
+    const panel = el('statePanel');
+    if (panel) panel.hidden = true;
+  }
   function clearCharts(message) {
     instances.forEach((chart) => chart.destroy());
     instances.clear();
@@ -40,8 +50,10 @@
       const fallback = wrap.querySelector('.country-map-fallback');
       if (fallback) { fallback.hidden = true; fallback.replaceChildren(); }
       const state = wrap.querySelector('.chart-state');
-      state.hidden = false;
-      state.textContent = message;
+      if (state) {
+        state.hidden = false;
+        state.textContent = message;
+      }
     });
   }
   function fillSelect(id, values, label, preserve = true) {
@@ -87,10 +99,13 @@
   function destroy(id) { if (instances.has(id)) instances.get(id).destroy(); instances.delete(id); }
   function chartState(id, message) {
     const canvas = el(id);
+    if (!canvas) return;
     canvas.hidden = true;
     const state = canvas.parentElement.querySelector('.chart-state');
-    state.hidden = false;
-    state.textContent = message;
+    if (state) {
+      state.hidden = false;
+      state.textContent = message;
+    }
   }
   const baseOptions = () => ({
     responsive: true, maintainAspectRatio: false, animation: false,
@@ -103,10 +118,12 @@
   function renderBar(id, rows, title, decimals = false, min = undefined, max = undefined, multicolor = true) {
     destroy(id);
     const canvas = el(id);
+    if (!canvas) return;
     if (!Array.isArray(rows) || !rows.length) return chartState(id, 'No valid values are available for this view.');
     if (!window.Chart) return chartState(id, 'Chart library did not load. Check the connection and reload this page.');
     canvas.hidden = false;
-    canvas.parentElement.querySelector('.chart-state').hidden = true;
+    const state = canvas.parentElement.querySelector('.chart-state');
+    if (state) state.hidden = true;
     const options = baseOptions();
     options.indexAxis = 'y';
     options.layout = { padding: { top: 2, right: 10, bottom: 0, left: 2 } };
@@ -133,10 +150,12 @@
   function renderDoughnut(id, rows) {
     destroy(id);
     const canvas = el(id);
+    if (!canvas) return;
     if (!Array.isArray(rows) || !rows.length) return chartState(id, 'No valid values are available for this view.');
     if (!window.Chart) return chartState(id, 'Chart library did not load. Check the connection and reload this page.');
     canvas.hidden = false;
-    canvas.parentElement.querySelector('.chart-state').hidden = true;
+    const state = canvas.parentElement.querySelector('.chart-state');
+    if (state) state.hidden = true;
     const total = rows.reduce((sum, row) => sum + row.value, 0);
     const options = baseOptions();
     options.cutout = '59%';
@@ -153,10 +172,12 @@
   function renderLine(id, rows) {
     destroy(id);
     const canvas = el(id);
+    if (!canvas) return;
     if (!Array.isArray(rows) || !rows.length) return chartState(id, 'No valid values are available for this view.');
     if (!window.Chart) return chartState(id, 'Chart library did not load. Check the connection and reload this page.');
     canvas.hidden = false;
-    canvas.parentElement.querySelector('.chart-state').hidden = true;
+    const state = canvas.parentElement.querySelector('.chart-state');
+    if (state) state.hidden = true;
     const options = baseOptions();
     options.plugins.legend = { display: true, position: 'bottom', labels: { color: '#c3bfb4', boxWidth: 9, font: { family: 'DM Sans', size: 9 } } };
     options.plugins.tooltip.callbacks = {
@@ -176,7 +197,9 @@
   }
   function renderRatingTreemap(rows) {
     const plot = el('chartRating');
+    if (!plot || !plot.parentElement) return;
     const state = plot.parentElement.querySelector('.chart-state');
+    if (!state) return;
     if (!Array.isArray(rows) || !rows.length) {
       if (window.Plotly) window.Plotly.purge(plot);
       plot.replaceChildren();
@@ -237,9 +260,11 @@
   }
   function renderCountryMap(rows) {
     const plot = el('chartCountry');
+    if (!plot || !plot.parentElement) return;
     const wrap = plot.parentElement;
     const state = wrap.querySelector('.chart-state');
     const fallback = el('countryMapFallback');
+    if (!state || !fallback) return;
     if (!Array.isArray(rows) || !rows.length) {
       if (window.Plotly) window.Plotly.purge(plot);
       plot.replaceChildren(); fallback.hidden = true; fallback.replaceChildren();
@@ -285,7 +310,7 @@
       });
   }
   function renderKpis(kpis) {
-    const assign = (id, value) => { el(id).textContent = value; };
+    const assign = setText;
     assign('kpiManufacturers', fmt(kpis.manufacturer_count.value));
     assign('kpiModels', fmt(kpis.model_count.value));
     assign('kpiSales', fmt(kpis.annual_sales.value));
@@ -309,39 +334,39 @@
     const c = data.charts;
     const salesText = k.annual_sales.value == null ? 'No sales values are available.' :
       fmt(k.annual_sales.value) + ' annual sales units appear across ' + fmt(s.filtered_records) + ' filtered records. ' + fmt(k.model_count.value) + ' distinct model names and ' + fmt(k.manufacturer_count.value) + ' manufacturers are represented.';
-    el('insightScale').textContent = salesText;
+    setText('insightScale', salesText);
     const top = (rows) => Array.isArray(rows) && rows.length ? rows.reduce((best, row) => row.value > best.value ? row : best) : null;
     const category = top(c.category_sales);
     const manufacturer = s.top_manufacturer;
     const battery = s.top_battery;
     const region = s.top_region;
     const country = top(c.country_sales);
-    el('insightCategory').textContent = category
+    setText('insightCategory', category
       ? category.label + ' leads category sales with ' + fmt(category.value) + ' summed annual units across ' + fmt(category.records) + ' records.'
-      : 'No category sales values are available for these filters.';
-    el('insightManufacturer').textContent = manufacturer
+      : 'No category sales values are available for these filters.');
+    setText('insightManufacturer', manufacturer
       ? manufacturer.label + ' has the largest manufacturer sales sum: ' + fmt(manufacturer.value) + ' annual units across ' + fmt(manufacturer.records) + ' records.'
-      : 'No manufacturer sales values are available for these filters.';
-    el('insightBattery').textContent = battery
+      : 'No manufacturer sales values are available for these filters.');
+    setText('insightBattery', battery
       ? battery.label + ' leads battery sales mix with ' + fmt(battery.value) + ' summed annual units. Values are sales totals, not vehicle counts.'
-      : 'No battery sales values are available for these filters.';
+      : 'No battery sales values are available for these filters.');
     const geography = [];
     if (country) geography.push(country.label + ' has the largest supplied country sales sum (' + fmt(country.value) + ' units)');
     if (region) geography.push(region.label + ' leads region sales (' + fmt(region.value) + ' units)');
-    el('insightGeography').textContent = geography.length
+    setText('insightGeography', geography.length
       ? geography.join('; ') + '. Country spellings are taken from the dataset.'
-      : 'No country or region sales values are available for these filters.';
+      : 'No country or region sales values are available for these filters.');
     const rated = s.highest_rated_category;
-    el('insightExperience').textContent = rated
+    setText('insightExperience', rated
       ? rated.label + ' has the highest average rating at ' + fmt(rated.value, true) + ' out of 5, from ' + fmt(rated.records) + ' non-missing ratings.'
-      : 'No customer ratings are available for these filters.';
+      : 'No customer ratings are available for these filters.');
     const efficient = s.lowest_wh_per_km_category;
-    el('insightCapability').textContent = efficient
+    setText('insightCapability', efficient
       ? efficient.label + ' has the lowest mean energy use at ' + fmt(efficient.value, true) + ' Wh/km. Average range is ' + fmt(k.average_range.value, true) + ' km.'
-      : 'Range and efficiency details will appear when those fields have valid values.';
-    el('insightCo2').textContent = k.co2_savings.value == null
+      : 'Range and efficiency details will appear when those fields have valid values.');
+    setText('insightCo2', k.co2_savings.value == null
       ? 'The CO₂ savings field is missing or has no valid values in these filtered records.'
-      : fmt(k.co2_savings.value, true) + ' tons/year summed from ' + fmt(k.co2_savings.valid_records) + ' non-missing records. This is a dataset-field total; overlapping record scope has not been independently validated.';
+      : fmt(k.co2_savings.value, true) + ' tons/year summed from ' + fmt(k.co2_savings.valid_records) + ' non-missing records. This is a dataset-field total; overlapping record scope has not been independently validated.');
     const q = data.metadata.data_quality;
     if (q.exact_duplicate_rows_removed || q.conflicting_vehicle_ids_excluded) {
       showState('warning', 'Data quality handling applied', fmt(q.exact_duplicate_rows_removed) + ' exact duplicate row(s) removed before aggregation.', 'Totals are dataset-field aggregates; review the methodology and source limitations below.');
@@ -353,8 +378,8 @@
     let active = Object.entries(selected).filter(([key, value]) => !['sort','model_year_min','model_year_max'].includes(key) && value).length;
     const years = data.filters.model_year.values || [];
     if (years.length && (el('modelYearMin').value !== String(years[0]) || el('modelYearMax').value !== String(years.at(-1)))) active += 1;
-    el('filterSummary').textContent = fmt(data.metadata.filtered_rows) + ' of ' + fmt(data.metadata.rows_analyzed) + ' records · ' + active + ' active filter' + (active === 1 ? '' : 's');
-    el('dataPeriod').textContent = (data.metadata.backend === 'database' ? 'Database source' : 'Training split') + ' · ' + fmt(data.metadata.rows_analyzed) + ' records';
+    setText('filterSummary', fmt(data.metadata.filtered_rows) + ' of ' + fmt(data.metadata.rows_analyzed) + ' records · ' + active + ' active filter' + (active === 1 ? '' : 's'));
+    setText('dataPeriod', (data.metadata.backend === 'database' ? 'Database source' : 'Training split') + ' · ' + fmt(data.metadata.rows_analyzed) + ' records');
     renderKpis(data.kpis);
     renderStory(data);
     if (data.metadata.filtered_rows === 0) return clearCharts('No records match the selected filters. Adjust or reset your filters to continue.');
@@ -385,8 +410,8 @@
           ? 'Set EV_TRAIN_CSV to ev_market_train.csv or configure DATABASE_URL. Keep the original CSV where it is.'
           : 'Review the source path, required columns and database table, then restart the app.';
         showState(state, title, data.message || 'Check the configured data source and try again.', help);
-        el('filterSummary').textContent = 'Connect a data source to begin';
-        el('heroDataNote').textContent = 'No real data connected · load the source CSV';
+        setText('filterSummary', 'Connect a data source to begin');
+        setText('heroDataNote', 'No real data connected · load the source CSV');
         return;
       }
       sourceStatus('ready', data.metadata.backend === 'database' ? 'Database connected' : 'Training CSV connected', data.metadata.rows_analyzed);
@@ -398,7 +423,7 @@
       clearCharts('A data response is not available for this view.');
       sourceStatus('error', 'Load error');
       showState('error', 'Dashboard request failed', error.message, 'Check the Flask server and data source, then retry.');
-      el('filterSummary').textContent = 'Unable to load dashboard data';
+      setText('filterSummary', 'Unable to load dashboard data');
     }
   }
   function resetFilters() {

@@ -146,7 +146,10 @@ class DashboardApiTests(unittest.TestCase):
         self.assertIn(b"tableau.embedding.3.latest.min.js", response.data)
 
     def test_missing_or_non_public_tableau_url_keeps_local_dashboard(self) -> None:
-        with patch.dict(os.environ, {"TABLEAU_PUBLIC_URL": "https://example.com/views/ev-market"}):
+        with patch.dict(os.environ, {
+            "TABLEAU_PUBLIC_URL": "https://example.com/views/ev-market",
+            "TABLEAU_STORY_URL": "",
+        }):
             response = self.client.get("/")
         self.assertEqual(response.status_code, 200)
         self.assertNotIn(b"<tableau-viz", response.data)
@@ -177,6 +180,16 @@ class DashboardApiTests(unittest.TestCase):
         self.assertIn(b'id="heroBatteryValue"', page)
         self.assertIn(b'id="heroRangeValue"', page)
         self.assertIn(b"Electric crossover concept illustration", page)
+
+    def test_dashboard_refreshes_script_and_guards_optional_text_targets(self) -> None:
+        page = self.client.get("/")
+        self.assertIn(b"dashboard.js?v=20261017-5", page.data)
+
+        with self.client.get("/static/js/dashboard.js?v=20261017-5") as script:
+            self.assertEqual(script.status_code, 200)
+            source = script.get_data(as_text=True)
+        self.assertIn("if (node) node.textContent = value;", source)
+        self.assertNotRegex(source, r"el\(['\"][^'\"]+['\"]\)\.textContent\s*=")
 
 
 class SqliteImportTests(unittest.TestCase):
