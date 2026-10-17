@@ -72,4 +72,4 @@ The uploaded project/performance requirement document was not accessible as a re
 | Tests | `tests/` | Complete; 10/10 pass |
 | Project, methodology, performance, database, Tableau, demo documentation | `docs/` plus `README.md` | Complete |
 | Refreshed Tableau Public handoff workbook | `../EV_Market_Performance_Public_Ready_Clean.twbx` | Clean extract verified and published |
-| Tableau Public URL/submission | [Published full dashboard](https://public.tableau.com/app/profile/man.mohan.singh3746/viz/EV_Market_Performance_Public_Ready_Clean/Dashboard1) | Complete; dataset owner confirmed checking terms and authorizing publication; independent license text remained unreadable |
+| Tableau Public URL/submission | [Dashboard 1](https://public.tableau.com/app/profile/man.mohan.singh3746/viz/EV_Market_Performance_Public_Ready_Clean/Dashboard1) and [Story 2](https://public.tableau.com/app/profile/man.mohan.singh3746/viz/EV_Market_Performance_Public_Ready_Clean/Story2) | Complete; dataset owner confirmed checking terms and authorizing publication; independent license text remained unreadable |
