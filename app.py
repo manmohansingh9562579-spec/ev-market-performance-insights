@@ -25,6 +25,7 @@ LOG = logging.getLogger(__name__)
 
 REQUIRED_FIELDS = {
     "vehicle_id",
+    "model_name",
     "manufacturer",
     "manufacturing_country",
     "market_region",
@@ -32,6 +33,7 @@ REQUIRED_FIELDS = {
     "battery_type",
     "model_year",
     "annual_sales_units",
+    "battery_capacity_kwh",
     "customer_rating",
     "range_km",
     "efficiency_wh_per_km",
@@ -40,6 +42,7 @@ REQUIRED_FIELDS = {
 
 ANALYTIC_FIELDS = [
     "vehicle_id",
+    "model_name",
     "manufacturer",
     "manufacturing_country",
     "market_region",
@@ -47,6 +50,7 @@ ANALYTIC_FIELDS = [
     "battery_type",
     "model_year",
     "annual_sales_units",
+    "battery_capacity_kwh",
     "customer_rating",
     "range_km",
     "efficiency_wh_per_km",
@@ -58,10 +62,12 @@ FILTER_FIELDS = {
     "battery_type": "battery_type",
     "region": "market_region",
     "category": "category",
+    "country": "manufacturing_country",
 }
 
 MEASURE_FIELDS = [
     "annual_sales_units",
+    "battery_capacity_kwh",
     "customer_rating",
     "range_km",
     "efficiency_wh_per_km",
@@ -373,6 +379,11 @@ class DashboardData:
         rating_by_category = self._rank(self._groups(data, "category", "customer_rating", "mean"), descending)
         range_by_category = self._rank(self._groups(data, "category", "range_km", "mean"), descending)
         efficiency_by_category = self._rank(self._groups(data, "category", "efficiency_wh_per_km", "mean"), descending)
+        annual_sales_by_year = self._groups(data, "model_year", "annual_sales_units", "sum")
+        annual_sales_by_year = sorted(annual_sales_by_year, key=lambda row: int(float(row["label"])))
+        battery_mix = self._rank(self._groups(data, "battery_type", "annual_sales_units", "sum"), True)
+        ranges = pd.to_numeric(data["range_km"], errors="coerce").dropna()
+        battery_capacity = pd.to_numeric(data["battery_capacity_kwh"], errors="coerce").dropna()
 
         kpis = {
             "annual_sales": {
@@ -389,6 +400,21 @@ class DashboardData:
                 "value": int(data["manufacturer"].nunique(dropna=True)),
                 "records_with_manufacturer": int(data["manufacturer"].notna().sum()),
                 "aggregation": "Distinct manufacturer names among filtered records.",
+            },
+            "model_count": {
+                "value": int(data["model_name"].nunique(dropna=True)),
+                "records_with_model_name": int(data["model_name"].notna().sum()),
+                "aggregation": "Distinct model_name values among filtered records.",
+            },
+            "average_range": {
+                "value": float(ranges.mean()) if not ranges.empty else None,
+                "valid_records": int(ranges.count()),
+                "aggregation": "Unweighted mean of range_km; each unique vehicle_id record has equal weight.",
+            },
+            "average_battery_capacity": {
+                "value": float(battery_capacity.mean()) if not battery_capacity.empty else None,
+                "valid_records": int(battery_capacity.count()),
+                "aggregation": "Unweighted mean of battery_capacity_kwh; each unique vehicle_id record has equal weight.",
             },
             "co2_savings": {
                 "value": float(co2.sum()) if not co2.empty else None,
@@ -417,6 +443,7 @@ class DashboardData:
                 "battery_type": parameters.get("battery_type", ""),
                 "region": parameters.get("region", ""),
                 "category": parameters.get("category", ""),
+                "country": parameters.get("country", ""),
                 "model_year_min": parameters.get("model_year_min", ""),
                 "model_year_max": parameters.get("model_year_max", ""),
                 "sort": sort_order,
@@ -431,6 +458,8 @@ class DashboardData:
                 "range_by_category": range_by_category,
                 "country_sales": country_sales,
                 "efficiency_by_category": efficiency_by_category,
+                "annual_sales_by_year": annual_sales_by_year,
+                "battery_mix": battery_mix,
             },
             "insights": insights,
             "metadata": {
@@ -446,7 +475,15 @@ class DashboardData:
 
 
 def tableau_public_url() -> str | None:
-    value = os.getenv("TABLEAU_PUBLIC_URL", "").strip()
+    return validated_tableau_url(os.getenv("TABLEAU_PUBLIC_URL", ""))
+
+
+def tableau_story_url() -> str | None:
+    return validated_tableau_url(os.getenv("TABLEAU_STORY_URL", ""))
+
+
+def validated_tableau_url(raw_value: str) -> str | None:
+    value = raw_value.strip()
     if not value:
         return None
     parsed = urlparse(value)
@@ -471,7 +508,11 @@ def create_app(config: dict[str, Any] | None = None) -> Flask:
 
     @app.get("/")
     def index():
-        return render_template("index.html", tableau_url=tableau_public_url())
+        return render_template(
+            "index.html",
+            tableau_url=tableau_public_url(),
+            tableau_story_url=tableau_story_url(),
+        )
 
     @app.get("/api/health")
     def health():

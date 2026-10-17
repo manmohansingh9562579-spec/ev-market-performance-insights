@@ -24,10 +24,10 @@ from app import DashboardData, create_app  # noqa: E402
 def required_rows() -> pd.DataFrame:
     return pd.DataFrame(
         [
-            {"vehicle_id": "EV001", "manufacturer": "Maker A", "manufacturing_country": "China", "market_region": "Asia", "category": "SUV", "battery_type": "LFP", "model_year": 2024, "annual_sales_units": 1000, "customer_rating": 4.5, "range_km": 350, "efficiency_wh_per_km": 160, "co2_saved_tons_per_year": 1.2},
-            {"vehicle_id": "EV002", "manufacturer": "Maker A", "manufacturing_country": "China", "market_region": "Asia", "category": "SUV", "battery_type": "NMC", "model_year": 2024, "annual_sales_units": 500, "customer_rating": 4.0, "range_km": 320, "efficiency_wh_per_km": 170, "co2_saved_tons_per_year": 1.1},
-            {"vehicle_id": "EV003", "manufacturer": "Maker B", "manufacturing_country": "Germany", "market_region": "Europe", "category": "Sedan", "battery_type": "LFP", "model_year": 2025, "annual_sales_units": 2000, "customer_rating": 5.0, "range_km": 400, "efficiency_wh_per_km": 150, "co2_saved_tons_per_year": 2.0},
-            {"vehicle_id": "EV004", "manufacturer": "Maker B", "manufacturing_country": "Germany", "market_region": "Europe", "category": "Sedan", "battery_type": "LFP", "model_year": 2025, "annual_sales_units": None, "customer_rating": None, "range_km": 430, "efficiency_wh_per_km": 140, "co2_saved_tons_per_year": 2.2},
+            {"vehicle_id": "EV001", "model_name": "Model One", "manufacturer": "Maker A", "manufacturing_country": "China", "market_region": "Asia", "category": "SUV", "battery_type": "LFP", "model_year": 2024, "annual_sales_units": 1000, "customer_rating": 4.5, "range_km": 350, "battery_capacity_kwh": 70, "efficiency_wh_per_km": 160, "co2_saved_tons_per_year": 1.2},
+            {"vehicle_id": "EV002", "model_name": "Model Two", "manufacturer": "Maker A", "manufacturing_country": "China", "market_region": "Asia", "category": "SUV", "battery_type": "NMC", "model_year": 2024, "annual_sales_units": 500, "customer_rating": 4.0, "range_km": 320, "battery_capacity_kwh": 65, "efficiency_wh_per_km": 170, "co2_saved_tons_per_year": 1.1},
+            {"vehicle_id": "EV003", "model_name": "Model Three", "manufacturer": "Maker B", "manufacturing_country": "Germany", "market_region": "Europe", "category": "Sedan", "battery_type": "LFP", "model_year": 2025, "annual_sales_units": 2000, "customer_rating": 5.0, "range_km": 400, "battery_capacity_kwh": 80, "efficiency_wh_per_km": 150, "co2_saved_tons_per_year": 2.0},
+            {"vehicle_id": "EV004", "model_name": "Model Three", "manufacturer": "Maker B", "manufacturing_country": "Germany", "market_region": "Europe", "category": "Sedan", "battery_type": "LFP", "model_year": 2025, "annual_sales_units": None, "customer_rating": None, "range_km": 430, "battery_capacity_kwh": 90, "efficiency_wh_per_km": 140, "co2_saved_tons_per_year": 2.2},
         ]
     )
 
@@ -73,6 +73,14 @@ class DashboardApiTests(unittest.TestCase):
         self.assertAlmostEqual(payload["kpis"]["average_rating"]["value"], 4.5)
         self.assertEqual(payload["kpis"]["manufacturer_count"]["value"], 2)
         self.assertAlmostEqual(payload["kpis"]["co2_savings"]["value"], 6.5)
+        self.assertEqual(payload["kpis"]["model_count"]["value"], 3)
+        self.assertAlmostEqual(payload["kpis"]["average_range"]["value"], 375)
+        self.assertAlmostEqual(payload["kpis"]["average_battery_capacity"]["value"], 76.25)
+        self.assertEqual(payload["charts"]["annual_sales_by_year"], [
+            {"label": "2024", "value": 1500.0, "records": 2},
+            {"label": "2025", "value": 2000.0, "records": 1},
+        ])
+        self.assertEqual(len(payload["charts"]["battery_mix"]), 2)
 
     def test_filters_change_aggregates(self) -> None:
         response = self.client.get("/api/dashboard?manufacturer=Maker%20A&model_year_min=2024&model_year_max=2024")
@@ -94,6 +102,14 @@ class DashboardApiTests(unittest.TestCase):
         response = self.client.get("/api/dashboard?category=NotARealCategory")
         self.assertEqual(response.status_code, 400)
         self.assertIn("Unknown category", response.get_json()["error"])
+
+    def test_country_filter_changes_aggregations(self) -> None:
+        response = self.client.get("/api/dashboard?country=Germany")
+        payload = response.get_json()
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(payload["metadata"]["filtered_rows"], 2)
+        self.assertEqual(payload["kpis"]["manufacturer_count"]["value"], 1)
+        self.assertEqual(payload["kpis"]["annual_sales"]["value"], 2000)
 
     def test_valid_filter_combination_can_return_empty_state(self) -> None:
         response = self.client.get("/api/dashboard?manufacturer=Maker%20A&region=Europe")
@@ -134,8 +150,19 @@ class DashboardApiTests(unittest.TestCase):
             response = self.client.get("/")
         self.assertEqual(response.status_code, 200)
         self.assertNotIn(b"<tableau-viz", response.data)
-        self.assertIn(b"No Tableau Public URL configured", response.data)
+        self.assertIn(b"Tableau Public link is not configured", response.data)
         self.assertIn(b"chartManufacturer", response.data)
+
+    def test_tableau_story_url_uses_official_embed_component(self) -> None:
+        with patch.dict(os.environ, {
+            "TABLEAU_PUBLIC_URL": "https://public.tableau.com/views/ev-market/Dashboard",
+            "TABLEAU_STORY_URL": "https://public.tableau.com/views/ev-market/Story2",
+        }):
+            response = self.client.get("/")
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b"tableauDashboardViz", response.data)
+        self.assertIn(b"tableauStoryViz", response.data)
+        self.assertIn(b"data-tableau-view=\"story\"", response.data)
 
 
 class SqliteImportTests(unittest.TestCase):

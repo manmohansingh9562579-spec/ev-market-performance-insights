@@ -4,9 +4,9 @@ A responsive Flask dashboard and MySQL-ready data workflow for the Electric Vehi
 
 ## What is included
 
-- Four correctly aggregated KPI cards: annual sales sum, unweighted average customer rating, distinct manufacturer count, and annual CO₂ savings sum.
-- Eight interactive visualizations: sales by manufacturer, battery type, region, category, and manufacturing country; average rating, range, and energy use by category.
-- Filters for manufacturer, battery type, region, category, and model-year range; chart sorting, tooltips, labels, and legends.
+- Seven KPI cards: annual sales sum, unweighted average customer rating, distinct manufacturer and model counts, average range, average battery capacity, and annual CO₂ savings sum.
+- Nine interactive visualizations: manufacturer, battery, region, category and country sales; customer rating, model-year sales trend, range and energy use.
+- Filters for manufacturer, battery type, region, category, manufacturing country, and model-year range; chart sorting, tooltips, labels, and legends.
 - Story and insights sequence, overview, methodology, findings, and limitations.
 - Loading, empty, missing-source, invalid-filter, and error states.
 - MySQL schema, analysis queries, safe repeatable CSV importer, and SQLite local-development support.
@@ -24,7 +24,7 @@ Together the two files contain 300,000 rows across matching 37-column schemas an
 
 The application uses the training split only by default. Keep the originals at their current location or set `EV_TRAIN_CSV` in a local `.env` file. No licensed source CSV is bundled in this project. The data profile contains inspected schema and quality results; see [`docs/data_profile.md`](docs/data_profile.md).
 
-The training file has one exact duplicate row, which the app removes in memory. It does not modify the source. Missing measures remain null and are omitted from the relevant sum or mean. Sales and CO₂ totals are dataset-field aggregates; the row grain and external interpretation of these fields should be confirmed before presenting them as market-wide totals.
+The training file has one exact duplicate row, which the app removes in memory. It does not modify the source. Missing measures remain null and are omitted from the relevant sum or mean. The UI includes distinct `model_name` and average `battery_capacity_kwh` summaries, plus annual sales grouped by `model_year`. Sales and CO₂ totals are dataset-field aggregates; the row grain and external interpretation of these fields should be confirmed before presenting them as market-wide totals.
 
 ## Run locally on Windows
 
@@ -50,7 +50,7 @@ For a local SQLite database, set `DATABASE_URL=sqlite:///ev_market.sqlite` in `.
 
 ## Tableau
 
-The original Tableau workbooks remain untouched. The refreshed local package `EV_Market_Performance_Public_Ready_Clean.twbx` uses the prepared, deduplicated 199,999-row training CSV through one embedded Hyper extract, and its seven existing chart worksheets use that source. The existing dashboard and Stories are preserved. The packaged workbook and prepared CSV are kept outside this source repository because they contain the dataset. Open the [full Dashboard 1](https://public.tableau.com/app/profile/man.mohan.singh3746/viz/EV_Market_Performance_Public_Ready_Clean/Dashboard1) or the [Story 2 narrative](https://public.tableau.com/app/profile/man.mohan.singh3746/viz/EV_Market_Performance_Public_Ready_Clean/Story2) on Tableau Public. The initial save URL opened only the Manufacturer Sales worksheet; Dashboard 1 shows the full dashboard. Its embedded extract is public. The dataset owner confirmed they checked the dataset terms and authorized publication; the assistant could not independently read Kaggle's license statement. See [`docs/tableau_public_workflow.md`](docs/tableau_public_workflow.md) for preparation evidence, account requirements, and publishing details. Flask remains a separate application and does not replace the Tableau workbook or Tableau Public submission. To show the full dashboard in Flask, set `TABLEAU_PUBLIC_URL` in the local `.env` file to the Dashboard 1 link above and restart the app; it uses Tableau's Embedding API v3 web component.
+The original Tableau workbooks remain untouched. The refreshed local package `EV_Market_Performance_Public_Ready_Clean.twbx` uses the prepared, deduplicated 199,999-row training CSV through one embedded Hyper extract, and its seven existing chart worksheets use that source. The existing dashboard and Stories are preserved. The packaged workbook and prepared CSV are kept outside this source repository because they contain the dataset. Open the [full Dashboard 1](https://public.tableau.com/app/profile/man.mohan.singh3746/viz/EV_Market_Performance_Public_Ready_Clean/Dashboard1) or the [Story 2 narrative](https://public.tableau.com/app/profile/man.mohan.singh3746/viz/EV_Market_Performance_Public_Ready_Clean/Story2) on Tableau Public. The initial save URL opened only the Manufacturer Sales worksheet; Dashboard 1 shows the full dashboard. Its embedded extract is public. The dataset owner confirmed they checked the dataset terms and authorized publication; the assistant could not independently read Kaggle's license statement. See [`docs/tableau_public_workflow.md`](docs/tableau_public_workflow.md) for preparation evidence, account requirements, and publishing details. Flask remains a separate application and does not replace the Tableau workbook or Tableau Public submission. Set `TABLEAU_PUBLIC_URL` and `TABLEAU_STORY_URL` in local `.env` to the Dashboard 1 and Story 2 links to enable the official Embedding API v3 views; local charts remain functional without either URL.
 
 ## Checks
 

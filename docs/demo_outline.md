@@ -1,12 +1,12 @@
 # Demonstration outline
 
-Estimated walkthrough: 5–7 minutes.
+Target length: 5–7 minutes. Record a screen-share walkthrough using this order.
 
-1. **Scope (30 sec):** identify the Kaggle EV dataset, the 200,000-row training split and 100,000-row test split, and explain why the app uses only train data for this descriptive dashboard.
-2. **Data quality (45 sec):** show one exact duplicate, the five fields with missingness, and explain that the source file remains unchanged.
-3. **Dashboard KPIs (45 sec):** explain sum, mean, distinct count, and null handling before interpreting the values.
-4. **Market comparisons (60 sec):** discuss sales by manufacturer, chemistry, region, category, and manufacturing-country labels.
-5. **Vehicle performance (60 sec):** compare customer ratings, range, and energy consumption. Explain that range/rating/efficiency are averages and lower Wh/km indicates less energy use per kilometer.
-6. **Filters and Story (60 sec):** choose one manufacturer, region, or model-year interval and demonstrate that the KPIs and all charts recompute; move through the insight narrative.
-7. **Database and Tableau (60 sec):** show the SQL schema/import workflow, then open the separate packaged Tableau workbook, its [full published dashboard](https://public.tableau.com/app/profile/man.mohan.singh3746/viz/EV_Market_Performance_Public_Ready_Clean/Dashboard1), and the [Story 2 narrative](https://public.tableau.com/app/profile/man.mohan.singh3746/viz/EV_Market_Performance_Public_Ready_Clean/Story2). Explain that Tableau Public uses an extract and makes the workbook/data public.
-8. **Performance and limitations (30 sec):** show measured in-process timings and the SQL/HTTP/browser checks still marked pending; reiterate that sums are field aggregates pending grain validation.
+1. **Introduce the project (30 sec):** state the EV market problem, your name/team, and why manufacturer, battery, customer and vehicle performance comparisons matter.
+2. **Show data source and scope (45 sec):** identify the Kaggle dataset and actual train/test files. State that the Flask dashboard uses only the 200,000-row training file, removes one exact duplicate in memory, and keeps the test split separate.
+3. **Explain preparation (45 sec):** show docs/data_profile.md and docs/methodology.md. Explain missing values, numeric parsing, duplicate handling, aggregation grain and that the source CSV stays unchanged.
+4. **Tour the dashboard (60 sec):** explain the seven KPIs and their aggregation rules. Tour all nine charts, including sales by manufacturer, battery, region, category and country labels, plus rating, model-year grouping, range and Wh/km efficiency.
+5. **Demonstrate interaction (60 sec):** apply manufacturer, battery, region, category, country and model-year filters; reset them; change sales sort. Explain that KPIs and chart values recalculate and show one empty selection if practical.
+6. **Present the Story (60 sec):** follow the narrative from market scale to market mix, customer satisfaction and vehicle capability; then summarize the key data limitations.
+7. **Show database and Tableau deliverables (60 sec):** show the MySQL schema/import instructions and note that MySQL connectivity was not tested. Open the separate Tableau workbook, [published Dashboard 1](https://public.tableau.com/app/profile/man.mohan.singh3746/viz/EV_Market_Performance_Public_Ready_Clean/Dashboard1), and [published Story 2](https://public.tableau.com/app/profile/man.mohan.singh3746/viz/EV_Market_Performance_Public_Ready_Clean/Story2). Explain Tableau Public makes the workbook and embedded data public.
+8. **Close with performance evidence (30 sec):** present the measured in-process load and response numbers from docs/performance_report.md, clarify browser/MySQL checks are pending, and show the public GitHub source repository.

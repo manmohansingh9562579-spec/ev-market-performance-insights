@@ -2,33 +2,31 @@
 
 ## Overview
 
-This project provides two deliverables for EV market exploration: a responsive Flask analytics application and a preserved/enhanced Tableau packaged workbook. The Flask app is independently usable and can optionally show a published Tableau view when a valid Tableau Public URL is supplied.
+The project has two separate deliverables: a responsive Flask dashboard and a Tableau packaged workbook with a published Dashboard and Story. Flask is usable on its own and can optionally embed the Tableau Public Dashboard and Story. Flask is not a replacement for the required Tableau workbook or its public submission.
 
-## Dataset findings
+## Dataset and evidence
 
-The actual local files contain 200,000 training rows and 100,000 test rows, with 37 columns in each split. Training size is 46,478,548 bytes; test size is 23,238,435 bytes. The splits have matching schemas and no overlapping vehicle IDs. Train has one exact duplicate row; test has none. Missingness is concentrated in five fields and about 0.257% of all cells in each split. See [`data_profile.md`](data_profile.md) for every field, inferred type, and missing count.
+The available Kaggle source files contain 200,000 training rows and 100,000 test rows, each with 37 columns. Their sizes are 46,478,548 and 23,238,435 bytes. The web dashboard uses the training split only. It removes one exact duplicate in memory, leaving 199,999 rows. The test split is reported separately and is not combined into dashboard totals.
 
-The training data contains 200 manufacturers, 10 manufacturing-country labels, 7 market regions, 15 categories, and 5 battery types. Candidate train aggregates after exact deduplication include 1,550,694,926 annual sales units, a 4.088754 mean rating, and 737,925.127 annual CO₂-savings field units. These are calculations over the dataset fields, not independent proof of global-market totals; see the row-grain caveat in the methodology.
+The training data contains 200 manufacturer labels, 10 manufacturing-country labels, 7 market-region labels, 15 categories, and 5 battery-type labels. In the deduplicated training frame, annual_sales_units sums to 1,550,694,926, customer_rating averages 4.088754, and co2_saved_tons_per_year sums to 737,925.127. These are arithmetic summaries of the dataset fields, not independently validated global market totals. See docs/data_profile.md and docs/methodology.md for the row-grain caveat.
 
-## Product behavior
+## Dashboard and analysis
 
-The Flask UI has four KPI cards, eight charts, five filter dimensions (including a model-year range), a story/insights sequence, methodology notes, and responsive CSS layouts. Data is loaded from the CSV by default or from SQLAlchemy when a database URL is configured. The app never falls back silently from a failed configured database to a different source.
+The Flask dashboard provides 7 KPIs: annual sales sum, average rating, distinct manufacturers, CO2 savings sum, distinct model names, average range, and average battery capacity. It renders 9 charts for manufacturer and battery mix, region, category, customer rating, model-year sales, range, manufacturing-country labels and energy efficiency. Six filters include manufacturer, battery type, region, category, manufacturing country and model-year range; sales charts can be sorted.
 
-The Tableau packaged workbook is a separate deliverable. The refreshed handoff copy preserves seven chart sheets, its dashboard, and both Stories, and uses one embedded Hyper extract created from the deduplicated 199,999-row CSV. The two original `.twb` workbooks and older package versions were not overwritten. The full dashboard and eight-step Story 2 narrative are published at [Tableau Public](https://public.tableau.com/app/profile/man.mohan.singh3746/viz/EV_Market_Performance_Public_Ready_Clean/Dashboard1) and [Story 2](https://public.tableau.com/app/profile/man.mohan.singh3746/viz/EV_Market_Performance_Public_Ready_Clean/Story2). The dataset owner confirmed checking the dataset terms and authorizing publication; the assistant could not independently read Kaggle's dataset-specific license statement.
+All metrics are recomputed for the active filters. Counts use distinct names, sales and CO2 are sums of non-null supplied values, and ratings/range/capacity/efficiency are unweighted means. The training data includes missing values; no zero imputation is used. Exact duplicate records are excluded. Conflicting non-identical vehicle IDs would be excluded as a group.
 
-## Limitations and next operational steps
+## Tableau deliverable
 
-- MySQL server connectivity, schema execution, CSV import, and SQL timing remain pending.
-- The Flask embed reads `TABLEAU_PUBLIC_URL` from the local `.env`; set it to the published Tableau Public link and restart Flask to show the view. The app keeps its local charts when the URL is unset.
-- Local HTTP/browser access was unavailable for this measurement environment; web-rendering and viewport verification remain pending.
-- The test suite uses synthetic rows to verify calculation logic and SQLite import, while actual-data checks separately compare filtered results against a pandas aggregate.
-- The dataset owner confirmed checking licensing before publication. Metric grain and field definitions still need to be interpreted with care before presenting totals as externally validated market totals.
+The separate refreshed Tableau handoff package preserves 7 chart worksheets, the existing dashboard and two Stories, with a prepared 199,999-row extract. The published [Dashboard 1](https://public.tableau.com/app/profile/man.mohan.singh3746/viz/EV_Market_Performance_Public_Ready_Clean/Dashboard1) and [Story 2](https://public.tableau.com/app/profile/man.mohan.singh3746/viz/EV_Market_Performance_Public_Ready_Clean/Story2) are public. The owner confirmed checking the dataset terms and authorizing publication. The assistant could not independently read the Kaggle-specific license statement.
 
-## Suggested presentation sequence
+## Implementation and test evidence
 
-1. State the data scope and train/test split.
-2. Explain deduplication, null handling, and aggregation semantics.
-3. Show the KPI summary and sales distribution by manufacturer, battery, region, category, and country.
-4. Compare rating, range, and Wh/km averages.
-5. Apply filters to demonstrate how KPIs and charts recompute.
-6. Explain limitations, measured performance scope, and show the published Tableau Public view.
+Source files are in app.py, templates/, static/, sql/, scripts/, tests/ and docs/. The project includes MySQL schema and analysis queries, a repeatable import workflow, and SQLite local development support. The automated unit suite was last run with 12 passing tests. A measured in-process Flask benchmark records source load and response times; it does not measure browser render time.
+
+## Limits and remaining submission actions
+
+- MySQL server connectivity, schema execution, import, query plans and query timing remain unverified and are marked pending.
+- Local HTTP/browser access was restricted during the performance run, so manual desktop/mobile rendering and end-to-end load time remain pending.
+- Sales and CO2 sums use the dataset's supplied row values. The source context does not establish whether those rows represent non-overlapping market-period observations, so don't present them as externally validated market totals.
+- The owner still needs to record the requested 5–7 minute end-to-end explanation video using docs/demo_outline.md.

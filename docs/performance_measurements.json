@@ -1,6 +1,6 @@
 {
   "status": "measured",
-  "measured_at_utc": "2026-10-17T08:12:17.192683+00:00",
+  "measured_at_utc": "2026-10-17T09:44:15.435046+00:00",
   "environment": {
     "platform": "Windows-11-10.0.26200-SP0",
     "python": "3.14.2",
@@ -32,13 +32,13 @@
     "train_split_only": true,
     "unique_manufacturers": 200
   },
-  "data_load_response_ms": 1402.079,
-  "first_dashboard_response_ms": 199.395,
+  "data_load_response_ms": 1465.877,
+  "first_dashboard_response_ms": 260.409,
   "dashboard_response_ms": {
-    "min": 200.305,
-    "median": 204.499,
-    "p95": 207.561,
-    "max": 208.811
+    "min": 247.257,
+    "median": 253.895,
+    "p95": 268.841,
+    "max": 276.799
   },
   "dashboard_status_codes": [
     200,

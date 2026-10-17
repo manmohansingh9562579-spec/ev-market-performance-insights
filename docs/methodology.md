@@ -19,10 +19,15 @@ The database importer is stricter because `vehicle_id` is a primary key: after r
 - Annual sales: `SUM(annual_sales_units)` across unique analyzed records; nulls skipped.
 - Rating: unweighted `AVG(customer_rating)`; each record with a rating has equal weight.
 - Manufacturer count: `COUNT(DISTINCT manufacturer)` in the filtered rows.
+- Model count: `COUNT(DISTINCT model_name)` in the filtered rows.
+- Average driving range: unweighted `AVG(range_km)`; range is not summed.
+- Average battery capacity: unweighted `AVG(battery_capacity_kwh)`; capacity is not summed.
 - CO₂ savings: `SUM(co2_saved_tons_per_year)` across unique analyzed records; nulls skipped.
-- Sales charts: sum annual sales by their category dimension.
+- Sales charts: sum annual sales by manufacturer, battery type, market region, category, manufacturing country, or model year.
 - Rating, range, and energy charts: unweighted average by vehicle category. Range is not summed. Lower Wh/km indicates lower energy use per distance.
+- Battery mix: sales by battery type; the doughnut segments show each type's share of their displayed sales total.
 - Country visualization: sales grouped by the supplied manufacturing-country text; no geocoding or map coordinates are inferred.
+- The annual-sales trend groups the supplied `model_year` values. The source does not define this field as a sales-observation year, so the chart is labelled by model year.
 
 Sales and CO₂ fields are described as dataset totals or candidate aggregates. The supplied document and data do not establish whether each row is a vehicle model, trim, or a market-period observation, or whether the CO₂ measure can be summed without overlap. Validate those definitions before presenting totals as externally validated market-wide metrics.
 

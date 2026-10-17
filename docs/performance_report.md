@@ -1,69 +1,88 @@
-# Performance and acceptance report
+# Performance test report
 
-## Environment and method
+## Scope and counting rules
 
-- Measured: 2026-10-17 (UTC timestamp in benchmark output).
-- OS: Windows 11 build 10.0.26200; Python 3.14.2; pandas 3.0.2.
-- Data backend: actual training CSV from the local download archive.
-- Repeatable command: `python scripts/benchmark_inprocess.py`.
-- Machine-readable measurements: [`performance_measurements.json`](performance_measurements.json).
-- The benchmark used Flask's in-process test client. It measured data loading through `/api/health`, recorded the first dashboard request separately, then timed 20 sequential warmed `/api/dashboard` calls. It also checked one filtered result against direct pandas calculations.
-- It does not measure TCP/HTTP, browser rendering, CDN fetch, concurrent users, or production server throughput. The separate socket benchmark and browser preview could not reach the local server in this environment; those results are pending, not inferred from in-process timings.
+This report distinguishes the Flask dashboard from the preserved Tableau workbook. Chart counts are per deliverable and are not added together. A chart means one distinct analytical view on the page; KPI cards, filter controls, Story steps, and optional embedded Tableau views do not count as Flask charts.
+
+The Flask dashboard has 9 chart canvases:
+1. Sales by manufacturer (top 12, sum of annual sales units).
+2. Battery technology mix (sum of annual sales units by battery type).
+3. Sales by market region (sum).
+4. Sales by vehicle category (sum).
+5. Average customer rating by category.
+6. Annual sales grouped by model year (sum).
+7. Average range by category.
+8. Sales by supplied manufacturing-country label (sum).
+9. Average energy use by category.
+
+The refreshed Tableau workbook is a separate artifact with 7 existing chart worksheets, in addition to its dashboard and Stories. KPI cards, story scenes, and filters are not counted as charts. The Flask and Tableau counts are not summed.
 
 ## Amount of data
 
-| Split | CSV rows | Fields | CSV size | Missing cells | Exact duplicate rows |
-|---|---:|---:|---:|---:|---:|
-| Train | 200,000 | 37 | 46,478,548 bytes | 18,996 (0.2567%) | 1 |
-| Test | 100,000 | 37 | 23,238,435 bytes | 9,511 (0.2571%) | 0 |
+The source profile in docs/data_profile.md records both actual CSV splits:
 
-The train dashboard removes the one exact duplicate, yielding 199,999 analyzed rows. No conflicting vehicle IDs were found in the train split; there were no missing IDs or negative sales rows. The test split has no vehicle IDs overlapping the train split. The full per-field profile is in [`data_profile.md`](data_profile.md).
+| Source | Rows | Columns | File size |
+|---|---:|---:|---:|
+| ev_market_train.csv | 200,000 | 37 | 46,478,548 bytes (44.33 MiB) |
+| ev_market_test.csv | 100,000 | 37 | 23,238,435 bytes (22.16 MiB) |
+| Both files | 300,000 | 37 per file | 69,716,983 bytes (66.49 MiB) |
 
-Across both split files, that is 300,000 source rows and 69,716,983 bytes (about 66.49 MiB) across matching 37-column schemas. The dashboard does not combine the splits.
+The Flask dashboard and its benchmark use only the training split. It removes one exact duplicate in memory, leaving 199,999 analyzed rows; the source CSV is not edited. It reports 18,996 missing cells across the raw training file. The exact field-level missing counts are listed in docs/data_profile.md.
 
-## Data utilization
+## Field utilization
 
-The Flask dashboard uses **12 of 37 fields = 32.43%**. Calculation: `12 / 37 × 100`, rounded to two decimals. `vehicle_id` is counted because it is required to deduplicate and prevent double counting; the other 11 fields are displayed or aggregated.
+The Flask dashboard requires and uses 14 of the dataset's 37 columns:
 
-**Fields used:** `vehicle_id`, `manufacturer`, `manufacturing_country`, `market_region`, `category`, `battery_type`, `model_year`, `annual_sales_units`, `customer_rating`, `range_km`, `efficiency_wh_per_km`, `co2_saved_tons_per_year`.
+vehicle_id, model_name, manufacturer, manufacturing_country, market_region, category, battery_type, model_year, annual_sales_units, battery_capacity_kwh, customer_rating, range_km, efficiency_wh_per_km, co2_saved_tons_per_year.
 
-**Fields unused by the Flask dashboard (25):** `model_name`, `battery_capacity_kwh`, `battery_cycle_life`, `battery_degradation_pct_5yr`, `motor_power_kw`, `torque_nm`, `num_motors`, `drivetrain`, `top_speed_kmph`, `acceleration_0_100_sec`, `max_dc_charging_kw`, `charging_dc_fast_time_min`, `charging_ac_time_hr`, `num_charging_ports`, `num_seats`, `weight_kg`, `cargo_capacity_liters`, `price_usd`, `insurance_cost_usd_yearly`, `warranty_years`, `resale_value_pct_3yr`, `safety_rating_stars`, `autonomous_level`, `infotainment_screen_inch`, `recommended_use_case`.
+Calculation: 14 used fields / 37 source fields × 100 = 37.84%.
 
-Tableau workbook count is separate: **9 of 37 = 24.32%**, counting the distinct fields used by its existing sheets/dashboard. The clean local Tableau package uses a Hyper extract created from the 199,999-row deduplicated training CSV. Tableau calculation inventory: zero calculated-field formulas, three distinct field/aggregation pairs (`SUM(annual_sales_units)`, `AVG(customer_rating)`, `AVG(range_km)`), and seven measure placements across chart sheets. This is not added to Flask's field-use percentage.
+The 23 columns not used in Flask aggregations or filters are:
 
-## Calculations, measures, and transformations
+battery_cycle_life, battery_degradation_pct_5yr, motor_power_kw, torque_nm, num_motors, drivetrain, top_speed_kmph, acceleration_0_100_sec, max_dc_charging_kw, charging_dc_fast_time_min, charging_ac_time_hr, num_charging_ports, num_seats, weight_kg, cargo_capacity_liters, price_usd, insurance_cost_usd_yearly, warranty_years, resale_value_pct_3yr, safety_rating_stars, autonomous_level, infotainment_screen_inch, recommended_use_case.
 
-Counting rule for the Flask implementation:
+The utilization percentage describes the Flask dashboard only. It is not a claim that every Tableau worksheet uses the same set of fields.
 
-- **Calculated fields:** 0 named/persisted calculated fields are created.
-- **KPI calculations:** 4 definitions: annual-sales sum, unweighted average rating, distinct manufacturer count, and CO₂ field sum.
-- **Chart aggregation definitions:** 8 chart outputs: five sales sums (manufacturer, battery, region, category, country) and three category means (rating, range, Wh/km).
-- **Source measures:** 5 distinct numeric measures used: `annual_sales_units`, `customer_rating`, `range_km`, `efficiency_wh_per_km`, and `co2_saved_tons_per_year`.
-- **Data-preparation transformations:** 3 conceptual operations: remove exact duplicate rows; detect and exclude conflicting vehicle IDs in dashboard analysis (none occurred in actual train); coerce numeric measures/model year and leave invalid values null. The importer rejects ambiguous/missing IDs instead of excluding them.
+## Calculation and transformation counts
 
-KPI definitions are not summed into chart-aggregation counts: the count is split by purpose to avoid inflating a single opaque “calculation” number. Nulls are ignored by sum/mean; manufacturer count is distinct, not a sum.
+These categories are counted separately to avoid mixing formulas and source columns:
 
-## Visualization count
+- 7 KPI calculations: sum of annual sales; unweighted mean customer rating; distinct manufacturer count; sum of the CO2-savings field; distinct model-name count; unweighted mean range; and unweighted mean battery capacity.
+- 9 chart aggregation expressions: 6 sales sums by manufacturer, battery type, region, category, model year, and manufacturing country; and 3 unweighted means by category for rating, range, and Wh/km efficiency. Battery mix shows grouped sales as shares of the grouped sales total.
+- 6 numeric source measures used by these aggregations: annual_sales_units, battery_capacity_kwh, customer_rating, range_km, efficiency_wh_per_km, co2_saved_tons_per_year.
+- 3 data-preparation operations: remove exact duplicate rows in memory; coerce the six numeric measures and model_year to numeric values; exclude all rows for any vehicle_id with conflicting non-identical records. Missing values remain null and are skipped by the relevant aggregation.
+- 0 new named Tableau calculated fields in the refreshed copy; the existing workbook's aggregation behavior is preserved.
 
-The Flask UI contains **8 chart visualizations**, counted as eight unique chart `<canvas>` elements: manufacturer sales, battery sales, region sales, category sales, country sales, rating by category, range by category, and efficiency by category. KPI cards, filter controls, insights text, and the conditional Tableau embed are not counted as charts.
+KPI definitions and data-grain caveats are documented in docs/methodology.md.
 
-The Tableau packaged workbook has **7 chart worksheet visualizations**, counted as distinct existing chart sheets; filter controls, dashboard containers, and Story points are not extra charts. The workbook also preserves the dashboard and two Stories.
+## Measured Flask performance
 
-## Timings and correctness
+Environment: Windows 11 build 10.0.26200, Python 3.14.2, pandas 3.0.2. Measurement timestamp: 2026-10-17 09:44:15 UTC.
 
-| Measurement | Result | Method / limitation |
-|---|---:|---|
-| Data load response | 1,402.079 ms | First in-process GET `/api/health`, which loads and profiles the actual 200,000-row CSV |
-| First dashboard response | 199.395 ms | First in-process GET `/api/dashboard`, reported separately |
-| 20 warmed dashboard responses | min 200.305 ms; median 204.499 ms; p95 207.561 ms; max 208.811 ms | Sequential Flask test-client requests in one process; no socket/browser/CDN |
-| Actual manufacturer-filter correctness | Passed | `AmpereAuto`: expected and returned 964 rows; expected and returned sales 7,178,632; rating matched at 4.09881981032666 |
-| Automated tests | 10/10 passed | Synthetic test fixtures, SQLite import/read integration, and Tableau embed URL behavior; not Kaggle result data |
-| SQL query performance | Pending | No MySQL installation/configuration or database URL was available. `scripts/benchmark_sql.py` emits a pending status instead of claiming timings. |
-| Local HTTP response timing | Pending | Local socket access was denied/timed out; `scripts/benchmark_dashboard.py --runs 20` cannot connect from this environment. |
-| Browser load / mobile and desktop visual behavior | Pending | CUA browser could not open the local server URL. CSS breakpoints are implemented, but no browser viewport timing or visual pass is claimed. |
+Method: an in-process Flask test client loaded the real training CSV through the health endpoint, timed one first dashboard call, then timed 20 sequential warmed dashboard API calls. No TCP socket, browser, CDN, concurrent users, or production WSGI server was involved.
 
-The filtered actual-data check uses the loaded, deduplicated frame and compares the dashboard endpoint result with independently computed pandas subset sales and rating. Unit tests also cover filter changes, invalid filters, valid filters with empty results, sorting/insight consistency, missing source, conflicting IDs, and SQLite read/import behavior.
+| Measurement | Result |
+|---|---:|
+| Training data load / health response | 1,465.877 ms |
+| First dashboard API response | 260.409 ms |
+| 20 warmed dashboard calls — minimum | 247.257 ms |
+| Median | 253.895 ms |
+| 95th percentile | 268.841 ms |
+| Maximum | 276.799 ms |
 
-## Response-time limitations and interpretation
+The 20 dashboard calls returned HTTP 200. These are application test-client response times, not end-to-end page load or chart rendering times. Raw machine-readable results are in docs/performance_measurements.json.
 
-The in-process timing excludes HTTP server/socket overhead, template rendering after route delivery, client-side chart rendering, CDN/Google Fonts downloads, and external network latency. One sequential local client is not a load or concurrency test. The timings describe this specific Windows/Python/pandas environment and should not be presented as production guarantees or measured improvements.
+## Correctness and behavior
+
+A real-data filter check selected manufacturer AmpereAuto. Expected values were independently calculated from the deduplicated training frame and matched the API: 964 rows, annual sales sum 7,178,632, and average rating 4.09881981032666. The benchmark marked the comparison passed.
+
+The automated suite contains 12 tests and was last run successfully after the dashboard changes. It covers KPI aggregations and deduplication, combined filters, sorting, invalid filters, country filtering, empty results, conflicting vehicle IDs, missing data, Tableau embed URL handling, Story embedding, and repeatable SQLite import plus dashboard reads. Test fixtures are synthetic and are not reported as dataset findings.
+
+## Pending checks and limitations
+
+- Browser visual rendering and responsive behavior could not be confirmed because local browser/TCP access was restricted in this environment. The CSS includes responsive breakpoints, but manual desktop/mobile inspection remains pending.
+- Error, missing-data, and empty-data states have automated API/template coverage; manual browser interaction remains pending.
+- MySQL is not configured here. MySQL schema execution, import, query timing, and query plan checks are pending. No MySQL success is claimed.
+- Local HTTP benchmark and page-load timings are pending. The in-process numbers above cannot establish a user's browser load time.
+- Concurrency, production deployment, network latency, CDN availability, and Tableau Public render time were not measured.
+- Sales and CO2 sums are sums of supplied fields over unique records. The dataset documentation available here does not independently establish market-period grain or that those values represent non-overlapping global totals.
