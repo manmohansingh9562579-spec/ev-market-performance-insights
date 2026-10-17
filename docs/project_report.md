@@ -18,7 +18,7 @@ All metrics are recomputed for the active filters. Counts use distinct names, sa
 
 ## Tableau deliverable
 
-The separate refreshed Tableau handoff package preserves 7 chart worksheets, the existing dashboard and two Stories, with a prepared 199,999-row extract. The published [Dashboard 1](https://public.tableau.com/app/profile/man.mohan.singh3746/viz/EV_Market_Performance_Public_Ready_Clean/Dashboard1) and [Story 2](https://public.tableau.com/app/profile/man.mohan.singh3746/viz/EV_Market_Performance_Public_Ready_Clean/Story2) are public. The owner confirmed checking the dataset terms and authorizing publication. The assistant could not independently read the Kaggle-specific license statement.
+The separate refreshed Tableau handoff package preserves 7 chart worksheets, the existing dashboard and two Stories, with a prepared 199,999-row extract. The published [Dashboard 1](https://public.tableau.com/app/profile/man.mohan.singh3746/viz/EV_Market_Performance_Green_Executive_Refresh/Dashboard1) and [Story 2](https://public.tableau.com/app/profile/man.mohan.singh3746/viz/EV_Market_Performance_Green_Executive_Refresh/Story2) are public. The owner confirmed checking the dataset terms and authorizing publication. The assistant could not independently read the Kaggle-specific license statement.
 
 ## Implementation and test evidence
 

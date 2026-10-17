@@ -1,13 +1,13 @@
 const views = {
   dashboard: {
     title: 'EV Market Performance dashboard',
-    src: 'https://public.tableau.com/views/EV_Market_Performance_Public_Ready_Clean/Dashboard1',
-    direct: 'https://public.tableau.com/app/profile/man.mohan.singh3746/viz/EV_Market_Performance_Public_Ready_Clean/Dashboard1'
+    src: 'https://public.tableau.com/views/EV_Market_Performance_Green_Executive_Refresh/Dashboard1',
+    direct: 'https://public.tableau.com/app/profile/man.mohan.singh3746/viz/EV_Market_Performance_Green_Executive_Refresh/Dashboard1'
   },
   story: {
     title: 'EV Market Performance data story',
-    src: 'https://public.tableau.com/views/EV_Market_Performance_Public_Ready_Clean/Story2',
-    direct: 'https://public.tableau.com/app/profile/man.mohan.singh3746/viz/EV_Market_Performance_Public_Ready_Clean/Story2'
+    src: 'https://public.tableau.com/views/EV_Market_Performance_Green_Executive_Refresh/Story2',
+    direct: 'https://public.tableau.com/app/profile/man.mohan.singh3746/viz/EV_Market_Performance_Green_Executive_Refresh/Story2'
   }
 };
 

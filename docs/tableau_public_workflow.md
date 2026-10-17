@@ -4,7 +4,7 @@
 
 The original `Book1.twb` and `EV_Market_Performance.twb` files in the Tableau Workbooks folder were left unchanged. Other local packaged workbook versions under `outputs/` were also retained.
 
-Use the local output file `EV_Market_Performance_Public_Ready_Clean.twbx` for the Tableau Public handoff. It was saved as a separate package in Tableau Public Desktop 2026.2 from the prepared CSV. Verification of the saved package found one embedded Hyper file (18,808,832 uncompressed bytes; the `.twbx` package is 11,210,219 bytes), one data source captioned `ev_market_train_tableau`, and all seven distinct chart worksheets connected to that data source. The existing dashboard and two Stories remain in the workbook. The original source extracts are not present in this clean package. The `.twbx` and prepared CSV are kept outside the source repository because they contain the dataset.
+The current public workbook is `EV_Market_Performance_Green_Executive_Refresh.twbx`, saved as a separate package in Tableau Public Desktop 2026.2 from the prepared CSV. It preserves the seven chart worksheets, dashboard, and two Stories, and adds six compact KPI cards for manufacturer count, EV models, annual sales, average rating, driving range, and battery capacity. The original source workbooks remain untouched. The `.twbx` and prepared CSV are kept outside this source repository because they contain the dataset.
 
 The prepared source `ev_market_train_tableau.csv` has 199,999 rows and 37 columns after removing the single exact duplicate from the 200,000-row train CSV. The source CSV was not modified. The workbook's embedded Hyper extract was generated from this prepared file; Tableau's data preview showed 37 fields and 199,999 rows before saving. The package also contains a text connection pointing to the prepared CSV's local output-folder path for refresh. When moving the workbook to another computer, use the embedded extract for viewing; reconnect to a local copy of the prepared CSV if refreshing.
 
@@ -24,13 +24,13 @@ Tableau Public workbooks can expose downloadable workbook data; publishing is a 
 
 After the owner's license confirmation:
 
-1. Open the local output file `EV_Market_Performance_Public_Ready_Clean.twbx` in Tableau Public Desktop. Confirm the extract is available and the dashboard, seven chart sheets, filters, and both Stories load.
+1. Open the local output file `EV_Market_Performance_Green_Executive_Refresh.twbx` in Tableau Public Desktop. Confirm the extract is available and the dashboard, KPI cards, seven chart sheets, filters, and both Stories load.
 2. Review the dashboard at desktop and phone sizes. Check filter behavior and verify the sales total against the deduplicated source if you use the total in a submission.
 3. In Tableau Public Desktop, choose **File → Save to Tableau Public**, then sign in to the Tableau Public account. Review the workbook title and public visibility before completing the upload.
-4. The save/upload completed. The initial published URL opened the Manufacturer Sales worksheet. The full dashboard was verified at <https://public.tableau.com/app/profile/man.mohan.singh3746/viz/EV_Market_Performance_Public_Ready_Clean/Dashboard1>; its title and multiple chart zones loaded. Story 2 was verified at <https://public.tableau.com/app/profile/man.mohan.singh3746/viz/EV_Market_Performance_Public_Ready_Clean/Story2>; its eight story points loaded.
+4. The refreshed workbook was published successfully. The full dashboard, including the six KPI cards, was verified at <https://public.tableau.com/app/profile/man.mohan.singh3746/viz/EV_Market_Performance_Green_Executive_Refresh/Dashboard1>. Story 2 is available at <https://public.tableau.com/app/profile/man.mohan.singh3746/viz/EV_Market_Performance_Green_Executive_Refresh/Story2>.
 5. To show the full dashboard inside Flask, set `TABLEAU_PUBLIC_URL` to the Dashboard 1 URL in a local `.env` file and restart Flask. The app converts Tableau Public profile share links (`/app/profile/.../viz/...`) into `/views/<workbook>/<view>` and adds literal `:showVizHome=no` and `:embed=true` query keys, so Tableau serves the view directly inside the frame. If the variable is unset, the local Flask dashboard continues to work without an embed.
 
-Tableau Public account login and publishing must be completed by the account owner. Do not enter a password into the Flask project or commit `.env`.
+The refreshed package was published from the account owner's signed-in Tableau Public session. Do not enter a password into the Flask project or commit `.env`.
 
 ## Tableau Public limits and visibility
 
