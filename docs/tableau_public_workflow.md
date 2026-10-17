@@ -28,7 +28,7 @@ After the owner's license confirmation:
 2. Review the dashboard at desktop and phone sizes. Check filter behavior and verify the sales total against the deduplicated source if you use the total in a submission.
 3. In Tableau Public Desktop, choose **File → Save to Tableau Public**, then sign in to the Tableau Public account. Review the workbook title and public visibility before completing the upload.
 4. The save/upload completed. The initial published URL opened the Manufacturer Sales worksheet. The full dashboard was verified at <https://public.tableau.com/app/profile/man.mohan.singh3746/viz/EV_Market_Performance_Public_Ready_Clean/Dashboard1>; its title and multiple chart zones loaded. Story 2 was verified at <https://public.tableau.com/app/profile/man.mohan.singh3746/viz/EV_Market_Performance_Public_Ready_Clean/Story2>; its eight story points loaded.
-5. To show the full dashboard inside Flask, set `TABLEAU_PUBLIC_URL` to the Dashboard 1 URL in a local `.env` file and restart Flask. The app converts Tableau Public profile share links (`/app/profile/.../viz/...`) into the canonical `/views/<workbook>/<view>` URL expected by the embed component. If the variable is unset, the local Flask dashboard continues to work without an embed.
+5. To show the full dashboard inside Flask, set `TABLEAU_PUBLIC_URL` to the Dashboard 1 URL in a local `.env` file and restart Flask. The app converts Tableau Public profile share links (`/app/profile/.../viz/...`) into `/views/<workbook>/<view>` and adds literal `:showVizHome=no` and `:embed=true` query keys, so Tableau serves the view directly inside the frame. If the variable is unset, the local Flask dashboard continues to work without an embed.
 
 Tableau Public account login and publishing must be completed by the account owner. Do not enter a password into the Flask project or commit `.env`.
 
@@ -43,7 +43,7 @@ Tableau Public account login and publishing must be completed by the account own
 
 ## Flask embedding
 
-When `TABLEAU_PUBLIC_URL` or `TABLEAU_STORY_URL` is a valid HTTPS Tableau Public view or profile share URL, the Flask app normalizes profile share links to `/views/<workbook>/<view>`, then loads Tableau's official Embedding API v3 and uses the `<tableau-viz>` web component. This avoids trying to frame the Tableau profile page, which rejects embedding. An unset or invalid URL leaves the local Chart.js dashboard available and omits the embed panel. Flask is a separate deliverable and does not replace Tableau Public publication.
+When `TABLEAU_PUBLIC_URL` or `TABLEAU_STORY_URL` is a valid HTTPS Tableau Public view or profile share URL, the Flask app normalizes profile share links to `/views/<workbook>/<view>` and adds literal `:showVizHome=no` and `:embed=true` query keys. These flags keep Tableau on the view route instead of redirecting to the profile share page, which refuses to render inside a frame. The app then loads Tableau's official Embedding API v3 and uses the `<tableau-viz>` web component. An unset or invalid URL leaves the local dashboard available and omits the embed panel. Flask is a separate deliverable and does not replace Tableau Public publication.
 
 Official references:
 

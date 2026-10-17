@@ -8,7 +8,7 @@ import re
 import time
 from pathlib import Path
 from typing import Any
-from urllib.parse import quote_plus, urlparse
+from urllib.parse import parse_qsl, quote_plus, urlencode, urlparse
 
 import pandas as pd
 from flask import Flask, jsonify, render_template, request
@@ -494,18 +494,24 @@ def validated_tableau_url(raw_value: str) -> str | None:
         LOG.warning("Ignoring TABLEAU_PUBLIC_URL outside the official Tableau Public host.")
         return None
 
-    # Tableau Public's profile/share page is not the view endpoint that the
-    # Embedding API expects. Convert its standard share URL to the canonical
-    # /views/<workbook>/<view> form used by Tableau's embed component.
+    # Tableau Public's profile/share page can redirect a bare /views URL back
+    # to the profile page, which refuses to render inside an embedded frame.
+    # Normalize it to the embed view and set Tableau's supported embed flags.
     parts = parsed.path.strip("/").split("/")
     if len(parts) == 6 and parts[0:2] == ["app", "profile"] and parts[3] == "viz":
         parsed = parsed._replace(path=f"/views/{parts[4]}/{parts[5]}")
-        return parsed.geturl()
-    if parsed.path.startswith("/views/"):
-        return value
+    elif not parsed.path.startswith("/views/"):
+        LOG.warning("Ignoring Tableau Public URL that is not a supported view or profile share URL.")
+        return None
 
-    LOG.warning("Ignoring Tableau Public URL that is not a supported view or profile share URL.")
-    return None
+    query = dict(parse_qsl(parsed.query, keep_blank_values=True))
+    query[":showVizHome"] = "no"
+    query[":embed"] = "true"
+    # Tableau's documented view URLs use literal colon-prefixed query keys.
+    # Keep the colon unescaped when serializing so the embed API sees those
+    # special parameters exactly as it does in Tableau's own share links.
+    encoded_query = urlencode(query).replace("%3A", ":")
+    return parsed._replace(query=encoded_query).geturl()
 
 
 def create_app(config: dict[str, Any] | None = None) -> Flask:

@@ -152,8 +152,8 @@ class DashboardApiTests(unittest.TestCase):
         }):
             response = self.client.get("/")
         self.assertEqual(response.status_code, 200)
-        self.assertIn(b'src="https://public.tableau.com/views/EV_Market/Dashboard1"', response.data)
-        self.assertIn(b'src="https://public.tableau.com/views/EV_Market/Story2"', response.data)
+        self.assertIn(b'src="https://public.tableau.com/views/EV_Market/Dashboard1?:showVizHome=no&amp;:embed=true"', response.data)
+        self.assertIn(b'src="https://public.tableau.com/views/EV_Market/Story2?:showVizHome=no&amp;:embed=true"', response.data)
         self.assertNotIn(b'src="https://public.tableau.com/app/profile/', response.data)
 
     def test_missing_or_non_public_tableau_url_keeps_local_dashboard(self) -> None:
@@ -183,7 +183,7 @@ class DashboardApiTests(unittest.TestCase):
             response = self.client.get("/")
         self.assertEqual(response.status_code, 200)
         page = response.data
-        self.assertIn(b"plotly-3.1.0.min.js", page)
+        self.assertIn(b"plotly.js-dist-min@3.1.0/plotly.min.js", page)
         self.assertIn(b'id="chartCountry" class="plotly-chart"', page)
         self.assertIn(b'id="countryMapFallback"', page)
         self.assertIn(b'id="chartRating" class="plotly-chart"', page)
