@@ -61,6 +61,8 @@ The original Tableau workbooks remain untouched. The refreshed public package `E
 
 The static `docs/site/` page is configured for GitHub Pages and embeds the already-published Tableau Dashboard and Story. The workflow is `.github/workflows/pages.yml`. After the first successful deployment, the expected link is `https://manmohansingh9562579-spec.github.io/ev-market-performance-insights/`. If GitHub Pages is not enabled for the repository, an owner must select **Settings → Pages → Build and deployment → GitHub Actions** once. GitHub Pages hosts only the static landing page; Flask and database features still need a Python-capable host. See [`docs/site/README.md`](docs/site/README.md).
 
+To host the custom Flask dashboard and its filters online, use the Render Blueprint in [`render.yaml`](render.yaml) and connect it to a hosted MySQL database. Import the local training CSV into that database first; never commit `.env` or CSV files. Follow [`docs/hosted_backend.md`](docs/hosted_backend.md). The deployed Flask URL will be separate from GitHub Pages; link it from the landing page after Render creates the service.
+
 ## Checks
 
 ```powershell
