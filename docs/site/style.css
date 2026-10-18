@@ -405,7 +405,7 @@ body {
 .data-note a { color: var(--gold-light); text-decoration: underline; text-underline-offset: 3px; }
 .project-links { margin-top: 18px; }
 .resources { padding-top: 34px; }
-.resource-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+.resource-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
 .resource-card { display: flex; min-height: 205px; flex-direction: column; padding: 20px; border: 1px solid rgba(238,236,220,.13); border-radius: 9px; background: linear-gradient(155deg, rgba(26,31,25,.96), rgba(14,17,14,.98)); transition: transform .2s ease, border-color .2s ease, background .2s ease; }
 .resource-card:hover, .resource-card:focus-visible { transform: translateY(-3px); border-color: rgba(239,174,0,.45); background: #171b17; }
 .resource-label { color: var(--gold-light); font: 700 9px Manrope, sans-serif; letter-spacing: .13em; }
