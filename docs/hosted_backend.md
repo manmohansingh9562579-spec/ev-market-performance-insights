@@ -1,56 +1,73 @@
-# Host the interactive Flask dashboard
+# Host the interactive Flask dashboard on Railway
 
-GitHub Pages serves the public landing page and Tableau embeds. It does not run Flask or connect to the laptop's private SQLite file. To use this project's custom filters online, deploy the Flask app as a web service and connect it to a hosted MySQL database.
+GitHub Pages serves the public landing page and Tableau embeds. It does not run Flask or connect to the laptop's private SQLite file. To use this project's custom filters online, deploy the Flask app to Railway and connect it to a hosted MySQL database. The repository includes a `Procfile` with a Gunicorn production command; Railway can also deploy the Flask app directly from this GitHub repository.
 
 ## 1. Create a hosted MySQL database
 
-Use a MySQL 8-compatible database provider. For this demo, [Aiven offers a small free MySQL service](https://aiven.io/docs/products/mysql/concepts/mysql-free-tier). Create a database and a user that can create tables, read rows, and import the training data. Keep its host, port, database name, username, and password private. Do not put credentials in GitHub, a screenshot, or a chat message.
+For this project, use the Aiven MySQL account already being set up. Create a MySQL service and database, then download its CA certificate from the Aiven service page. The database login and connection URL are private. Do not paste them into GitHub, screenshots, or chat messages.
 
-## 2. Import the training CSV into that database
+## 2. Import the training CSV into MySQL
 
-The CSV is intentionally excluded from GitHub. From the project folder on the computer that has `ev_market_train.csv`:
+The CSV is intentionally excluded from GitHub. On the computer that has `ev_market_train.csv`:
 
 1. Copy `.env.example` to `.env` if `.env` does not already exist.
-2. In the local `.env`, replace `DATABASE_URL=sqlite:///ev_market.sqlite` with the hosted connection URL:
+2. Replace the local SQLite `DATABASE_URL` with the Aiven MySQL URL using the SQLAlchemy/PyMySQL form:
 
    ```text
-   DATABASE_URL=mysql+pymysql://USER:URL_ENCODED_PASSWORD@HOST:3306/DATABASE_NAME
+   DATABASE_URL=mysql+pymysql://USER:URL_ENCODED_PASSWORD@HOST:PORT/DATABASE_NAME
    ```
 
-   Keep `.env` private; `.gitignore` excludes it. URL-encode special characters in the password.
-3. Run the importer using the local CSV path:
+   URL-encode special characters in the username or password. Set `MYSQL_SSL_CA` to the local path of Aiven's downloaded CA certificate and set `MYSQL_SSL_REQUIRED=true`.
+3. Import the training file from PowerShell:
 
    ```powershell
    python -m pip install -r requirements.txt
    python scripts/import_csv.py --split train --input "C:/Users/Manmohan Singh/Downloads/archive/ev_market_train.csv"
    ```
 
-   The importer creates `ev_market_train`, removes exact duplicate rows, and refuses to replace existing rows unless `--replace` is explicitly supplied.
-4. Confirm the import reports the expected row count. Do not commit `.env` or the CSV.
+4. Keep the terminal result private if it contains account details. Confirm the import completed and the destination is `ev_market_train`. Do not add the CSV, `.env`, or CA file to GitHub.
 
-## 3. Deploy the Flask service on Render
+The importer removes exact duplicate rows and refuses to replace an existing non-empty table unless `--replace` is explicitly passed.
 
-The repository includes `render.yaml` with the Python build/start commands and a prompt for the secret database URL.
+## 3. Deploy Flask from GitHub to Railway
 
-1. Sign in to Render and choose **New → Blueprint**.
-2. Connect `manmohansingh9562579-spec/ev-market-performance-insights` and select the `main` branch.
-3. Review the service from `render.yaml`. When prompted, paste the same MySQL URL into the private `DATABASE_URL` value. Render generates a private `SECRET_KEY` for login sessions. Never add database URLs, passwords, or session secrets to a repository file.
-4. Create the Blueprint and wait for the deploy to finish.
-5. Open the service's `onrender.com` URL. Check `/api/health`; it must say `ready` and report the imported rows. Then open the dashboard and try filters.
-6. In the Render service's **Environment → Secret Files**, add the MySQL provider's CA certificate as `/etc/secrets/mysql-ca.pem`, then add `MYSQL_SSL_CA=/etc/secrets/mysql-ca.pem` as an environment variable and redeploy. The app verifies the database certificate when this variable is set.
+1. In Railway, create a project and choose **Deploy from GitHub repo**. Connect `manmohansingh9562579-spec/ev-market-performance-insights` and select `main`.
+2. If Railway does not pick up the `Procfile`, set the service's start command to:
 
-Render's free web service can sleep after inactivity, so its first request may take longer to respond. The database provider must allow connections from the Render service.
+   ```text
+   gunicorn app:app --bind 0.0.0.0:$PORT --workers 1 --threads 4 --timeout 120
+   ```
+
+   Railway detects the Python dependencies from `requirements.txt`.
+3. In the Flask service's **Variables**, add these values. Keep the MySQL URL and session secret private:
+
+   | Variable | Value |
+   | --- | --- |
+   | `DATABASE_URL` | The same Aiven URL used for import, with the password URL-encoded |
+   | `EV_TABLE_NAME` | `ev_market_train` |
+   | `MYSQL_SSL_REQUIRED` | `true` |
+   | `MYSQL_SSL_CA_CERT` | Full contents of the downloaded Aiven CA `.pem` file; Railway accepts multiline variable values |
+   | `SECRET_KEY` | A private random value generated on your computer, for example with `py -c "import secrets; print(secrets.token_urlsafe(48))"` |
+   | `REQUIRE_SECRET_KEY` | `true` |
+   | `SESSION_COOKIE_SECURE` | `true` |
+   | `TRUST_PROXY` | `true` |
+   | `TABLEAU_PUBLIC_URL` | `https://public.tableau.com/app/profile/man.mohan.singh3746/viz/EV_Market_Performance_Green_Executive_Refresh/Dashboard1` |
+   | `TABLEAU_STORY_URL` | `https://public.tableau.com/app/profile/man.mohan.singh3746/viz/EV_Market_Performance_Green_Executive_Refresh/Story2` |
+
+   Railway documents GitHub-connected Flask deployments, generated public domains, and multiline variables in its [Flask guide](https://docs.railway.com/guides/flask) and [variables guide](https://docs.railway.com/variables).
+4. Deploy the service. In **Settings → Networking**, generate a public domain. Open `/api/health` on that domain; it should report `"state":"ready"` and the loaded row count. Then use the dashboard filters and create a test account at `/register`.
+5. Add the new public Flask URL as the **Interactive Flask dashboard** link in `docs/site/index.html`, then push the site change so GitHub Pages publishes it. This is a separate URL from the Pages landing page and Tableau Public.
 
 ## Website accounts
 
-The dashboard stays public. Visitors can optionally create an account at `/register`, sign in at `/login`, and remove their account from `/account`. The app creates the private `ev_user_accounts` table in the configured database the first time someone opens an account page. The database user therefore needs permission to create tables. Passwords are stored as one-way hashes; account records contain only an email address, the hash, and the creation time. CSRF protection, secure session cookies on Render, and per-IP limits on sign-up/sign-in are enabled.
+The dashboard remains public. Visitors can optionally create an account at `/register`, sign in at `/login`, and delete their account at `/account`. The app creates the private `ev_user_accounts` table on the first account request. Passwords are stored as one-way hashes. CSRF protection, secure session cookies, and per-IP rate limits for sign-up and sign-in are enabled.
 
-Email verification and password-reset email are not configured because this project has no mail service. The first account is not an administrator; accounts only provide sign-in and a private account page. The Tableau workbook and the website dashboard remain public.
+Email verification and password-reset email are not configured because this project has no mail service. Accounts only provide sign-in and a private account page; they do not make the dashboard private or give users administrator access.
 
-## 4. Link the deployed dashboard from GitHub Pages
+## Cost and availability
 
-After Render gives the service its final URL, add that URL to the public landing page as the **Interactive Flask dashboard** link. GitHub Pages cannot proxy the Flask service itself. The Tableau embed and the hosted Flask dashboard remain separate interactive views.
+Railway's current Free plan provides $1 of monthly resource credit, and its trial includes a one-time $5 credit for up to 30 days. The Hobby subscription is $5/month, with extra charges if usage exceeds the included credit. Check the plan and usage estimate in Railway before enabling paid service; don't add a payment method or upgrade unless you accept the charge. See Railway's [current plans](https://docs.railway.com/pricing/plans) and [free trial details](https://docs.railway.com/pricing/free-trial).
 
 ## Local vs hosted data
 
-The local app can keep using `sqlite:///ev_market.sqlite`. Render must use the hosted MySQL `DATABASE_URL`; a laptop's SQLite file is not reachable from Render. The CSV remains local during import and is not committed or uploaded to GitHub.
+Local development can keep using `sqlite:///ev_market.sqlite`. Railway cannot access the laptop's SQLite database, and the source CSV remains local during import. The hosted Flask app reads the imported Aiven MySQL table using a verified TLS connection. Do not commit the `.env`, database credentials, CA certificate, or CSV file.

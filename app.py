@@ -89,6 +89,31 @@ class DataUnavailable(RuntimeError):
     """Raised when a configured source cannot provide a usable dataset."""
 
 
+def normalize_database_url(database_url: str | None) -> str | None:
+    """Use the installed PyMySQL driver when a provider supplies a generic MySQL URL."""
+    if database_url and database_url.startswith("mysql://"):
+        return "mysql+pymysql://" + database_url[len("mysql://") :]
+    return database_url
+
+
+def database_connect_args(database_url: str | None) -> dict[str, Any]:
+    """Build SQLAlchemy connection options, including verified MySQL TLS when configured."""
+    if not database_url or not database_url.startswith("mysql"):
+        if database_url and database_url.startswith("sqlite"):
+            return {"check_same_thread": False}
+        return {}
+
+    ca_file = os.getenv("MYSQL_SSL_CA", "").strip()
+    ca_certificate = os.getenv("MYSQL_SSL_CA_CERT", "").strip()
+    if ca_file:
+        return {"ssl": ssl.create_default_context(cafile=ca_file)}
+    if ca_certificate:
+        return {"ssl": ssl.create_default_context(cadata=ca_certificate)}
+    if os.getenv("MYSQL_SSL_REQUIRED", "false").lower() in {"1", "true", "yes"}:
+        raise RuntimeError("MySQL TLS is required; configure MYSQL_SSL_CA or MYSQL_SSL_CA_CERT.")
+    return {}
+
+
 class Account(UserMixin):
     """Small account object loaded from the private account table."""
 
@@ -110,13 +135,12 @@ class AccountStore:
         if not database_url:
             return
 
-        connect_args: dict[str, Any] = {}
-        if database_url.startswith("sqlite"):
-            connect_args["check_same_thread"] = False
-        ca_file = os.getenv("MYSQL_SSL_CA", "").strip()
-        if ca_file and database_url.startswith("mysql"):
-            connect_args["ssl"] = ssl.create_default_context(cafile=ca_file)
-        self.engine = create_engine(database_url, pool_pre_ping=True, connect_args=connect_args)
+        database_url = normalize_database_url(database_url) or database_url
+        self.engine = create_engine(
+            database_url,
+            pool_pre_ping=True,
+            connect_args=database_connect_args(database_url),
+        )
         self.accounts = Table(
             "ev_user_accounts",
             self.metadata,
@@ -187,7 +211,7 @@ def configured_database_url(environ: dict[str, str] | None = None) -> str | None
     env = environ if environ is not None else os.environ
     direct_url = env.get("DATABASE_URL", "").strip()
     if direct_url:
-        return direct_url
+        return normalize_database_url(direct_url)
 
     host = env.get("DB_HOST", "").strip()
     user = env.get("DB_USER", "").strip()
@@ -233,7 +257,9 @@ class DashboardData:
         table_name: str = "ev_market_train",
     ) -> None:
         self.train_csv = resolve_train_csv(str(train_csv) if train_csv else os.getenv("EV_TRAIN_CSV"))
-        self.database_url = database_url if database_url is not None else configured_database_url()
+        self.database_url = normalize_database_url(
+            database_url if database_url is not None else configured_database_url()
+        )
         self.table_name = allowed_table_name(table_name)
         self.backend = "mysql/sqlalchemy" if self.database_url else "csv"
         self._frame: pd.DataFrame | None = None
@@ -379,7 +405,11 @@ class DashboardData:
 
     def _read_database(self) -> pd.DataFrame:
         table_name = allowed_table_name(self.table_name)
-        engine = create_engine(self.database_url or "", pool_pre_ping=True)
+        engine = create_engine(
+            self.database_url or "",
+            pool_pre_ping=True,
+            connect_args=database_connect_args(self.database_url),
+        )
         try:
             with engine.connect() as connection:
                 return pd.read_sql_query(text(f"SELECT * FROM {table_name}"), connection)
@@ -621,7 +651,7 @@ def create_app(config: dict[str, Any] | None = None) -> Flask:
     app = Flask(__name__)
     secret_key = (config or {}).get("SECRET_KEY") or os.getenv("SECRET_KEY")
     if not secret_key:
-        if os.getenv("RENDER", "").lower() == "true":
+        if os.getenv("REQUIRE_SECRET_KEY", "false").lower() in {"1", "true", "yes"}:
             raise RuntimeError("Set SECRET_KEY in the hosting service before starting Flask.")
         secret_key = secrets.token_urlsafe(48)
     app.config.update(
@@ -632,7 +662,7 @@ def create_app(config: dict[str, Any] | None = None) -> Flask:
         WTF_CSRF_TIME_LIMIT=3600,
     )
     app.config.update(config or {})
-    if os.getenv("RENDER", "").lower() == "true":
+    if os.getenv("TRUST_PROXY", "false").lower() in {"1", "true", "yes"}:
         app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1)
 
     CSRFProtect(app)

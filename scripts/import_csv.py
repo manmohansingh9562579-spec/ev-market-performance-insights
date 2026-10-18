@@ -13,7 +13,7 @@ from sqlalchemy import Column, Index, Integer, MetaData, Numeric, String, Table,
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT))
 
-from app import configured_database_url, resolve_train_csv  # noqa: E402
+from app import configured_database_url, database_connect_args, normalize_database_url, resolve_train_csv  # noqa: E402
 
 TEXT_FIELDS = {
     "vehicle_id": 32,
@@ -147,7 +147,7 @@ def main() -> int:
     if input_path is None:
         parser.error("Could not resolve an input CSV; pass --input or set EV_TRAIN_CSV.")
 
-    database_url = args.database_url or configured_database_url()
+    database_url = normalize_database_url(args.database_url) or configured_database_url()
     if not database_url:
         parser.error("Configure DATABASE_URL or DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, and DB_NAME first.")
     table_name = validate_table_name(args.table or f"ev_market_{args.split}")
@@ -156,7 +156,11 @@ def main() -> int:
         frame, duplicates_removed = clean_csv(input_path)
         metadata = MetaData()
         table = table_for(metadata, table_name)
-        engine = create_engine(database_url, pool_pre_ping=True)
+        engine = create_engine(
+            database_url,
+            pool_pre_ping=True,
+            connect_args=database_connect_args(database_url),
+        )
         try:
             metadata.create_all(engine)
             with engine.connect() as connection:
