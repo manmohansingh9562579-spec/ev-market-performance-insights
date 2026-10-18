@@ -5,14 +5,24 @@ from __future__ import annotations
 import logging
 import os
 import re
+import secrets
+import ssl
 import time
+from threading import Lock
 from pathlib import Path
 from typing import Any
 from urllib.parse import parse_qsl, quote_plus, urlencode, urlparse
 
 import pandas as pd
-from flask import Flask, jsonify, render_template, request
-from sqlalchemy import create_engine, text
+from flask import Flask, flash, jsonify, redirect, render_template, request, url_for
+from flask_login import LoginManager, UserMixin, current_user, login_required, login_user, logout_user
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
+from flask_wtf.csrf import CSRFProtect
+from sqlalchemy import Column, DateTime, Integer, MetaData, String, Table, create_engine, insert, select, text
+from sqlalchemy.exc import IntegrityError
+from werkzeug.security import check_password_hash, generate_password_hash
+from werkzeug.middleware.proxy_fix import ProxyFix
 
 try:
     from dotenv import load_dotenv
@@ -77,6 +87,99 @@ MEASURE_FIELDS = [
 
 class DataUnavailable(RuntimeError):
     """Raised when a configured source cannot provide a usable dataset."""
+
+
+class Account(UserMixin):
+    """Small account object loaded from the private account table."""
+
+    def __init__(self, account_id: int, email: str, created_at: Any = None) -> None:
+        self.id = str(account_id)
+        self.email = email
+        self.created_at = created_at
+
+
+class AccountStore:
+    """Stores website accounts in the configured private database."""
+
+    def __init__(self, database_url: str | None) -> None:
+        self.engine = None
+        self.accounts = None
+        self.metadata = MetaData()
+        self._schema_lock = Lock()
+        self._schema_ready = False
+        if not database_url:
+            return
+
+        connect_args: dict[str, Any] = {}
+        if database_url.startswith("sqlite"):
+            connect_args["check_same_thread"] = False
+        ca_file = os.getenv("MYSQL_SSL_CA", "").strip()
+        if ca_file and database_url.startswith("mysql"):
+            connect_args["ssl"] = ssl.create_default_context(cafile=ca_file)
+        self.engine = create_engine(database_url, pool_pre_ping=True, connect_args=connect_args)
+        self.accounts = Table(
+            "ev_user_accounts",
+            self.metadata,
+            Column("id", Integer, primary_key=True, autoincrement=True),
+            Column("email", String(254), nullable=False, unique=True, index=True),
+            Column("password_hash", String(512), nullable=False),
+            Column("created_at", DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP")),
+        )
+
+    @property
+    def available(self) -> bool:
+        return self.engine is not None and self.accounts is not None
+
+    def ensure_schema(self) -> None:
+        if not self.available:
+            raise DataUnavailable("Connect a database before creating website accounts.")
+        if self._schema_ready:
+            return
+        with self._schema_lock:
+            if not self._schema_ready:
+                self.metadata.create_all(self.engine, tables=[self.accounts])
+                self._schema_ready = True
+
+    def get_by_id(self, account_id: str) -> Account | None:
+        if not self.available:
+            return None
+        self.ensure_schema()
+        with self.engine.connect() as connection:
+            row = connection.execute(
+                select(self.accounts.c.id, self.accounts.c.email, self.accounts.c.created_at).where(
+                    self.accounts.c.id == account_id
+                )
+            ).mappings().first()
+        return Account(row["id"], row["email"], row["created_at"]) if row else None
+
+    def get_by_email(self, email: str) -> dict[str, Any] | None:
+        if not self.available:
+            return None
+        self.ensure_schema()
+        with self.engine.connect() as connection:
+            row = connection.execute(select(self.accounts).where(self.accounts.c.email == email)).mappings().first()
+        return dict(row) if row else None
+
+    def create(self, email: str, password_hash: str) -> Account | None:
+        if not self.available:
+            raise DataUnavailable("Connect a database before creating website accounts.")
+        self.ensure_schema()
+        try:
+            with self.engine.begin() as connection:
+                result = connection.execute(
+                    insert(self.accounts).values(email=email, password_hash=password_hash)
+                )
+                account_id = result.inserted_primary_key[0]
+        except IntegrityError:
+            return None
+        return self.get_by_id(str(account_id))
+
+    def delete(self, account_id: str) -> None:
+        if not self.available:
+            raise DataUnavailable("Account storage is unavailable.")
+        self.ensure_schema()
+        with self.engine.begin() as connection:
+            connection.execute(self.accounts.delete().where(self.accounts.c.id == account_id))
 
 
 def configured_database_url(environ: dict[str, str] | None = None) -> str | None:
@@ -516,13 +619,58 @@ def validated_tableau_url(raw_value: str) -> str | None:
 
 def create_app(config: dict[str, Any] | None = None) -> Flask:
     app = Flask(__name__)
+    secret_key = (config or {}).get("SECRET_KEY") or os.getenv("SECRET_KEY")
+    if not secret_key:
+        if os.getenv("RENDER", "").lower() == "true":
+            raise RuntimeError("Set SECRET_KEY in the hosting service before starting Flask.")
+        secret_key = secrets.token_urlsafe(48)
+    app.config.update(
+        SECRET_KEY=secret_key,
+        SESSION_COOKIE_HTTPONLY=True,
+        SESSION_COOKIE_SAMESITE="Lax",
+        SESSION_COOKIE_SECURE=os.getenv("SESSION_COOKIE_SECURE", "false").lower() in {"1", "true", "yes"},
+        WTF_CSRF_TIME_LIMIT=3600,
+    )
     app.config.update(config or {})
+    if os.getenv("RENDER", "").lower() == "true":
+        app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1)
+
+    CSRFProtect(app)
+    login_manager = LoginManager(app)
+    login_manager.login_view = "login"
+    login_manager.login_message = "Sign in to view your account."
+    login_manager.login_message_category = "info"
+    limiter = Limiter(key_func=get_remote_address, storage_uri="memory://")
+    limiter.init_app(app)
+
     service = app.config.get("DASHBOARD_DATA") or DashboardData(
         train_csv=app.config.get("EV_TRAIN_CSV"),
         database_url=app.config.get("DATABASE_URL"),
         table_name=app.config.get("EV_TABLE_NAME", os.getenv("EV_TABLE_NAME", "ev_market_train")),
     )
     app.extensions["dashboard_data"] = service
+    database_url = app.config.get("DATABASE_URL")
+    if database_url is None:
+        database_url = configured_database_url()
+    accounts = app.config.get("ACCOUNT_STORE") or AccountStore(database_url)
+    app.extensions["account_store"] = accounts
+
+    @login_manager.user_loader
+    def load_account(account_id: str) -> Account | None:
+        try:
+            return accounts.get_by_id(account_id)
+        except Exception:
+            LOG.exception("Could not load the signed-in account.")
+            return None
+
+    def account_storage_ready() -> bool:
+        try:
+            accounts.ensure_schema()
+            return True
+        except Exception:
+            LOG.exception("Website account storage is unavailable.")
+            flash("Accounts need a working database connection. The public dashboard remains available.", "error")
+            return False
 
     @app.get("/")
     def index():
@@ -535,6 +683,7 @@ def create_app(config: dict[str, Any] | None = None) -> Flask:
     @app.get("/api/health")
     def health():
         status = service.status()
+        status["accounts_enabled"] = accounts.available
         code = 200 if status.get("state") in {"ready", "empty", "missing"} else 503
         return jsonify(status), code
 
@@ -551,6 +700,103 @@ def create_app(config: dict[str, Any] | None = None) -> Flask:
             return jsonify({"available": True, "error": str(error)}), 400
         except DataUnavailable as error:
             return jsonify({"available": False, "state": "error", "message": str(error)}), 503
+
+    @app.route("/register", methods=["GET", "POST"])
+    @limiter.limit("8 per hour", methods=["POST"])
+    def register():
+        if current_user.is_authenticated:
+            return redirect(url_for("account"))
+        if not account_storage_ready():
+            return render_template("auth.html", mode="register"), 503 if request.method == "POST" else 200
+        if request.method == "POST":
+            email = request.form.get("email", "").strip().lower()
+            password = request.form.get("password", "")
+            confirmation = request.form.get("confirm_password", "")
+            if len(email) > 254 or not re.fullmatch(r"[^\s@]+@[^\s@]+\.[^\s@]+", email):
+                flash("Enter a valid email address.", "error")
+            elif len(password) < 10 or len(password) > 128:
+                flash("Use a password between 10 and 128 characters.", "error")
+            elif password != confirmation:
+                flash("The two passwords do not match.", "error")
+            else:
+                try:
+                    new_account = accounts.create(email, generate_password_hash(password))
+                except Exception:
+                    LOG.exception("Could not create a website account.")
+                    flash("Account creation failed. Check the database connection and try again.", "error")
+                else:
+                    if new_account is None:
+                        flash("An account with this email already exists. Sign in instead.", "error")
+                    else:
+                        login_user(new_account, fresh=True)
+                        flash("Your account is ready.", "success")
+                        return redirect(url_for("account"))
+        return render_template("auth.html", mode="register")
+
+    @app.route("/login", methods=["GET", "POST"])
+    @limiter.limit("12 per hour", methods=["POST"])
+    def login():
+        if current_user.is_authenticated:
+            return redirect(url_for("account"))
+        if not account_storage_ready():
+            return render_template("auth.html", mode="login"), 503 if request.method == "POST" else 200
+        if request.method == "POST":
+            email = request.form.get("email", "").strip().lower()
+            password = request.form.get("password", "")
+            lookup_failed = False
+            try:
+                stored_account = accounts.get_by_email(email)
+            except Exception:
+                LOG.exception("Could not look up a website account.")
+                stored_account = None
+                lookup_failed = True
+                flash("Sign-in is temporarily unavailable. Please try again later.", "error")
+            if stored_account and check_password_hash(stored_account["password_hash"], password):
+                login_user(
+                    Account(stored_account["id"], stored_account["email"], stored_account["created_at"]),
+                    fresh=True,
+                )
+                flash("You are signed in.", "success")
+                return redirect(url_for("account"))
+            if not lookup_failed:
+                flash("Email or password is incorrect.", "error")
+        return render_template("auth.html", mode="login")
+
+    @app.get("/account")
+    @login_required
+    def account():
+        try:
+            account_data = accounts.get_by_id(current_user.get_id())
+        except Exception:
+            LOG.exception("Could not load the website account page.")
+            flash("Account details are temporarily unavailable. Please try again later.", "error")
+            return redirect(url_for("index"))
+        if account_data is None:
+            logout_user()
+            flash("Your session ended. Please sign in again.", "error")
+            return redirect(url_for("login"))
+        return render_template("account.html", account=account_data)
+
+    @app.post("/logout")
+    @login_required
+    def logout():
+        logout_user()
+        flash("You are signed out.", "success")
+        return redirect(url_for("index"))
+
+    @app.post("/account/delete")
+    @login_required
+    @limiter.limit("3 per hour")
+    def delete_account():
+        try:
+            accounts.delete(current_user.get_id())
+        except Exception:
+            LOG.exception("Could not delete a website account.")
+            flash("Account deletion failed. Please try again later.", "error")
+            return redirect(url_for("account"))
+        logout_user()
+        flash("Your account has been deleted.", "success")
+        return redirect(url_for("index"))
 
     return app
 

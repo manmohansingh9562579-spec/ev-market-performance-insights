@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090a09">
+  <title>My account | EV Insights</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css', v='20261018-1') }}">
+</head>
+<body class="auth-page">
+  <header class="site-header auth-header">
+    <a class="brand" href="{{ url_for('index') }}" aria-label="EV Insights home">
+      <span class="brand-mark" aria-hidden="true">ϟ</span>
+      <span><strong>EV Insights</strong><small>MARKET INTELLIGENCE</small></span>
+    </a>
+    <a class="header-story" href="{{ url_for('index') }}#dashboard">Explore dashboard</a>
+  </header>
+  <main class="auth-main account-main">
+    <section class="auth-card account-card" aria-labelledby="account-title">
+      <p class="eyebrow">YOUR EV INSIGHTS ACCOUNT</p>
+      <h1 id="account-title">Account details</h1>
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}<div class="flash-list" role="status">{% for category, message in messages %}<p class="flash-message {{ category }}">{{ message }}</p>{% endfor %}</div>{% endif %}
+      {% endwith %}
+      <div class="account-detail"><span>Email address</span><strong>{{ account.email }}</strong></div>
+      <div class="account-detail"><span>Created</span><strong>{{ account.created_at.strftime('%d %b %Y') if account.created_at else '—' }}</strong></div>
+      <p class="auth-intro">Your account is stored in the project's private database. The dashboard itself remains available without signing in.</p>
+      <div class="account-actions">
+        <a class="button button-gold" href="{{ url_for('index') }}#dashboard">Explore dashboard <span aria-hidden="true">→</span></a>
+        <form method="post" action="{{ url_for('logout') }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="button button-outline" type="submit">Sign out</button></form>
+      </div>
+      <form class="account-delete" method="post" action="{{ url_for('delete_account') }}" onsubmit="return confirm('Permanently delete this EV Insights account?')"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button type="submit">Delete my account</button></form>
+    </section>
+  </main>
+</body>
+</html>

@@ -4,7 +4,7 @@ GitHub Pages serves the public landing page and Tableau embeds. It does not run 
 
 ## 1. Create a hosted MySQL database
 
-Use a MySQL 8-compatible database provider. Create a database and a user that can create tables, read rows, and import the training data. Keep its host, port, database name, username, and password private. Do not put credentials in GitHub, a screenshot, or a chat message.
+Use a MySQL 8-compatible database provider. For this demo, [Aiven offers a small free MySQL service](https://aiven.io/docs/products/mysql/concepts/mysql-free-tier). Create a database and a user that can create tables, read rows, and import the training data. Keep its host, port, database name, username, and password private. Do not put credentials in GitHub, a screenshot, or a chat message.
 
 ## 2. Import the training CSV into that database
 
@@ -34,11 +34,18 @@ The repository includes `render.yaml` with the Python build/start commands and a
 
 1. Sign in to Render and choose **New → Blueprint**.
 2. Connect `manmohansingh9562579-spec/ev-market-performance-insights` and select the `main` branch.
-3. Review the service from `render.yaml`. When prompted, paste the same MySQL URL into the private `DATABASE_URL` value. Never add that URL to a repository file.
+3. Review the service from `render.yaml`. When prompted, paste the same MySQL URL into the private `DATABASE_URL` value. Render generates a private `SECRET_KEY` for login sessions. Never add database URLs, passwords, or session secrets to a repository file.
 4. Create the Blueprint and wait for the deploy to finish.
 5. Open the service's `onrender.com` URL. Check `/api/health`; it must say `ready` and report the imported rows. Then open the dashboard and try filters.
+6. In the Render service's **Environment → Secret Files**, add the MySQL provider's CA certificate as `/etc/secrets/mysql-ca.pem`, then add `MYSQL_SSL_CA=/etc/secrets/mysql-ca.pem` as an environment variable and redeploy. The app verifies the database certificate when this variable is set.
 
 Render's free web service can sleep after inactivity, so its first request may take longer to respond. The database provider must allow connections from the Render service.
+
+## Website accounts
+
+The dashboard stays public. Visitors can optionally create an account at `/register`, sign in at `/login`, and remove their account from `/account`. The app creates the private `ev_user_accounts` table in the configured database the first time someone opens an account page. The database user therefore needs permission to create tables. Passwords are stored as one-way hashes; account records contain only an email address, the hash, and the creation time. CSRF protection, secure session cookies on Render, and per-IP limits on sign-up/sign-in are enabled.
+
+Email verification and password-reset email are not configured because this project has no mail service. The first account is not an administrator; accounts only provide sign-in and a private account page. The Tableau workbook and the website dashboard remain public.
 
 ## 4. Link the deployed dashboard from GitHub Pages
 

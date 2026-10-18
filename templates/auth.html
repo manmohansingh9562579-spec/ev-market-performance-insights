@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090a09">
+  <title>{{ 'Create account' if mode == 'register' else 'Sign in' }} | EV Insights</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css', v='20261018-1') }}">
+</head>
+<body class="auth-page">
+  <header class="site-header auth-header">
+    <a class="brand" href="{{ url_for('index') }}" aria-label="EV Insights home">
+      <span class="brand-mark" aria-hidden="true">ϟ</span>
+      <span><strong>EV Insights</strong><small>MARKET INTELLIGENCE</small></span>
+    </a>
+    <a class="header-story" href="{{ url_for('index') }}#dashboard">Back to dashboard</a>
+  </header>
+  <main class="auth-main">
+    <section class="auth-card" aria-labelledby="auth-title">
+      <p class="eyebrow">EV INSIGHTS ACCOUNT</p>
+      <h1 id="auth-title">{{ 'Create your account' if mode == 'register' else 'Welcome back' }}</h1>
+      <p class="auth-intro">{{ 'Save your sign-in for this project. The EV dashboard stays public and works without an account.' if mode == 'register' else 'Sign in to see your account. The EV dashboard remains public.' }}</p>
+
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}<div class="flash-list" role="status">{% for category, message in messages %}<p class="flash-message {{ category }}">{{ message }}</p>{% endfor %}</div>{% endif %}
+      {% endwith %}
+
+      <form class="auth-form" method="post" action="{{ url_for('register' if mode == 'register' else 'login') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <label for="email">Email address</label>
+        <input id="email" name="email" type="email" autocomplete="email" maxlength="254" required value="{{ request.form.get('email', '') }}">
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" autocomplete="{{ 'new-password' if mode == 'register' else 'current-password' }}" minlength="10" maxlength="128" required>
+        {% if mode == 'register' %}
+        <label for="confirm_password">Confirm password</label>
+        <input id="confirm_password" name="confirm_password" type="password" autocomplete="new-password" minlength="10" maxlength="128" required>
+        <p class="password-note">Use 10–128 characters. Passwords are stored as one-way hashes.</p>
+        {% endif %}
+        <button class="button button-gold auth-submit" type="submit">{{ 'Create account' if mode == 'register' else 'Sign in' }} <span aria-hidden="true">→</span></button>
+      </form>
+      <p class="auth-switch">{% if mode == 'register' %}Already have an account? <a href="{{ url_for('login') }}">Sign in</a>{% else %}New here? <a href="{{ url_for('register') }}">Create an account</a>{% endif %}</p>
+    </section>
+    <aside class="auth-aside"><span class="auth-aside-mark" aria-hidden="true">ϟ</span><p>Market intelligence, with the data filters ready to explore.</p><span>Public dashboard · Optional account</span></aside>
+  </main>
+</body>
+</html>

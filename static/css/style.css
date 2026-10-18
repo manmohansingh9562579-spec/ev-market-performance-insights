@@ -396,3 +396,47 @@ tableau-viz { width: 100%; height: 620px; display: block; }
   .dashboard-section .chart-wrap { height: 245px; }
   .dashboard-section .map-wrap { height: 255px; }
 }
+
+.auth-page { min-height: 100vh; background: radial-gradient(circle at 72% 38%, rgba(232,170,25,.09), transparent 35%), #090a09; }
+.auth-header { position: relative; }
+.auth-main { width: min(960px, calc(100% - 40px)); min-height: calc(100vh - 78px); display: grid; grid-template-columns: minmax(0, 1fr) minmax(220px, .72fr); align-items: center; gap: clamp(30px, 7vw, 90px); margin: 0 auto; padding: 54px 0; }
+.auth-card { width: 100%; padding: clamp(25px, 4vw, 42px); border: 1px solid rgba(237,232,215,.13); border-radius: 14px; background: linear-gradient(145deg, rgba(26,27,23,.96), rgba(16,17,15,.96)); box-shadow: 0 24px 75px rgba(0,0,0,.32); }
+.auth-card h1 { margin: 12px 0 10px; font: 800 clamp(28px, 4vw, 39px)/1.1 'Manrope', sans-serif; letter-spacing: -.05em; }
+.auth-intro { margin: 0; color: #aaa79d; font-size: 12px; line-height: 1.75; }
+.auth-form { display: grid; gap: 9px; margin-top: 26px; }
+.auth-form label { margin-top: 8px; color: #d6d1c5; font-size: 11px; font-weight: 600; }
+.auth-form input { width: 100%; min-height: 44px; padding: 0 12px; color: #f4f1e8; background: #10110f; border: 1px solid rgba(245,240,224,.16); border-radius: 6px; outline: none; font: inherit; font-size: 13px; }
+.auth-form input:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(232,170,25,.1); }
+.password-note { margin: 0; color: #8c897f; font-size: 10px; line-height: 1.6; }
+.auth-submit { width: 100%; margin-top: 13px; cursor: pointer; }
+.auth-switch { margin: 20px 0 0; color: #a6a298; font-size: 11px; }
+.auth-switch a { color: var(--gold-light); font-weight: 700; }
+.flash-list { display: grid; gap: 7px; margin-top: 18px; }
+.flash-message { margin: 0; padding: 10px 12px; color: #ece8dc; background: rgba(232,170,25,.1); border: 1px solid rgba(232,170,25,.24); border-radius: 6px; font-size: 11px; line-height: 1.5; }
+.flash-message.error { background: rgba(223,135,119,.1); border-color: rgba(223,135,119,.32); }
+.flash-message.success { background: rgba(103,195,139,.1); border-color: rgba(103,195,139,.3); }
+.auth-aside { display: grid; justify-items: start; gap: 13px; max-width: 265px; color: #a9a69d; }
+.auth-aside-mark { width: 52px; height: 52px; display: grid; place-items: center; color: #17140c; background: var(--gold); border-radius: 15px; font-size: 32px; }
+.auth-aside p { margin: 0; color: #f0ede3; font: 700 23px/1.35 'Manrope', sans-serif; letter-spacing: -.04em; }
+.auth-aside > span:last-child { color: #8c897f; font-size: 10px; letter-spacing: .04em; }
+.account-main { grid-template-columns: minmax(0, 620px); justify-content: center; }
+.account-card { max-width: 620px; }
+.account-detail { display: grid; gap: 6px; padding: 16px 0; border-bottom: 1px solid var(--line); }
+.account-detail:first-of-type { margin-top: 20px; border-top: 1px solid var(--line); }
+.account-detail span { color: #8e8b82; font-size: 10px; }
+.account-detail strong { overflow-wrap: anywhere; font-size: 14px; }
+.account-card > .auth-intro { margin-top: 20px; }
+.account-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 25px; }
+.account-actions form { display: flex; }
+.account-actions button { cursor: pointer; }
+.account-delete { margin-top: 30px; padding-top: 17px; border-top: 1px solid var(--line); }
+.account-delete button { padding: 0; color: #d98c7d; background: none; border: 0; cursor: pointer; font: inherit; font-size: 10px; }
+.account-delete button:hover { color: #ffc1b1; }
+.auth-card .button-outline { color: #eeeae0; background: rgba(255,255,255,.015); border: 1px solid rgba(244,239,225,.24); }
+.auth-card .button-outline:hover { border-color: var(--gold); color: var(--gold-light); }
+@media (max-width: 680px) {
+  .auth-main { grid-template-columns: minmax(0, 1fr); width: min(520px, calc(100% - 28px)); min-height: calc(100vh - 66px); padding: 30px 0; }
+  .auth-aside { display: none; }
+  .auth-header { padding: 0 18px; }
+  .auth-header .header-story { font-size: 9px; padding: 0 6px; }
+}

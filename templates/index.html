@@ -27,7 +27,7 @@
     <nav class="main-nav" id="mainNav" aria-label="Main navigation">
       <a href="#home">Home</a><a href="#about">About</a><a href="#features">Features</a><a href="#methodology">Services</a><a href="#dashboard">Dashboard</a><a href="#story">Story</a>
     </nav>
-    <div class="header-actions"><a class="header-story" href="#story">Explore Story</a><a class="header-cta" href="#dashboard">Explore Dashboard <span aria-hidden="true">↗</span></a></div>
+    <div class="header-actions"><a class="header-story" href="{{ url_for('account') if current_user.is_authenticated else url_for('login') }}">{{ 'My account' if current_user.is_authenticated else 'Sign in' }}</a><a class="header-cta" href="#dashboard">Explore Dashboard <span aria-hidden="true">↗</span></a></div>
   </header>
 
   <main>
