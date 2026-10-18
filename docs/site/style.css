@@ -401,3 +401,27 @@ body {
   .car-caption { right: 1%; bottom: 0; }
   .battery-chip { top: 0; left: 0; }
 }
+
+.data-note a { color: var(--gold-light); text-decoration: underline; text-underline-offset: 3px; }
+.project-links { margin-top: 18px; }
+.resources { padding-top: 34px; }
+.resource-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+.resource-card { display: flex; min-height: 205px; flex-direction: column; padding: 20px; border: 1px solid rgba(238,236,220,.13); border-radius: 9px; background: linear-gradient(155deg, rgba(26,31,25,.96), rgba(14,17,14,.98)); transition: transform .2s ease, border-color .2s ease, background .2s ease; }
+.resource-card:hover, .resource-card:focus-visible { transform: translateY(-3px); border-color: rgba(239,174,0,.45); background: #171b17; }
+.resource-label { color: var(--gold-light); font: 700 9px Manrope, sans-serif; letter-spacing: .13em; }
+.resource-card h3 { margin: 22px 0 8px; font: 750 16px/1.3 Manrope, sans-serif; letter-spacing: -.025em; }
+.resource-card p { margin: 0 0 18px; color: #a9b0a4; font-size: 11px; line-height: 1.7; }
+.resource-action { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: auto; padding-top: 11px; border-top: 1px solid rgba(238,236,220,.1); color: #d1d6cb; font-size: 9px; font-weight: 700; }
+.resource-action b { color: var(--gold-light); font-size: 15px; font-weight: 400; }
+.deployment-note { margin: 16px 0 0; padding: 14px 16px; border: 1px solid rgba(107,181,131,.22); border-radius: 6px; color: #aeb5aa; background: rgba(107,181,131,.05); font-size: 10px; line-height: 1.7; }
+.deployment-note strong { color: #b9dbbf; }
+@media (max-width: 1040px) {
+  .resource-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 760px) {
+  .resources { padding-top: 32px; }
+  .resource-grid { grid-template-columns: minmax(0, 1fr); gap: 9px; }
+  .resource-card { min-height: 175px; padding: 17px; }
+  .resource-card h3 { margin-top: 17px; }
+  .deployment-note { padding: 12px; font-size: 9px; }
+}

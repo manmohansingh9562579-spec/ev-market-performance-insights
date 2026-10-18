@@ -89,6 +89,6 @@ The uploaded requirements/performance document was not available to read as a fi
 | Data preparation, import and benchmarks | scripts/ | Complete |
 | Automated tests | tests/test_dashboard.py | 13 tests; last run passed |
 | Report and submission documentation | docs/ and README.md | Complete, with pending limits called out |
-| Tableau Public dashboard | https://public.tableau.com/app/profile/man.mohan.singh3746/viz/EV_Market_Performance_Green_Executive_Refresh/Dashboard1 | Published |
-| Tableau Public Story | https://public.tableau.com/app/profile/man.mohan.singh3746/viz/EV_Market_Performance_Green_Executive_Refresh/Story2 | Published |
+| Tableau Public dashboard | https://public.tableau.com/app/profile/man.mohan.singh3746/viz/EV_Market_Performance_Overlap_Fixed_2026-10-18/Dashboard1 | Published |
+| Tableau Public Story | https://public.tableau.com/app/profile/man.mohan.singh3746/viz/EV_Market_Performance_Overlap_Fixed_2026-10-18/Story2 | Published |
 | GitHub source submission | https://github.com/manmohansingh9562579-spec/ev-market-performance-insights | Public repository; source/docs only |
