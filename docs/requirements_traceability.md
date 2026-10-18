@@ -26,16 +26,16 @@ The uploaded requirements/performance document was not available to read as a fi
 
 | Requirement | Implementation / evidence | Status |
 |---|---|---|
-| Epic: Data Visualizations — create/document unique visualizations | Flask renders 9 charts, including a customer-rating treemap and manufacturing-country choropleth with table fallback; titles, field mappings and aggregation rules appear in templates/index.html, static/js/dashboard.js, app.py and docs/performance_report.md. Tableau handoff preserves 7 existing chart worksheets. | Complete |
-| Professional responsive dashboard | templates/index.html and static/css/style.css implement the dark/gold EV Insights design, responsive layout and navigation. | Implemented; manual browser/device verification pending |
+| Epic: Data Visualizations — create/document unique visualizations | Flask renders 9 charts, including a customer-rating treemap and manufacturing-country choropleth with table fallback; titles, field mappings and aggregation rules appear in templates/index.html, public/static/js/dashboard.js, app.py and docs/performance_report.md. Tableau handoff preserves 7 existing chart worksheets. | Complete |
+| Professional responsive dashboard | templates/index.html and public/static/css/style.css implement the dark/gold EV Insights design, responsive layout and navigation. | Implemented; manual browser/device verification pending |
 | KPIs for annual sales, customer rating, manufacturers, CO2 where available | Seven cards include the required four plus distinct models, average range and average battery capacity. Formulas are stated in docs/methodology.md. | Complete |
 | Sales by manufacturer, battery type, region and category | Four requested groupings, including a sales-mix doughnut by battery type. | Complete |
 | Customer rating, range and energy-efficiency analysis | Rating, range and Wh/km are means by category; lower Wh/km is explained in the UI. | Complete |
 | Country map or appropriate geography when reliable | Manufacturing-country sales map through recognized ISO-3 codes; unmatched labels or map-library errors fall back to a source-label sales table. | Implemented; browser map rendering pending |
 | Manufacturer, battery, region, category and model-year filters | Filtered API and UI also provide manufacturing-country filter and sales sort. | Implemented; automated behavior covered |
-| Sorting, tooltips, labels, legends, titles | Chart.js setup and chart headers in static/js/dashboard.js and templates/index.html. | Complete |
+| Sorting, tooltips, labels, legends, titles | Chart.js setup and chart headers in public/static/js/dashboard.js and templates/index.html. | Complete |
 | Loading, empty, missing-data and error states | UI/API states plus automated missing/empty/error behavior coverage. | Implemented; browser manual verification pending |
-| Epic: Dashboard — responsive design | Breakpoints and mobile navigation are in static/css/style.css and static/js/dashboard.js. | Implemented; manual viewport check pending |
+| Epic: Dashboard — responsive design | Breakpoints and mobile navigation are in public/static/css/style.css and public/static/js/dashboard.js. | Implemented; manual viewport check pending |
 
 ## Story and project documentation
 
@@ -83,7 +83,7 @@ The uploaded requirements/performance document was not available to read as a fi
 
 | Deliverable | Location / evidence | Status |
 |---|---|---|
-| Flask app and frontend | app.py, templates/index.html, static/css/style.css, static/js/dashboard.js | Complete |
+| Flask app and frontend | app.py, templates/index.html, public/static/css/style.css, public/static/js/dashboard.js | Complete |
 | Dependencies and safe environment template | requirements.txt, .env.example | Complete |
 | MySQL / SQL assets | sql/schema.sql, sql/analysis_queries.sql | Complete |
 | Data preparation, import and benchmarks | scripts/ | Complete |

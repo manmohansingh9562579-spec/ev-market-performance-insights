@@ -22,7 +22,7 @@ The separate refreshed Tableau handoff package preserves 7 chart worksheets, the
 
 ## Implementation and test evidence
 
-Source files are in app.py, templates/, static/, sql/, scripts/, tests/ and docs/. The project includes MySQL schema and analysis queries, a repeatable import workflow, and SQLite local development support. The automated unit suite was last run with 12 passing tests. A measured in-process Flask benchmark records source load and response times; it does not measure browser render time.
+Source files are in app.py, templates/, public/static/, sql/, scripts/, tests/ and docs/. The project includes MySQL schema and analysis queries, a repeatable import workflow, and SQLite local development support. The automated unit suite was last run with 12 passing tests. A measured in-process Flask benchmark records source load and response times; it does not measure browser render time.
 
 ## Limits and remaining submission actions
 

@@ -648,7 +648,9 @@ def validated_tableau_url(raw_value: str) -> str | None:
 
 
 def create_app(config: dict[str, Any] | None = None) -> Flask:
-    app = Flask(__name__)
+    # Vercel serves files from public/ at the CDN edge. Keeping Flask's static
+    # folder under public lets the same assets work locally and on Vercel.
+    app = Flask(__name__, static_folder="public/static", static_url_path="/static")
     secret_key = (config or {}).get("SECRET_KEY") or os.getenv("SECRET_KEY")
     if not secret_key:
         if os.getenv("REQUIRE_SECRET_KEY", "false").lower() in {"1", "true", "yes"}:

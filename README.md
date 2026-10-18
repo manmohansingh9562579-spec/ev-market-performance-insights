@@ -53,7 +53,7 @@ Read [`docs/database_setup.md`](docs/database_setup.md) before using MySQL. Run 
 
 The default local setup uses `DATABASE_URL=sqlite:///ev_market.sqlite` and imports the training CSV on first launch. The automated suite exercised the SQLite path with a synthetic integration fixture; the live local database now uses the real training file. **MySQL installation, connection, import, and query performance have not been tested in this environment.**
 
-The Flask site also supports optional public sign-up and login. Accounts are stored in the configured database's `ev_user_accounts` table with hashed passwords; the dashboard itself remains public. Configure a private `SECRET_KEY` before hosting. Sign-up and login require the database to be reachable. See [`docs/hosted_backend.md`](docs/hosted_backend.md) for Railway, MySQL TLS, and account setup.
+The Flask site also supports optional public sign-up and login. Accounts are stored in the configured database's `ev_user_accounts` table with hashed passwords; the dashboard itself remains public. Configure a private `SECRET_KEY` before hosting. Sign-up and login require the database to be reachable. See [`docs/hosted_backend.md`](docs/hosted_backend.md) for Vercel Hobby, Aiven MySQL Free, TLS, and account setup.
 
 ## Tableau
 
@@ -63,7 +63,7 @@ The original Tableau workbooks remain untouched. The refreshed public package `E
 
 The static `docs/site/` page is configured for GitHub Pages and embeds the already-published Tableau Dashboard and Story. The workflow is `.github/workflows/pages.yml`. After the first successful deployment, the expected link is `https://manmohansingh9562579-spec.github.io/ev-market-performance-insights/`. If GitHub Pages is not enabled for the repository, an owner must select **Settings → Pages → Build and deployment → GitHub Actions** once. GitHub Pages hosts only the static landing page; Flask and database features still need a Python-capable host. See [`docs/site/README.md`](docs/site/README.md).
 
-To host the custom Flask dashboard and its filters online, connect this public GitHub repository to Railway and connect a hosted MySQL database. Import the local training CSV into that database first; never commit `.env`, database credentials, or CSV files. Follow [`docs/hosted_backend.md`](docs/hosted_backend.md). The deployed Flask URL will be separate from GitHub Pages; link it from the landing page after Railway creates the service.
+To host the custom Flask dashboard and its filters online without a monthly subscription, connect this public GitHub repository to Vercel Hobby and use an Aiven MySQL Free database. Import the local training CSV into that database first; never commit `.env`, database credentials, or CSV files. These are free tiers with usage and availability limits, not a lifetime guarantee. Follow [`docs/hosted_backend.md`](docs/hosted_backend.md). The deployed Flask URL is separate from GitHub Pages; add it to the landing page after Vercel creates the project URL.
 
 ## Checks
 
@@ -81,8 +81,8 @@ The unit suite uses small synthetic fixtures, not Kaggle results. `benchmark_inp
 ```text
 app.py                         Flask routes and data aggregation
 templates/index.html           Dashboard, Story, and conditional Tableau embed
-static/css/style.css           Responsive styles
-static/js/dashboard.js         Filters, charts, states, and interactions
+public/static/css/style.css    Responsive styles served by Flask and Vercel's CDN
+public/static/js/dashboard.js  Filters, charts, states, and interactions
 sql/schema.sql                 MySQL schema and indexes
 sql/analysis_queries.sql       Parameterized analysis examples
 scripts/                       Inspection, import, Tableau prep, and benchmarks
