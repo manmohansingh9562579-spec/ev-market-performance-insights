@@ -76,7 +76,7 @@ The 20 dashboard calls returned HTTP 200. These are application test-client resp
 
 A real-data filter check selected manufacturer AmpereAuto. Expected values were independently calculated from the deduplicated training frame and matched the API: 964 rows, annual sales sum 7,178,632, and average rating 4.09881981032666. The benchmark marked the comparison passed.
 
-The automated suite contains 13 tests and was last run successfully after the dashboard changes. It covers KPI aggregations and deduplication, combined filters, sorting, invalid filters, country filtering, empty results, conflicting vehicle IDs, missing data, Tableau embed URL handling, Story embedding, presence of the map/treemap/eight-step Story/vehicle artwork in the page template, and repeatable SQLite import plus dashboard reads. The front-end asset syntax check also passed. Test fixtures are synthetic and are not reported as dataset findings.
+The current `tests/test_dashboard.py` contains 14 test functions covering KPI aggregations and deduplication, combined filters, sorting, invalid filters, country filtering, empty results, conflicting vehicle IDs, missing data, Tableau embed URL handling, Story embedding, presence of the map/treemap/eight-step Story/vehicle artwork in the page template, and repeatable SQLite import plus dashboard reads. Earlier project notes record successful runs of 13 tests; the current 14-test suite needs a fresh run before final submission. Test fixtures are synthetic and are not reported as dataset findings.
 
 ## Pending checks and limitations
 

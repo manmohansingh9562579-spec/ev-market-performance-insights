@@ -11,7 +11,7 @@ A responsive Flask dashboard and MySQL-ready data workflow for the Electric Vehi
 - Story and insights sequence, overview, methodology, findings, and limitations.
 - Loading, empty, missing-source, invalid-filter, and error states.
 - MySQL schema, analysis queries, safe repeatable CSV importer, and SQLite local-development support.
-- Tableau-compatible CSV preparation workflow and a refreshed Tableau packaged workbook that preserves the existing sheets, dashboard, filters, and Stories.
+- Tableau-compatible CSV preparation from either a source CSV or configured SQL table, plus a refreshed Tableau packaged workbook that preserves the existing sheets, dashboard, filters, and Stories.
 - Data profile, requirements traceability, project report, database guide, Tableau Public guide, performance report, and demo outline under `docs/`.
 
 ## Data source
@@ -49,7 +49,7 @@ Chart.js, Plotly (used for the treemap and map), and fonts load from CDNs; the d
 
 ## Database
 
-Read [`docs/database_setup.md`](docs/database_setup.md) before using MySQL. Run `sql/schema.sql` in MySQL 8+, clear `DATABASE_URL` in `.env`, configure the environment variables, then import using `scripts/import_csv.py`. The importer validates the 37-column schema, drops exact duplicates, rejects conflicting or missing primary-key IDs, and protects a non-empty destination unless `--replace` is explicitly passed.
+Read [`docs/database_setup.md`](docs/database_setup.md) before using MySQL. Run `sql/schema.sql` in MySQL 8+, clear `DATABASE_URL` in `.env`, configure the environment variables, then import using `scripts/import_csv.py`. The importer validates the 37-column schema, drops exact duplicates, rejects conflicting or missing primary-key IDs, and protects a non-empty destination unless `--replace` is explicitly passed. After import, `scripts/prepare_tableau_csv.py --from-database` can export the configured table as a Tableau-ready extract source.
 
 The default local setup uses `DATABASE_URL=sqlite:///ev_market.sqlite` and imports the training CSV on first launch. The automated suite exercised the SQLite path with a synthetic integration fixture; the live local database now uses the real training file. **MySQL installation, connection, import, and query performance have not been tested in this environment.**
 
@@ -57,7 +57,7 @@ The Flask site also supports optional public sign-up and login. Accounts are sto
 
 ## Tableau
 
-The original Tableau workbooks remain untouched. The refreshed public package `EV_Market_Performance_Overlap_Fixed_2026-10-18.twbx` uses the prepared, deduplicated 199,999-row training CSV through one embedded Hyper extract, and its seven existing chart worksheets use that source. The existing dashboard and Stories are preserved, with six refreshed KPI cards. The packaged workbook and prepared CSV are kept outside this source repository because they contain the dataset. Open the [full Dashboard 1](https://public.tableau.com/app/profile/man.mohan.singh3746/viz/EV_Market_Performance_Overlap_Fixed_2026-10-18/Dashboard1) or the [Story 2 narrative](https://public.tableau.com/app/profile/man.mohan.singh3746/viz/EV_Market_Performance_Overlap_Fixed_2026-10-18/Story2) on Tableau Public. Its embedded extract is public. The dataset owner confirmed they checked the dataset terms and authorized publication; the assistant could not independently read Kaggle's license statement. See [`docs/tableau_public_workflow.md`](docs/tableau_public_workflow.md) for preparation evidence, account requirements, and publishing details. Flask remains a separate application and does not replace the Tableau workbook or Tableau Public submission. Set `TABLEAU_PUBLIC_URL` and `TABLEAU_STORY_URL` in local `.env` to the Dashboard 1 and Story 2 links; the Flask app converts Tableau Public profile share URLs to `/views/<workbook>/<view>` and adds the `:showVizHome=no` and `:embed=true` flags needed to embed the view. Local charts remain functional without either URL.
+The original Tableau workbooks remain untouched. The public package `EV_Market_Performance_Overlap_Fixed_2026-10-18.twbx` preserves seven chart worksheets, the dashboard, and two Stories. Its local rating-corrected copy shows the verified dataset mean (4.09/5); the current public workbook still shows 4.01/5 and must be republished before that KPI is treated as current. Both packages and prepared CSVs are kept outside this source repository because they contain the dataset. Open the [full Dashboard 1](https://public.tableau.com/app/profile/man.mohan.singh3746/viz/EV_Market_Performance_Overlap_Fixed_2026-10-18/Dashboard1) or the [Story 2 narrative](https://public.tableau.com/app/profile/man.mohan.singh3746/viz/EV_Market_Performance_Overlap_Fixed_2026-10-18/Story2) on Tableau Public. Its embedded extract is public. The dataset owner confirmed they checked the dataset terms and authorized publication; the assistant could not independently read Kaggle's license statement. See [`docs/tableau_public_workflow.md`](docs/tableau_public_workflow.md) and the exact [`SkillWallet submission map`](docs/skillwallet_submission_map.md). Flask remains a separate application and does not replace Tableau Public submission. Set `TABLEAU_PUBLIC_URL` and `TABLEAU_STORY_URL` in local `.env` to the Dashboard 1 and Story 2 links; Flask embeds the views when these values are configured.
 
 ## Public demo landing page
 
@@ -74,7 +74,7 @@ python scripts/benchmark_dashboard.py --runs 20
 python scripts/benchmark_sql.py
 ```
 
-The unit suite uses small synthetic fixtures, not Kaggle results. `benchmark_inprocess.py` measures real-data loading and warmed Flask test-client responses and compares an actual manufacturer-filter result to a direct pandas calculation. `benchmark_dashboard.py` requires a reachable local HTTP server; this environment blocked local socket/browser access, so HTTP and visual browser timings are pending. SQL timings are pending until a database is configured. See [`docs/performance_report.md`](docs/performance_report.md).
+The unit suite uses small synthetic fixtures, not Kaggle results. `benchmark_inprocess.py` measures real-data loading and warmed Flask test-client responses and compares an actual manufacturer-filter result to a direct pandas calculation. `benchmark_dashboard.py` requires a reachable local HTTP server; HTTP and local Flask browser timings are pending. SQL timings are pending until MySQL is configured. See [`docs/performance_report.md`](docs/performance_report.md).
 
 ## Repository map
 

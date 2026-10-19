@@ -22,6 +22,14 @@
 
 The importer requires all 37 inspected fields. It removes exact duplicate rows, refuses missing IDs and conflicting duplicate IDs, and refuses to append to a non-empty destination unless `--replace` is explicitly supplied. Review the target table before using `--replace`, because that option deletes existing rows before replacing them from the selected CSV.
 
+To create a Tableau-ready local extract source from the configured database table after import, run:
+
+```powershell
+python scripts/prepare_tableau_csv.py --from-database --table ev_market_train --output "C:/path/to/ev_market_train_tableau.csv"
+```
+
+This exports a local CSV for a packaged Tableau extract. It does not expose database credentials or create a live connection from Tableau Public to MySQL.
+
 ## SQLite local fallback
 
 The one-click launcher defaults to `DATABASE_URL=sqlite:///ev_market.sqlite`; it creates the database and imports the training CSV the first time it runs. You can also set this value in `.env` and run the importer manually. The importer creates the schema and indexes. SQLite import and dashboard reading were exercised by the automated integration test.

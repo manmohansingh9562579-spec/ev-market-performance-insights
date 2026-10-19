@@ -4,6 +4,8 @@
 
 The uploaded requirements/performance document was not available to read as a file in this workspace. The user authorized proceeding from the chat requirements and then supplied SkillWallet screenshots. This checklist maps those chat and screenshot requirements and does not claim to implement unseen wording from an unavailable attachment.
 
+The SkillWallet percentage is a separate platform status from repository evidence. See [`docs/skillwallet_submission_map.md`](skillwallet_submission_map.md) for the exact task mapping and remaining owner/hosting actions.
+
 ## Data inspection and preparation
 
 | Requirement | Implementation / evidence | Status |
@@ -13,7 +15,7 @@ The uploaded requirements/performance document was not available to read as a fi
 | Keep data authentic and do not invent results | The application reads the actual local training CSV; test fixtures are explicitly synthetic. There is no sample-data fallback presented as real data. | Complete |
 | Keep originals unchanged and avoid unnecessary data/credential redistribution | Source CSVs remain outside this repository; exports and local .env are ignored; .env.example contains placeholders only. | Complete |
 | Epic: Data Collection & Extraction — download dataset | Source download files were found in the local Downloads archive and profiled. | Complete |
-| Epic: Data Collection & Extraction — connect dataset with Tableau | Prepared CSV/extract process and local workbook evidence are in docs/tableau_public_workflow.md. | Complete |
+| Epic: Data Collection & Extraction — connect dataset with Tableau | CSV-to-extract workflow and public workbook are documented; SQL-table-to-extract export is implemented in scripts/prepare_tableau_csv.py. | Partial; current public extract came from CSV, and the database export has not been run against a configured MySQL service |
 
 ## Data preparation
 
@@ -87,7 +89,7 @@ The uploaded requirements/performance document was not available to read as a fi
 | Dependencies and safe environment template | requirements.txt, .env.example | Complete |
 | MySQL / SQL assets | sql/schema.sql, sql/analysis_queries.sql | Complete |
 | Data preparation, import and benchmarks | scripts/ | Complete |
-| Automated tests | tests/test_dashboard.py | 13 tests; last run passed |
+| Automated tests | tests/test_dashboard.py | 14 test functions are present; earlier notes report 13 passing. Run the current suite before final submission. |
 | Report and submission documentation | docs/ and README.md | Complete, with pending limits called out |
 | Tableau Public dashboard | https://public.tableau.com/app/profile/man.mohan.singh3746/viz/EV_Market_Performance_Overlap_Fixed_2026-10-18/Dashboard1 | Published |
 | Tableau Public Story | https://public.tableau.com/app/profile/man.mohan.singh3746/viz/EV_Market_Performance_Overlap_Fixed_2026-10-18/Story2 | Published |
