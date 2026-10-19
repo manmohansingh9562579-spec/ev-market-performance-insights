@@ -52,8 +52,8 @@ The importer drops exact duplicate rows and refuses to replace a non-empty table
    | `REQUIRE_SECRET_KEY` | `true` |
    | `SESSION_COOKIE_SECURE` | `true` |
    | `TRUST_PROXY` | `true` |
-   | `TABLEAU_PUBLIC_URL` | `https://public.tableau.com/app/profile/man.mohan.singh3746/viz/EV_Market_Performance_Overlap_Fixed_2026-10-18/Dashboard1` |
-   | `TABLEAU_STORY_URL` | `https://public.tableau.com/app/profile/man.mohan.singh3746/viz/EV_Market_Performance_Overlap_Fixed_2026-10-18/Story2` |
+   | `TABLEAU_PUBLIC_URL` | `https://public.tableau.com/app/profile/man.mohan.singh3746/viz/EV_Market_Performance_Rating_Corrected/Dashboard1` |
+   | `TABLEAU_STORY_URL` | `https://public.tableau.com/app/profile/man.mohan.singh3746/viz/EV_Market_Performance_Rating_Corrected/Story2` |
 
    Vercel supports multiline environment values for PEM certificates. Keep the database URL and `SECRET_KEY` private. Environment-variable changes apply to a new deployment, so redeploy after saving them.
 3. In **Settings → Domains**, use the free `*.vercel.app` project domain. Do not add a paid custom domain.

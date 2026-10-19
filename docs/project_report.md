@@ -18,7 +18,7 @@ All metrics are recomputed for the active filters. Counts use distinct names, sa
 
 ## Tableau deliverable
 
-The separate refreshed Tableau handoff package preserves 7 chart worksheets, the existing dashboard and two Stories, with a prepared 199,999-row extract. Its overlap pass clarifies long labels and switches the manufacturing map to filled green country shapes. The published [Dashboard 1](https://public.tableau.com/app/profile/man.mohan.singh3746/viz/EV_Market_Performance_Overlap_Fixed_2026-10-18/Dashboard1) and [Story 2](https://public.tableau.com/app/profile/man.mohan.singh3746/viz/EV_Market_Performance_Overlap_Fixed_2026-10-18/Story2) are public. The owner confirmed checking the dataset terms and authorizing publication. The assistant could not independently read the Kaggle-specific license statement.
+The current Tableau Public workbook, `EV_Market_Performance_Rating_Corrected`, contains the seven chart worksheets, dashboard and two Stories, with the prepared 199,999-row extract. Its overlap pass clarifies long labels and uses filled green country shapes on the manufacturing map; the rating card is corrected to 4.09/5. The published [Dashboard 1](https://public.tableau.com/app/profile/man.mohan.singh3746/viz/EV_Market_Performance_Rating_Corrected/Dashboard1) and [Story 2](https://public.tableau.com/app/profile/man.mohan.singh3746/viz/EV_Market_Performance_Rating_Corrected/Story2) are public. The older duplicate views were removed from the profile. The owner confirmed checking the dataset terms and authorizing publication. The assistant could not independently read the Kaggle-specific license statement.
 
 ## Implementation and test evidence
 
