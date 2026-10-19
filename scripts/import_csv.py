@@ -1,4 +1,4 @@
-"""Repeatably import a CSV split into MySQL or local SQLite."""
+"""Repeatably import a CSV split into the local SQLite database."""
 
 from __future__ import annotations
 
@@ -133,7 +133,7 @@ def main() -> int:
     parser.add_argument("--input", type=Path, help="CSV split to import; defaults to EV_TRAIN_CSV or the local training CSV.")
     parser.add_argument("--split", choices=("train", "test"), default="train")
     parser.add_argument("--table", help="Destination table; defaults to ev_market_<split>.")
-    parser.add_argument("--database-url", help="SQLAlchemy URL; defaults to DATABASE_URL or DB_* environment variables.")
+    parser.add_argument("--database-url", help="SQLite URL; defaults to DATABASE_URL (sqlite:///ev_market.sqlite).")
     parser.add_argument("--replace", action="store_true", help="Replace all rows in the destination table. Without this flag, a non-empty destination is protected.")
     args = parser.parse_args()
 
@@ -149,7 +149,7 @@ def main() -> int:
 
     database_url = normalize_database_url(args.database_url) or configured_database_url()
     if not database_url:
-        parser.error("Configure DATABASE_URL or DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, and DB_NAME first.")
+        parser.error("Set DATABASE_URL=sqlite:///ev_market.sqlite in .env or pass a SQLite --database-url.")
     table_name = validate_table_name(args.table or f"ev_market_{args.split}")
 
     try:

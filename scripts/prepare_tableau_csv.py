@@ -85,7 +85,7 @@ def main() -> int:
     source = parser.add_mutually_exclusive_group()
     source.add_argument("--input", type=Path, help="Training CSV; defaults to EV_TRAIN_CSV or the local training CSV.")
     source.add_argument("--from-database", action="store_true", help="Read the configured SQL table instead of a CSV.")
-    parser.add_argument("--database-url", help="SQLAlchemy URL; defaults to DATABASE_URL or DB_* environment variables.")
+    parser.add_argument("--database-url", help="SQLite URL; defaults to DATABASE_URL (sqlite:///ev_market.sqlite).")
     parser.add_argument("--table", default=None, help="SQL source table; defaults to EV_TABLE_NAME or ev_market_train.")
     parser.add_argument("--output", type=Path, required=True, help="New CSV path; the source file is never overwritten.")
     parser.add_argument("--overwrite", action="store_true", help="Allow replacing the chosen output file if it already exists.")
@@ -94,7 +94,7 @@ def main() -> int:
         if args.from_database:
             database_url = normalize_database_url(args.database_url) or configured_database_url()
             if not database_url:
-                raise ValueError("Configure DATABASE_URL or DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, and DB_NAME first.")
+                raise ValueError("Set DATABASE_URL=sqlite:///ev_market.sqlite in .env or pass a SQLite --database-url.")
             table_name = args.table or os.getenv("EV_TABLE_NAME", "ev_market_train")
             frame = read_database_table(database_url, table_name)
             raw_rows, prepared_rows, duplicates = prepare_frame(frame, args.output, overwrite=args.overwrite)

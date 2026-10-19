@@ -1,4 +1,4 @@
--- Run against ev_market.ev_market_train after the repeatable import workflow.
+-- Run against ev_market.sqlite and the ev_market_train table after import.
 -- The vehicle_id primary key and importer's duplicate checks keep one row per ID.
 
 -- 1. Total annual sales. Null annual_sales_units values are excluded by SUM.

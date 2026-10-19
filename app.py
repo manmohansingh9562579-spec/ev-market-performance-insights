@@ -6,12 +6,11 @@ import logging
 import os
 import re
 import secrets
-import ssl
 import time
 from threading import Lock
 from pathlib import Path
 from typing import Any
-from urllib.parse import parse_qsl, quote_plus, urlencode, urlparse
+from urllib.parse import parse_qsl, urlencode, urlparse
 
 import pandas as pd
 from flask import Flask, flash, jsonify, redirect, render_template, request, url_for
@@ -90,28 +89,18 @@ class DataUnavailable(RuntimeError):
 
 
 def normalize_database_url(database_url: str | None) -> str | None:
-    """Use the installed PyMySQL driver when a provider supplies a generic MySQL URL."""
-    if database_url and database_url.startswith("mysql://"):
-        return "mysql+pymysql://" + database_url[len("mysql://") :]
+    """Accept only the local SQLite database used by this project."""
+    if database_url and not database_url.startswith("sqlite:///"):
+        raise ValueError("This project uses local SQLite only. Set DATABASE_URL=sqlite:///ev_market.sqlite.")
     return database_url
 
 
 def database_connect_args(database_url: str | None) -> dict[str, Any]:
-    """Build SQLAlchemy connection options, including verified MySQL TLS when configured."""
-    if not database_url or not database_url.startswith("mysql"):
-        if database_url and database_url.startswith("sqlite"):
-            return {"check_same_thread": False}
+    """Return local SQLite connection options; reject remote SQL backends."""
+    if not database_url:
         return {}
-
-    ca_file = os.getenv("MYSQL_SSL_CA", "").strip()
-    ca_certificate = os.getenv("MYSQL_SSL_CA_CERT", "").strip()
-    if ca_file:
-        return {"ssl": ssl.create_default_context(cafile=ca_file)}
-    if ca_certificate:
-        return {"ssl": ssl.create_default_context(cadata=ca_certificate)}
-    if os.getenv("MYSQL_SSL_REQUIRED", "false").lower() in {"1", "true", "yes"}:
-        raise RuntimeError("MySQL TLS is required; configure MYSQL_SSL_CA or MYSQL_SSL_CA_CERT.")
-    return {}
+    normalize_database_url(database_url)
+    return {"check_same_thread": False}
 
 
 class Account(UserMixin):
@@ -207,22 +196,10 @@ class AccountStore:
 
 
 def configured_database_url(environ: dict[str, str] | None = None) -> str | None:
-    """Read a connection URL or construct one from environment-only credentials."""
+    """Read the optional local SQLite URL from the environment."""
     env = environ if environ is not None else os.environ
     direct_url = env.get("DATABASE_URL", "").strip()
-    if direct_url:
-        return normalize_database_url(direct_url)
-
-    host = env.get("DB_HOST", "").strip()
-    user = env.get("DB_USER", "").strip()
-    database = env.get("DB_NAME", "").strip()
-    if not (host and user and database):
-        return None
-
-    port = env.get("DB_PORT", "3306").strip() or "3306"
-    password = quote_plus(env.get("DB_PASSWORD", ""))
-    username = quote_plus(user)
-    return f"mysql+pymysql://{username}:{password}@{host}:{port}/{database}"
+    return normalize_database_url(direct_url) if direct_url else None
 
 
 def allowed_table_name(value: str) -> str:
@@ -261,7 +238,7 @@ class DashboardData:
             database_url if database_url is not None else configured_database_url()
         )
         self.table_name = allowed_table_name(table_name)
-        self.backend = "mysql/sqlalchemy" if self.database_url else "csv"
+        self.backend = "sqlite/sqlalchemy" if self.database_url else "csv"
         self._frame: pd.DataFrame | None = None
         self._status: dict[str, Any] = {
             "state": "not_loaded",

@@ -29,8 +29,8 @@ def main() -> int:
     if not url:
         print(json.dumps({
             "status": "pending",
-            "reason": "No DATABASE_URL or complete DB_* configuration is set.",
-            "message": "Configure a database, import the CSV, then rerun this script. No SQL timings are claimed.",
+            "reason": "DATABASE_URL is not set to a local SQLite database.",
+            "message": "Set DATABASE_URL=sqlite:///ev_market.sqlite, import the CSV, then rerun this script. No SQL timings are claimed.",
         }, indent=2))
         return 0
 

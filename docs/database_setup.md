@@ -36,4 +36,4 @@ To run without the database for source-file fallback, clear `DATABASE_URL` and s
 
 ## Verification status
 
-SQLite: automated synthetic integration coverage plus a manual local import and dashboard check using 199,999 real training rows. Remote MySQL/server deployment and remote query performance are not part of the required workflow.
+SQLite: automated synthetic integration coverage plus a manual local import and dashboard check using 199,999 real training rows. Hosted database deployment and remote query performance are not part of the required workflow.
