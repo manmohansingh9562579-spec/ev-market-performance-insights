@@ -1,6 +1,6 @@
 # Electric Vehicle Market Performance & Insights
 
-A responsive Flask dashboard and MySQL-ready data workflow for the Electric Vehicle Market Classification Dataset. The one-click local launcher imports the training CSV into a private SQLite database on first use; a configured MySQL database can replace it. It keeps the test split separate and never edits the source CSV.
+A responsive Flask dashboard and SQL workflow for the Electric Vehicle Market Classification Dataset. The one-click local launcher imports the training CSV into a private SQLite database on first use. SQLite is the project's active database; no hosted database provider is required. The project keeps the test split separate and never edits the source CSV.
 
 ## What is included
 
@@ -10,7 +10,7 @@ A responsive Flask dashboard and MySQL-ready data workflow for the Electric Vehi
 - Filters for manufacturer, battery type, region, category, manufacturing country, and model-year range; chart sorting, tooltips, labels, and legends.
 - Story and insights sequence, overview, methodology, findings, and limitations.
 - Loading, empty, missing-source, invalid-filter, and error states.
-- MySQL schema, analysis queries, safe repeatable CSV importer, and SQLite local-development support.
+- SQLite schema and analysis queries, plus a safe repeatable CSV importer.
 - Tableau-compatible CSV preparation from either a source CSV or configured SQL table, plus a refreshed Tableau packaged workbook that preserves the existing sheets, dashboard, filters, and Stories.
 - Data profile, requirements traceability, project report, database guide, Tableau Public guide, performance report, and demo outline under `docs/`.
 
@@ -47,13 +47,13 @@ The launcher creates the local SQLite database from the training CSV when needed
 
 Chart.js, Plotly (used for the treemap and map), and fonts load from CDNs; the data API and Flask server run locally. An internet connection is needed for those external visual assets. If the Plotly map cannot load, the app shows a country-sales table; if no CSV or database is available, the page shows a clear data-loading state. Synthetic rows exist only in automated test fixtures and are not offered as real dataset results.
 
-## Database
+## Database and SQL
 
-Read [`docs/database_setup.md`](docs/database_setup.md) before using MySQL. Run `sql/schema.sql` in MySQL 8+, clear `DATABASE_URL` in `.env`, configure the environment variables, then import using `scripts/import_csv.py`. The importer validates the 37-column schema, drops exact duplicates, rejects conflicting or missing primary-key IDs, and protects a non-empty destination unless `--replace` is explicitly passed. After import, `scripts/prepare_tableau_csv.py --from-database` can export the configured table as a Tableau-ready extract source.
+The required database workflow uses local SQLite through SQLAlchemy: `DATABASE_URL=sqlite:///ev_market.sqlite`. The one-click launcher imports the training CSV into `ev_market_train`; the repeatable importer validates the 37-column schema, drops exact duplicates, rejects conflicting or missing primary-key IDs, and protects a non-empty destination unless `--replace` is explicitly passed. The app and database remain on the user's computer during local use.
 
-The default local setup uses `DATABASE_URL=sqlite:///ev_market.sqlite` and imports the training CSV on first launch. The automated suite exercised the SQLite path with a synthetic integration fixture; the live local database now uses the real training file. **MySQL installation, connection, import, and query performance have not been tested in this environment.**
+Use [`sql/schema_sqlite.sql`](sql/schema_sqlite.sql) and [`sql/analysis_queries.sql`](sql/analysis_queries.sql) for the project SQL operations and [`docs/database_setup.md`](docs/database_setup.md) for setup and export steps. `scripts/prepare_tableau_csv.py --from-database` exports a local Tableau-ready extract source from SQLite. The project's required workflow uses only the local SQLite database; no remote database service is part of the submission.
 
-The Flask site also supports optional public sign-up and login. Accounts are stored in the configured database's `ev_user_accounts` table with hashed passwords; the dashboard itself remains public. Configure a private `SECRET_KEY` before hosting. Sign-up and login require the database to be reachable. See [`docs/hosted_backend.md`](docs/hosted_backend.md) for Vercel Hobby, Aiven MySQL Free, TLS, and account setup.
+The Flask site also supports optional sign-up and login, storing password hashes in the configured local database. These account routes are for local demonstration and do not create a hosted public account service. See [`docs/hosted_backend.md`](docs/hosted_backend.md) for the local Flask + SQLite setup.
 
 ## Tableau
 
@@ -63,7 +63,7 @@ The original Tableau workbooks remain untouched. The current public workbook is 
 
 The static `docs/site/` page is configured for GitHub Pages and embeds the already-published Tableau Dashboard and Story. The workflow is `.github/workflows/pages.yml`. After the first successful deployment, the expected link is `https://manmohansingh9562579-spec.github.io/ev-market-performance-insights/`. If GitHub Pages is not enabled for the repository, an owner must select **Settings → Pages → Build and deployment → GitHub Actions** once. GitHub Pages hosts only the static landing page; Flask and database features still need a Python-capable host. See [`docs/site/README.md`](docs/site/README.md).
 
-To host the custom Flask dashboard and its filters online without a monthly subscription, connect this public GitHub repository to Vercel Hobby and use an Aiven MySQL Free database. Import the local training CSV into that database first; never commit `.env`, database credentials, or CSV files. These are free tiers with usage and availability limits, not a lifetime guarantee. Follow [`docs/hosted_backend.md`](docs/hosted_backend.md). The deployed Flask URL is separate from GitHub Pages; add it to the landing page after Vercel creates the project URL.
+The Flask dashboard is a local companion to the public Tableau deliverable. Online Flask hosting and a remote database are not required by the project guidance. GitHub Pages hosts only the static landing page; it does not run Flask or SQLite. Follow [`docs/hosted_backend.md`](docs/hosted_backend.md) to run the Flask + SQLite app locally.
 
 ## Checks
 
@@ -74,16 +74,17 @@ python scripts/benchmark_dashboard.py --runs 20
 python scripts/benchmark_sql.py
 ```
 
-The unit suite uses small synthetic fixtures, not Kaggle results. `benchmark_inprocess.py` measures real-data loading and warmed Flask test-client responses and compares an actual manufacturer-filter result to a direct pandas calculation. `benchmark_dashboard.py` requires a reachable local HTTP server; HTTP and local Flask browser timings are pending. SQL timings are pending until MySQL is configured. See [`docs/performance_report.md`](docs/performance_report.md).
+The unit suite uses small synthetic fixtures, not Kaggle results. `benchmark_inprocess.py` measures real-data loading and warmed Flask test-client responses and compares an actual manufacturer-filter result to a direct pandas calculation. `benchmark_dashboard.py` requires a reachable local HTTP server; HTTP and local Flask browser timings are pending. Remote-database timings are outside the required project scope. See [`docs/performance_report.md`](docs/performance_report.md).
 
 ## Repository map
 
 ```text
 app.py                         Flask routes and data aggregation
 templates/index.html           Dashboard, Story, and conditional Tableau embed
-public/static/css/style.css    Responsive styles served by Flask and Vercel's CDN
+public/static/css/style.css    Responsive styles served by Flask locally
 public/static/js/dashboard.js  Filters, charts, states, and interactions
-sql/schema.sql                 MySQL schema and indexes
+sql/schema_sqlite.sql          Active SQLite schema and indexes
+sql/analysis_queries.sql       SQL analysis examples
 sql/analysis_queries.sql       Parameterized analysis examples
 scripts/                       Inspection, import, Tableau prep, and benchmarks
 tests/                         Synthetic unit and SQLite integration tests

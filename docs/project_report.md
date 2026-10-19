@@ -22,11 +22,11 @@ The current Tableau Public workbook, `EV_Market_Performance_Rating_Corrected`, c
 
 ## Implementation and test evidence
 
-Source files are in app.py, templates/, public/static/, sql/, scripts/, tests/ and docs/. The project includes MySQL schema and analysis queries, a repeatable import workflow, and SQLite local development support. The current `tests/test_dashboard.py` contains 14 test functions; earlier project notes record successful runs of 12 or 13 tests, so run the current suite before final submission. A measured in-process Flask benchmark records source load and response times; it does not measure browser render time.
+Source files are in app.py, templates/, public/static/, sql/, scripts/, tests/ and docs/. The required database workflow uses SQLite, with SQL schema/analysis queries and a repeatable importer. No cloud database provider is part of the submission plan. The current `tests/test_dashboard.py` contains 14 test functions; earlier project notes record successful runs of 12 or 13 tests, so run the current suite before final submission. A measured in-process Flask benchmark records source load and response times; it does not measure browser render time.
 
 ## Limits and remaining submission actions
 
-- MySQL server connectivity, schema execution, import, query plans and query timing remain unverified and are marked pending.
+- Separate remote-database connectivity and query performance are not required by the project guidance; no remote database results are claimed.
 - Local HTTP/browser access was restricted during the performance run, so manual desktop/mobile rendering and end-to-end load time remain pending.
 - Sales and CO2 sums use the dataset's supplied row values. The source context does not establish whether those rows represent non-overlapping market-period observations, so don't present them as externally validated market totals.
 - The owner still needs to record the requested 5–7 minute end-to-end explanation video using docs/demo_outline.md.

@@ -6,7 +6,7 @@ This checklist maps the SkillWallet brief to the actual EV project files and pub
 
 - SkillWallet showed **3% overall progress** on 2026-10-19: one task in progress, 13 to do, and none reviewed or completed.
 - The GitHub Pages site now embeds the corrected Tableau Public Dashboard/Story; the live page returned HTTP 200. The Tableau profile has one viz, `EV_Market_Performance_Rating_Corrected`; the three older duplicate/incorrect vizzes were deleted. GitHub Pages is static; the Flask app is local and is not connected to a hosted backend.
-- The local `.env` uses SQLite. No MySQL connection is configured in this checkout, so hosted MySQL import, query performance, and database-backed deployment remain pending.
+- The local `.env` uses SQLite. SQLite is the active SQL database for the project; no cloud database provider is required or connected.
 - The dataset files are available locally and ignored by Git. The public repository contains no source CSV or database file.
 - The current published Tableau Public workbook is `EV_Market_Performance_Rating_Corrected` and its rating KPI shows **4.09/5**, matching the dataset profile's 4.088754 mean. Dashboard 1 and Story 2 links on GitHub Pages point to this workbook; the Flask `.env` also uses these corrected links.
 
@@ -16,9 +16,9 @@ This checklist maps the SkillWallet brief to the actual EV project files and pub
 |---|---|---|
 | Define problem / problem understanding | `README.md`, `docs/project_report.md`, project overview with three EV-market personas and questions | Ready |
 | Download the dataset | `docs/data_profile.md`, `scripts/inspect_data.py`; local train/test CSVs | Evidence ready locally; CSVs stay out of GitHub |
-| Store data in a database | `sql/schema.sql`, `scripts/import_csv.py`, local `ev_market.sqlite` | SQLite local workflow available; MySQL service/import pending |
-| Perform SQL operations | `sql/analysis_queries.sql`, indexed schema, SQLAlchemy dashboard path | Queries and implementation are present; remote MySQL execution is pending |
-| Connect database data to Tableau | `scripts/prepare_tableau_csv.py` supports exporting a prepared CSV from a configured SQL table; Tableau Public workbook uses an embedded extract | Export path is implemented; current published extract was prepared from CSV, so complete the database-to-extract handoff after MySQL is available |
+| Store data in a database | `sql/schema_sqlite.sql`, `scripts/import_csv.py`, local `ev_market.sqlite` | SQLite database and training import are available locally |
+| Perform SQL operations | `sql/analysis_queries.sql`, indexed schema, SQLAlchemy dashboard path | SQL queries and SQLite workflow are included; no remote database is required |
+| Connect dataset with Tableau | Published Tableau Public workbook uses an embedded extract; `scripts/prepare_tableau_csv.py` can prepare a local extract from CSV or SQLite | Published workbook is connected to the dataset; SQLite export is available for a future refresh |
 | Prepare data for visualization | `scripts/inspect_data.py`, `scripts/import_csv.py`, `scripts/prepare_tableau_csv.py`, `docs/methodology.md` | Ready; source remains unchanged and one exact duplicate is excluded |
 | Number of unique visualizations | `docs/performance_report.md`: 9 Flask views and 7 Tableau chart worksheets, counted separately | Ready and documented |
 | Responsive dashboard design | `templates/index.html`, `public/static/css/style.css`, `docs/site/` | Implemented; finish manual desktop/mobile review before marking reviewed |
@@ -43,6 +43,6 @@ The Data Collection & Extraction description on SkillWallet refers to an online-
 ## Final completion order
 
 1. Complete — publish the rating-corrected Tableau package, update GitHub Pages links to Dashboard 1 and Story 2, and verify the live Pages deployment.
-2. Configure the selected free MySQL service and import the training split; run the database-backed Tableau export and verify the row count.
-3. Deploy Flask only after the database is reachable; set the private production secrets and Tableau view URLs, then connect the hosted Flask dashboard from the landing page.
+2. Use the local SQLite database and run the documented SQL analysis queries; prepare a Tableau-ready CSV from SQLite only if refreshing the workbook from the database is needed.
+3. Keep GitHub Pages and Tableau Public as the public deliverables. The custom Flask + SQLite dashboard runs locally; a hosted Flask service is not required by the project guidance.
 4. Review dashboard and map at desktop/mobile sizes, record the demo video, and attach repository/site evidence to the corresponding SkillWallet cards.

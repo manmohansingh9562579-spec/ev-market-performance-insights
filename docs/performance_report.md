@@ -82,7 +82,7 @@ The current `tests/test_dashboard.py` contains 14 test functions covering KPI ag
 
 - Browser visual rendering and responsive behavior could not be confirmed because local browser/TCP access was restricted in this environment. The CSS includes responsive breakpoints, but manual desktop/mobile inspection remains pending.
 - Error, missing-data, and empty-data states have automated API/template coverage; manual browser interaction remains pending.
-- MySQL is not configured here. MySQL schema execution, import, query timing, and query plan checks are pending. No MySQL success is claimed.
+- The active workflow uses local SQLite. Separate remote-database query timings and query-plan checks are outside the required scope and are not claimed.
 - Local HTTP benchmark and page-load timings are pending. The in-process numbers above cannot establish a user's browser load time.
 - Concurrency, production deployment, network latency, CDN availability, and Tableau Public render time were not measured.
 - Sales and CO2 sums are sums of supplied fields over unique records. The dataset documentation available here does not independently establish market-period grain or that those values represent non-overlapping global totals.

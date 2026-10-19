@@ -15,7 +15,7 @@ The SkillWallet percentage is a separate platform status from repository evidenc
 | Keep data authentic and do not invent results | The application reads the actual local training CSV; test fixtures are explicitly synthetic. There is no sample-data fallback presented as real data. | Complete |
 | Keep originals unchanged and avoid unnecessary data/credential redistribution | Source CSVs remain outside this repository; exports and local .env are ignored; .env.example contains placeholders only. | Complete |
 | Epic: Data Collection & Extraction — download dataset | Source download files were found in the local Downloads archive and profiled. | Complete |
-| Epic: Data Collection & Extraction — connect dataset with Tableau | CSV-to-extract workflow and public workbook are documented; SQL-table-to-extract export is implemented in scripts/prepare_tableau_csv.py. | Partial; current public extract came from CSV, and the database export has not been run against a configured MySQL service |
+| Epic: Data Collection & Extraction — connect dataset with Tableau | CSV-to-extract workflow and public workbook are documented; optional SQLite-table-to-extract export is implemented in scripts/prepare_tableau_csv.py. | Complete; current public extract came from the inspected CSV |
 
 ## Data preparation
 
@@ -52,12 +52,11 @@ The SkillWallet percentage is a separate platform status from repository evidenc
 
 | Requirement | Implementation / evidence | Status |
 |---|---|---|
-| MySQL schema, suitable types, PK and indexes | sql/schema.sql. | Implemented; MySQL execution pending |
-| Repeatable CSV import | scripts/import_csv.py protects populated destinations unless --replace is supplied. | SQLite path tested; MySQL pending |
+| SQL schema, suitable types, PK and indexes | sql/schema_sqlite.sql and the SQLAlchemy schema used by scripts/import_csv.py. | Implemented for the SQLite workflow |
+| Repeatable CSV import | scripts/import_csv.py protects populated destinations unless --replace is supplied. | SQLite workflow available and used locally |
 | Meaningful EV analysis queries | sql/analysis_queries.sql covers supported sales, manufacturer, region, battery, rating, range, country, efficiency and CO2 metrics. | Complete |
 | Environment variables and placeholder-only .env.example | .env.example and app.py. | Complete |
-| SQLite fallback and setup instructions | docs/database_setup.md. | SQLite tested; MySQL pending |
-| Do not claim MySQL success without testing | Connection, import and performance are marked pending throughout. | Complete |
+| SQL database setup instructions | docs/database_setup.md. | SQLite setup documented; no external database service required |
 
 ## Tableau and web integration
 
@@ -77,7 +76,7 @@ The SkillWallet percentage is a separate platform status from repository evidenc
 | Epic: Performance Testing — field utilization | Report lists Flask's 14 used and 23 unused source fields; 14/37 = 37.84%. | Complete |
 | Epic: Performance Testing — calculated fields/measures/transformations | Report distinguishes 7 KPIs, 9 chart aggregation expressions, 6 numeric measures, 3 preparation operations, and zero newly authored Tableau calculated fields. | Complete |
 | Epic: Performance Testing — number of visualizations | Nine Flask analytical views (seven Chart.js and two Plotly); seven Tableau chart worksheets counted separately. | Complete |
-| Load/response timing and SQL query performance | Actual in-process Flask timings recorded; HTTP/browser and MySQL SQL timing are explicitly pending. | Partial; pending checks labeled |
+| Load/response timing and SQL query performance | Actual in-process Flask timings recorded; HTTP/browser and separate SQL-query timings are pending. | Partial; pending checks labeled |
 | Filtering correctness, responsiveness and error handling | Real-data manufacturer filter comparison and unit coverage recorded; responsive CSS implemented; manual browser/device check pending. | Partial; manual visual check pending |
 | Repeatable test scripts and measured environment/method/limitations | tests/test_dashboard.py, benchmark scripts, docs/performance_report.md and docs/performance_measurements.json. | Complete |
 
@@ -87,7 +86,7 @@ The SkillWallet percentage is a separate platform status from repository evidenc
 |---|---|---|
 | Flask app and frontend | app.py, templates/index.html, public/static/css/style.css, public/static/js/dashboard.js | Complete |
 | Dependencies and safe environment template | requirements.txt, .env.example | Complete |
-| MySQL / SQL assets | sql/schema.sql, sql/analysis_queries.sql | Complete |
+| SQL schema and analysis assets | sql/schema_sqlite.sql, sql/analysis_queries.sql | Complete |
 | Data preparation, import and benchmarks | scripts/ | Complete |
 | Automated tests | tests/test_dashboard.py | 14 test functions are present; earlier notes report 13 passing. Run the current suite before final submission. |
 | Report and submission documentation | docs/ and README.md | Complete, with pending limits called out |

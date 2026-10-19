@@ -16,13 +16,13 @@ The original train CSV remains in the local Downloads archive and is not include
 python scripts/prepare_tableau_csv.py --input "C:/path/to/ev_market_train.csv" --output "C:/path/to/ev_market_train_tableau.csv"
 ```
 
-The script removes exact duplicate rows, rejects conflicting `vehicle_id` records, and refuses to overwrite an existing output unless `--overwrite` is explicitly supplied. To prepare from the configured SQLite/MySQL table instead of a CSV, run:
+The script removes exact duplicate rows, rejects conflicting `vehicle_id` records, and refuses to overwrite an existing output unless `--overwrite` is explicitly supplied. To prepare from the configured local SQLite table instead of a CSV, run:
 
 ```powershell
 python scripts/prepare_tableau_csv.py --from-database --table ev_market_train --output "C:/path/to/ev_market_train_tableau.csv"
 ```
 
-The database export uses `DATABASE_URL` (or the supported `DB_*` variables), the same MySQL TLS settings as the Flask app, and a validated table name. It still creates a local file for Tableau's packaged extract; it does not publish a live database connection. In Tableau Desktop/Public Desktop, connect to that prepared CSV, check field types and row count, select **Extract** on the Data Source page, and refresh. Save a new packaged workbook (`.twbx`) so the extract travels with it. Keep the previous workbook versions until the refreshed copy has been checked.
+The database export uses the local SQLite `DATABASE_URL` and a validated table name. It creates a local file for Tableau's packaged extract; it does not publish a live database connection. In Tableau Desktop/Public Desktop, connect to that prepared CSV, check field types and row count, select **Extract** on the Data Source page, and refresh. Save a new packaged workbook (`.twbx`) so the extract travels with it. Keep the previous workbook versions until the refreshed copy has been checked.
 
 ## Publish through Tableau Public Desktop
 
