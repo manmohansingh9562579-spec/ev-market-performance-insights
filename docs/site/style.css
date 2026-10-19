@@ -425,3 +425,41 @@ body {
   .resource-card h3 { margin-top: 17px; }
   .deployment-note { padding: 12px; font-size: 9px; }
 }
+
+@media (prefers-reduced-motion: no-preference) {
+  .hero-copy { animation: hero-copy-enter .72s cubic-bezier(.2,.7,.2,1) both; }
+  .hero-car { animation: hero-art-enter .9s .08s cubic-bezier(.2,.7,.2,1) both; }
+  .battery-chip { animation: float-chip 5.8s 1s ease-in-out infinite; }
+  .car-caption { animation: float-chip 6.4s 1.3s ease-in-out infinite; }
+  .hero::before { animation: hero-glow 8s ease-in-out infinite alternate; }
+  .live-dot { animation: status-pulse 2.4s ease-in-out infinite; }
+}
+
+.motion-ready .motion-reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity .55s ease, transform .55s cubic-bezier(.2,.7,.2,1);
+  transition-delay: var(--motion-delay, 0ms);
+}
+.motion-ready .motion-reveal.is-visible { opacity: 1; transform: translateY(0); }
+
+@keyframes hero-copy-enter {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes hero-art-enter {
+  from { opacity: 0; transform: translateX(28px) scale(.985); }
+  to { opacity: 1; transform: translateX(0) scale(1); }
+}
+@keyframes float-chip {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-7px); }
+}
+@keyframes hero-glow {
+  from { opacity: .72; transform: scale(.96); }
+  to { opacity: 1; transform: scale(1.04); }
+}
+@keyframes status-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(107,181,131,.22); }
+  50% { box-shadow: 0 0 0 5px rgba(107,181,131,0); }
+}

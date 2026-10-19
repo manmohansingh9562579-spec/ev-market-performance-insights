@@ -21,6 +21,29 @@ const backTop = document.querySelector('.back-top');
 let loadTimer;
 let scrollQueued = false;
 
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+if (!prefersReducedMotion && 'IntersectionObserver' in window) {
+  const revealTargets = document.querySelectorAll(
+    '.overview > .section-heading, .fact-card, .data-note, .project-links, .focus-card, .workspace-heading, .view-switch, .story-copy, .story-steps > div, .method > div, .resource-card'
+  );
+  revealTargets.forEach((element, index) => {
+    element.classList.add('motion-reveal');
+    element.style.setProperty('--motion-delay', `${(index % 4) * 65}ms`);
+  });
+  if (revealTargets.length) {
+    document.documentElement.classList.add('motion-ready');
+    const revealObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { rootMargin: '0px 0px -7% 0px', threshold: 0.12 });
+    revealTargets.forEach((element) => revealObserver.observe(element));
+  }
+}
+
 const menuToggle = document.querySelector('#menu-toggle');
 const mainNav = document.querySelector('#main-nav');
 menuToggle?.addEventListener('click', () => {
