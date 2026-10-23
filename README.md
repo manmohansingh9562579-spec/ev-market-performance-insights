@@ -6,6 +6,10 @@ A responsive Flask dashboard and SQL workflow for the Electric Vehicle Market Cl
 
 **[Read the final project report (Markdown)](docs/EV_Market_Performance_Final_Report.md)** — the primary, readable report for review and submission.
 
+**[Open the live project website](https://manmohansingh9562579-spec.github.io/ev-market-performance-insights/)**
+
+**[Open the Tableau Public dashboard](https://public.tableau.com/app/profile/man.mohan.singh3746/viz/EV_Market_Performance_Rating_Corrected/Dashboard1)**
+
 Need a downloadable Word copy? [Open the final report (.docx)](docs/EV_Market_Performance_Final_Report.docx). For supporting reports and project guides, see the [documentation index](docs/README.md).
 
 ## What is included
