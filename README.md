@@ -2,6 +2,12 @@
 
 A responsive Flask dashboard and SQL workflow for the Electric Vehicle Market Classification Dataset. The one-click local launcher imports the training CSV into a private SQLite database on first use. SQLite is the project's active database; no hosted database provider is required. The project keeps the test split separate and never edits the source CSV.
 
+## Final report — start here
+
+**[Read the final project report (Markdown)](docs/EV_Market_Performance_Final_Report.md)** — the primary, readable report for review and submission.
+
+Need a downloadable Word copy? [Open the final report (.docx)](docs/EV_Market_Performance_Final_Report.docx). For supporting reports and project guides, see the [documentation index](docs/README.md).
+
 ## What is included
 
 - Seven KPI cards: annual sales sum, unweighted average customer rating, distinct manufacturer and model counts, average range, average battery capacity, and annual CO₂ savings sum.
@@ -14,7 +20,7 @@ A responsive Flask dashboard and SQL workflow for the Electric Vehicle Market Cl
 - Tableau-compatible CSV preparation from either a source CSV or configured SQL table, plus a refreshed Tableau packaged workbook that preserves the existing sheets, dashboard, filters, and Stories.
 - Data profile, requirements traceability, final project report, database guide, Tableau Public guide, performance report, and demo outline under `docs/`.
 
-The final report is available as a [readable Markdown document](docs/EV_Market_Performance_Final_Report.md) and a [Word document](docs/EV_Market_Performance_Final_Report.docx). It follows the supplied report outline and links to the live Tableau and GitHub Pages deliverables.
+The final report follows the supplied report outline and links to the live Tableau and GitHub Pages deliverables.
 
 ## Data source
 
