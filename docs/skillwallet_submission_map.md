@@ -29,7 +29,7 @@ This checklist maps the SkillWallet brief to the actual EV project files and pub
 | Number of visualizations / graphs | 9 Flask views and 7 Tableau worksheets; `docs/performance_report.md` defines the counting rule | Ready |
 | Publish Dashboard and Story to Tableau Public | Public Dashboard 1 and Story 2 are linked in `README.md` and `docs/tableau_public_workflow.md` | Published as the corrected workbook; GitHub Pages embeds Dashboard 1 and Story 2 from this view |
 | Embed Dashboard and Story with Flask | Conditional Tableau Embedding API v3 components in `templates/index.html`; local `.env` has both view URLs | Implemented locally; no hosted Flask URL is connected to GitHub Pages |
-| Record end-to-end explanation video | `docs/demo_outline.md` | Outline ready; owner must record and submit the video |
+| Record end-to-end explanation video | `docs/demo_outline.md` | Owner reports the video is recorded and submitted; confirm the correct SkillWallet card shows the attachment and review status |
 | Step-by-step project documentation | `README.md` and the `docs/` guides | Ready; database-to-Tableau flow is documented here and in `docs/tableau_public_workflow.md` |
 
 ## Exact SkillWallet Kanban tasks
@@ -45,4 +45,5 @@ The Data Collection & Extraction description on SkillWallet refers to an online-
 1. Complete — publish the rating-corrected Tableau package, update GitHub Pages links to Dashboard 1 and Story 2, and verify the live Pages deployment.
 2. Use the local SQLite database and run the documented SQL analysis queries; prepare a Tableau-ready CSV from SQLite only if refreshing the workbook from the database is needed.
 3. Keep GitHub Pages and Tableau Public as the public deliverables. The custom Flask + SQLite dashboard runs locally; a hosted Flask service is not required by the project guidance.
-4. Review dashboard and map at desktop/mobile sizes, record the demo video, and attach repository/site evidence to the corresponding SkillWallet cards.
+4. Review dashboard and map at desktop/mobile sizes, then attach repository/site evidence to the corresponding SkillWallet cards. The owner reports the demo video is already submitted; check its SkillWallet card for review status.
+
