@@ -12,7 +12,9 @@ A responsive Flask dashboard and SQL workflow for the Electric Vehicle Market Cl
 - Loading, empty, missing-source, invalid-filter, and error states.
 - SQLite schema and analysis queries, plus a safe repeatable CSV importer.
 - Tableau-compatible CSV preparation from either a source CSV or configured SQL table, plus a refreshed Tableau packaged workbook that preserves the existing sheets, dashboard, filters, and Stories.
-- Data profile, requirements traceability, project report, database guide, Tableau Public guide, performance report, and demo outline under `docs/`.
+- Data profile, requirements traceability, final project report, database guide, Tableau Public guide, performance report, and demo outline under `docs/`.
+
+The final report is available as a [readable Markdown document](docs/EV_Market_Performance_Final_Report.md) and a [Word document](docs/EV_Market_Performance_Final_Report.docx). It follows the supplied report outline and links to the live Tableau and GitHub Pages deliverables.
 
 ## Data source
 
